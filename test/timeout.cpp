@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2019-2020, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2020-2020, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -30,43 +30,15 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include <osal/timeout.hpp>
 
-#include "osal/timestamp.hpp"
+#include <catch2/catch.hpp>
 
-#include <cassert>
-#include <chrono>
-
-// NOLINTNEXTLINE(google-global-names-in-headers)
-using namespace std::chrono_literals;
-
-namespace osal {
-
-class Timeout {
-public:
-    template <typename Representation, typename Period>
-    Timeout(const std::chrono::duration<Representation, Period>& duration) // NOLINT
-        : m_cExpireTimestamp(timestamp() + duration)
-    {
-        assert(duration > Duration::zero());
-    }
-
-    [[nodiscard]] bool isExpired() const
-    {
-        return (timestamp() > m_cExpireTimestamp);
-    }
-
-    [[nodiscard]] Duration left() const
-    {
-        auto now = timestamp();
-        if (now > m_cExpireTimestamp)
-            return Duration::zero();
-
-        return std::chrono::duration_cast<Duration>(m_cExpireTimestamp - now);
-    }
-
-private:
-    const std::chrono::time_point<Clock, Duration> m_cExpireTimestamp;
-};
-
-} // namespace osal
+TEST_CASE("Creation of timeout", "[cpp][unit][timeout]")
+{
+    osal::Timeout t1(5s);
+    osal::Timeout t2(4ms);
+    osal::Timeout t3(1us);
+    osal::Timeout t4(t2);
+    osal::Timeout t5 = t3;
+}
