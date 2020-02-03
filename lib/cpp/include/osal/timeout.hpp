@@ -51,10 +51,7 @@ public:
         assert(duration > Duration::zero());
     }
 
-    [[nodiscard]] bool isExpired() const
-    {
-        return (timestamp() > m_cExpireTimestamp);
-    }
+    [[nodiscard]] bool isExpired() const { return (timestamp() > m_cExpireTimestamp); }
 
     [[nodiscard]] Duration timeLeft() const
     {
