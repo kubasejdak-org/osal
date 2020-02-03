@@ -46,7 +46,7 @@ class Timeout {
 public:
     template <typename Representation, typename Period>
     Timeout(const std::chrono::duration<Representation, Period>& duration) // NOLINT
-        : m_cExpireTimestamp(timestamp() + duration)
+        : m_cExpireTimestamp(timestamp() + std::chrono::duration_cast<Duration>(duration))
     {
         assert(duration > Duration::zero());
     }
@@ -56,7 +56,7 @@ public:
         return (timestamp() > m_cExpireTimestamp);
     }
 
-    [[nodiscard]] Duration left() const
+    [[nodiscard]] Duration timeLeft() const
     {
         auto now = timestamp();
         if (now > m_cExpireTimestamp)

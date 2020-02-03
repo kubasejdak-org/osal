@@ -31,14 +31,47 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 #include <osal/timeout.hpp>
+#include <osal/sleep.hpp>
 
 #include <catch2/catch.hpp>
 
+#include <algorithm>
+
 TEST_CASE("Creation of timeout", "[cpp][unit][timeout]")
 {
-    osal::Timeout t1(5s);
+    osal::Timeout t1(3s);
     osal::Timeout t2(4ms);
     osal::Timeout t3(1us);
     osal::Timeout t4(t2);
     osal::Timeout t5 = t3;
+
+    constexpr auto cDelay = 5s;
+    osal::sleep(cDelay);
+
+    REQUIRE(t1.isExpired());
+    REQUIRE(t1.timeLeft() == osal::Duration::zero());
+    REQUIRE(t2.isExpired());
+    REQUIRE(t2.timeLeft() == osal::Duration::zero());
+    REQUIRE(t3.isExpired());
+    REQUIRE(t3.timeLeft() == osal::Duration::zero());
+    REQUIRE(t4.isExpired());
+    REQUIRE(t4.timeLeft() == osal::Duration::zero());
+    REQUIRE(t5.isExpired());
+    REQUIRE(t5.timeLeft() == osal::Duration::zero());
+}
+
+TEST_CASE("Timeout is monotonic", "[cpp][unit][timeout]")
+{
+    constexpr auto cTimeout = 5s;
+    osal::Timeout t(cTimeout);
+
+    std::vector<std::uint64_t> timesLeft;
+    while (!t.isExpired()) {
+        constexpr auto cDelay = 100ms;
+        osal::sleep(cDelay);
+        timesLeft.push_back(t.timeLeft().count());
+    }
+
+    REQUIRE(t.timeLeft().count() == 0);
+    REQUIRE(std::is_sorted(std::rbegin(timesLeft), std::rend(timesLeft)));
 }
