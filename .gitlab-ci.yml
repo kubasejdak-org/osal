@@ -8,6 +8,6 @@ stages:
   - quality
 
 include:
-#  - ".gitlab/ci/build-tests-freertos.yml"
+  - ".gitlab/ci/build-tests-freertos.yml"
   - ".gitlab/ci/build-tests-standard.yml"
-#  - ".gitlab/ci/quality.yml"
+  - ".gitlab/ci/quality.yml"
