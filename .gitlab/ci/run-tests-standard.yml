@@ -12,6 +12,7 @@
   tags:
     - linux
     - shared
+  image: kubasejdak/gcc:latest
   dependencies:
     - Linux_GCC_Debug_Build
   variables:
