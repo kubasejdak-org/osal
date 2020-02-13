@@ -4,7 +4,7 @@ add_subdirectory(init/${PLATFORM})
 add_library(apposal-tests OBJECT EXCLUDE_FROM_ALL
     appMain.cpp
     timeout.cpp
-    timestamp.cpp
+    time.cpp
 )
 
 target_include_directories(apposal-tests
