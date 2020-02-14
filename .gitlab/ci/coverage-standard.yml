@@ -20,12 +20,12 @@
     - bin/osal-tests [unit]${Tags}
     - make coverage
 
-Timestamp_Coverage:
-  extends: .Standard_Coverage
-  variables:
-    Tags: "[timestamp]"
-
 Timeout_Coverage:
   extends: .Standard_Coverage
   variables:
     Tags: "[timeout]"
+
+Timestamp_Coverage:
+  extends: .Standard_Coverage
+  variables:
+    Tags: "[timestamp]"
