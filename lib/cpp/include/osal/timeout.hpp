@@ -85,7 +85,7 @@ public:
 
     /// Conversion operator to Duration.
     /// @return Duration value representing time left in std::chrono unit to the deadline timestamp.
-    operator Duration() const { return timeLeft(); }
+    operator Duration() const { return timeLeft(); } // NOLINT
 
     /// Returns the std::chrono duration value used to initialize timeout.
     /// @return std::chrono duration value used to initialize timeout.

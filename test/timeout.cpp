@@ -130,8 +130,7 @@ TEST_CASE("Timeout used as a function argument", "[unit][cpp][timeout]")
     SECTION("Measuring time elapsed until deadline is reached")
     {
         auto func = [](osal::Timeout timeout) {
-            while (!timeout.isExpired())
-            {
+            while (!timeout.isExpired()) {
                 constexpr auto cDelay = 100ms;
                 osal::sleep(cDelay);
             }
@@ -204,8 +203,7 @@ TEST_CASE("Resetting timeout", "[unit][cpp][timeout]")
     osal::Timeout t2 = 100ms;
 
     constexpr int cIterationsCount = 10;
-    for (int i = 0; i < cIterationsCount; ++i)
-    {
+    for (int i = 0; i < cIterationsCount; ++i) {
         // Make all timeouts expired.
         constexpr auto cDelay = 500ms;
         osal::sleep(cDelay);
