@@ -48,7 +48,7 @@ Clang_Tidy_Linux_ARM:
   variables:
     Script: "linux-arm-clang-debug"
 
-Coverage_Overall:
+Coverage_Total:
   stage: quality
   image: kubasejdak/gcc:latest
   tags:
