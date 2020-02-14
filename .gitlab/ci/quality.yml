@@ -49,7 +49,7 @@ Clang_Tidy_Linux_ARM:
     Script: "linux-arm-clang-debug"
 
 Coverage_Overall:
-  stage: coverage
+  stage: quality
   image: kubasejdak/gcc:latest
   tags:
     - linux
