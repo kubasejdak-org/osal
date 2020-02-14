@@ -52,7 +52,7 @@ constexpr auto cTimeoutInfinity = Duration::max();
 namespace detail {
 
 /// @typedef NotLessThanDuration
-/// Helper alias to perform SFINAE on duration type used to initialize timeout. Prevents using units smaller,
+/// Helper type to perform SFINAE to prevent using std::chrono unit in Timeout, which is smaller than Duration,
 /// than Duration type.
 template <typename T>
 using NotLessThanDuration = std::enable_if_t<std::is_same_v<std::common_type_t<T, Duration>, Duration>, bool>;
@@ -82,6 +82,10 @@ public:
     {
         assert(duration >= Duration::zero());
     }
+
+    /// Conversion operator to Duration.
+    /// @return Duration value representing time left in std::chrono unit to the deadline timestamp.
+    operator Duration() const { return timeLeft(); }
 
     /// Returns the std::chrono duration value used to initialize timeout.
     /// @return std::chrono duration value used to initialize timeout.
