@@ -5,6 +5,7 @@ stages:
   - build-GCC
   - build-Clang
   - test
+  - coverage
   - quality
   - deploy
 
