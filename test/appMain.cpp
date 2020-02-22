@@ -60,6 +60,8 @@ int appMain(int argc, char* argv[])
 
     return Catch::Session().run(argvTags.size(), argvTags.data());
 #else
+    (void) argc;
+    (void) argv;
     std::ostringstream ss;
     ss << "adad";
     std::printf("%s\n", ss.str().c_str());
