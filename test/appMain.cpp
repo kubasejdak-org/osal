@@ -37,7 +37,7 @@
 
 #include <osal/init.h>
 
-//#include <catch2/catch.hpp>
+#include <catch2/catch.hpp>
 
 #include <cstdlib>
 
@@ -59,6 +59,6 @@ int appMain(int argc, char* argv[])
 
     return Catch::Session().run(argvTags.size(), argvTags.data());
 #else
-    return 0; // return Catch::Session().run(argc, argv);
+    return Catch::Session().run(argc, argv);
 #endif
 }

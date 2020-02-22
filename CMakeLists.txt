@@ -31,7 +31,7 @@ if (EXISTS ${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif ()
 
 # Project-wide compilation options.
-#add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 
 # Generate coverage report.
 if (COVERAGE)
