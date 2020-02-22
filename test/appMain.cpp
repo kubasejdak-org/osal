@@ -37,10 +37,9 @@
 
 #include <osal/init.h>
 
-//#include <catch2/catch.hpp>
+#include <catch2/catch.hpp>
 
 #include <cstdlib>
-#include <sstream>
 
 // NOLINTNEXTLINE
 int appMain(int argc, char* argv[])
@@ -60,12 +59,6 @@ int appMain(int argc, char* argv[])
 
     return Catch::Session().run(argvTags.size(), argvTags.data());
 #else
-    (void) argc;
-    (void) argv;
-    std::ostringstream ss;
-    ss << "adad";
-    std::printf("%s\n", ss.str().c_str());
-    return 0;
-//    return Catch::Session().run(argc, argv);
+    return Catch::Session().run(argc, argv);
 #endif
 }
