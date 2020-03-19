@@ -5,5 +5,5 @@ add_library(osal-standard EXCLUDE_FROM_ALL
 )
 
 target_include_directories(osal-standard
-    PUBLIC ../include
+    PUBLIC ../include include
 )

@@ -9,5 +9,5 @@ target_include_directories(osal-cpp
 )
 
 target_link_libraries(osal-cpp
-    PRIVATE osal-c
+    PUBLIC osal-c
 )
