@@ -36,7 +36,18 @@
 extern "C" {
 #endif
 
-enum OsalError { eOk, eInvalidArgument, eOsError, eThreadNotJoined, eRecursiveUsage, eNotOwner, eNotLocked, eLocked };
+// clang-format off
+enum OsalError {
+    eOk,
+    eInvalidArgument,
+    eOsError,
+    eThreadNotJoined,
+    eRecursiveUsage,
+    eNotOwner,
+    eNotLocked,
+    eLocked
+};
+// clang-format on
 
 #ifdef __cplusplus
 }

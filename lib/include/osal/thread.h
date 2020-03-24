@@ -46,7 +46,15 @@ struct OsalThread {
     ThreadImpl impl;
 };
 
-enum OsalThreadPriority { eLowest, eLow, eNormal, eHigh, eHighest };
+// clang-format off
+enum OsalThreadPriority {
+    eLowest,
+    eLow,
+    eNormal,
+    eHigh,
+    eHighest
+};
+// clang-format on
 
 static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::eNormal;
 static const size_t cOsalThreadDefaultStackSize = 8 * 1024;
@@ -57,7 +65,7 @@ struct OsalThreadConfig {
     void* stack;
 };
 
-typedef void (*OsalThreadFunction)(void*);
+typedef void (*OsalThreadFunction)(void*); // NOLINT(modernize-use-using)
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg);
 OsalError osalThreadDestroy(OsalThread* thread);

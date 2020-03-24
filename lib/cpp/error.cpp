@@ -53,10 +53,10 @@ std::string ErrorCategory::message(int value) const
         case OsalError::eInvalidArgument: return "invalid arguments";
         case OsalError::eOsError: return "OS error";
         case OsalError::eThreadNotJoined: return "thread has not been joined";
-        case OsalError::eRecursiveUsage: return "";
-        case OsalError::eNotOwner: return "";
-        case OsalError::eNotLocked: return "";
-        case OsalError::eLocked: return "";
+        case OsalError::eRecursiveUsage: return "recursive usage";
+        case OsalError::eNotOwner: return "not owner";
+        case OsalError::eNotLocked: return "not locked";
+        case OsalError::eLocked: return "locked";
         default: return "(unrecognized error)";
     }
 }
