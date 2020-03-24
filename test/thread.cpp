@@ -31,16 +31,16 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 #include <osal/thread.h>
-#include <osal/thread.hpp>
 
 #include <catch2/catch.hpp>
 
 TEST_CASE("Thread creation and destruction", "[unit][c][thread]")
 {
-    auto func = [](void* /*unused*/) -> void* {return 0;};
+    auto func = [](void* /*unused*/) {};
 
     OsalThread thread{};
-    auto error = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize}, func, nullptr);
+    auto error
+        = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
     REQUIRE(error == OsalError::eOk);
 
     error = osalThreadJoin(&thread);

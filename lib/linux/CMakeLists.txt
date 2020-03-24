@@ -10,5 +10,5 @@ target_include_directories(osal-linux
 )
 
 target_link_libraries(osal-linux
-    PRIVATE pthread
+    PUBLIC pthread
 )

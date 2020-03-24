@@ -54,9 +54,10 @@ static const size_t cOsalThreadDefaultStackSize = 8 * 1024;
 struct OsalThreadConfig {
     OsalThreadPriority priority;
     size_t stackSize;
+    void* stack;
 };
 
-typedef void* (*OsalThreadFunction)(void*);
+typedef void (*OsalThreadFunction)(void*);
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg);
 OsalError osalThreadDestroy(OsalThread* thread);

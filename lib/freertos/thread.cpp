@@ -32,36 +32,16 @@
 
 #include "osal/thread.h"
 
-#include <pthread.h>
-#include <sched.h>
-#include <unistd.h>
-
-#include <algorithm>
-#include <climits>
-#include <cstdlib>
-#include <memory>
-
-struct ThreadWrapperData {
-    OsalThreadFunction func{};
-    void* param{};
-};
-
-static void* threadWrapper(void* arg)
-{
-    auto* wrapperData = static_cast<ThreadWrapperData*>(arg);
-    wrapperData->func(wrapperData->param);
-
-    std::free(wrapperData); // NOLINT
-    return nullptr;
-}
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
     if (thread == nullptr || func == nullptr)
         return OsalError::eInvalidArgument;
 
-    const auto cPriorityMin = sched_get_priority_min(SCHED_RR);
-    const auto cPriorityMax = sched_get_priority_max(SCHED_RR);
+    const auto cPriorityMin = 0;
+    const auto cPriorityMax = configMAX_PRIORITIES - 1;
     const auto cPriorityStep = (cPriorityMax - cPriorityMin) / 4;
 
     int priority{};
@@ -74,27 +54,19 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
         default: return OsalError::eInvalidArgument;
     }
 
-    pthread_attr_t attr{};
-    if (pthread_attr_init(&attr) != 0)
-        return OsalError::eOsError;
+#if configSUPPORT_STATIC_ALLOCATION
+    thread->impl.stack = static_cast<StackType_t*>(config.stack);
+    thread->impl.handle
+        = xTaskCreateStatic(func, "thread", config.stackSize, arg, priority, thread->impl.stack, &thread->impl.tcb);
 
-    sched_param schedParam{};
-    schedParam.sched_priority = priority;
-    if (pthread_attr_setschedparam(&attr, &schedParam) != 0)
+    if (thread->impl.handle == nullptr)
         return OsalError::eOsError;
-
-    auto stackSize = std::max<std::size_t>(config.stackSize, PTHREAD_STACK_MIN);
-    if (pthread_attr_setstacksize(&attr, stackSize) != 0)
+#elif configSUPPORT_DYNAMIC_ALLOCATION
+    auto result = xTaskCreate(func, "thread", config.stackSize, arg, priority, &thread->impl.handle);
+    if (result != pdPASS)
         return OsalError::eOsError;
+#endif
 
-    pthread_t handle{};
-    auto wrapper = std::make_unique<ThreadWrapperData>();
-    wrapper->func = func;
-    wrapper->param = arg;
-    if (pthread_create(&handle, &attr, threadWrapper, wrapper.release()) != 0)
-        return OsalError::eOsError;
-
-    thread->impl.handle = handle;
     return OsalError::eOk;
 }
 
@@ -103,6 +75,7 @@ OsalError osalThreadDestroy(OsalThread* thread)
     if (thread == nullptr)
         return OsalError::eInvalidArgument;
 
+    vTaskDelete(thread->impl.handle);
     return OsalError::eOk;
 }
 
@@ -111,18 +84,17 @@ OsalError osalThreadJoin(OsalThread* thread)
     if (thread == nullptr)
         return OsalError::eInvalidArgument;
 
-    if (pthread_join(thread->impl.handle, nullptr) != 0)
-        return OsalError::eOsError;
+    // TODO(kuba): implement once semaphores are available.
 
     return OsalError::eOk;
 }
 
 void osalThreadYield()
 {
-    sched_yield();
+    taskYIELD(); // NOLINT
 }
 
 uint32_t osalThreadId()
 {
-    return std::hash<pthread_t>{}(pthread_self());
+    return uint32_t(xTaskGetCurrentTaskHandle());
 }
