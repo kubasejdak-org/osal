@@ -30,37 +30,14 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "osal/Error.hpp"
+#pragma once
 
-#include <string>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-namespace osal {
+enum OsalError { eOk, eInvalidArgument, eOsError, eThreadNotJoined, eRecursiveUsage, eNotOwner, eNotLocked, eLocked };
 
-struct ErrorCategory : std::error_category {
-    [[nodiscard]] const char* name() const noexcept override;
-    [[nodiscard]] std::string message(int value) const override;
-};
-
-const char* ErrorCategory::name() const noexcept
-{
-    return "osal";
+#ifdef __cplusplus
 }
-
-std::string ErrorCategory::message(int value) const
-{
-    switch (static_cast<Error>(value)) {
-        case Error::eOk: return "no error";
-        default: return "(unrecognized error)";
-    }
-}
-
-// NOLINTNEXTLINE(fuchsia-statically-constructed-objects)
-const ErrorCategory cErrorCategory{};
-
-// NOLINTNEXTLINE(readability-identifier-naming)
-std::error_code make_error_code(Error error)
-{
-    return {static_cast<int>(error), cErrorCategory};
-}
-
-} // namespace osal
+#endif

@@ -30,83 +30,15 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "osal/Mutex.hpp"
+#pragma once
 
-#include "osal/Error.hpp"
-
-#include <mutex>
-#include <thread>
+#include "osal/thread.h"
 
 namespace osal {
-namespace detail {
 
-struct MutexImpl {
-    std::recursive_timed_mutex mutex;
-    std::mutex helperMutex;
-    std::thread::id owner;
+class Thread {
+public:
+    Thread();
 };
-
-} // namespace detail
-
-Mutex::Mutex(MutexType type) noexcept
-    : m_type(type)
-    , m_impl(std::make_unique<detail::MutexImpl>())
-{}
-
-Mutex::~Mutex() = default;
-
-std::error_code Mutex::lock()
-{
-    std::lock_guard<std::mutex> lock(m_impl->helperMutex);
-    if (m_type == MutexType::eNonRecursive && m_lockCounter == 1) {
-        if (m_impl->owner == std::this_thread::get_id())
-            return Error::eRecursiveUsage;
-    }
-
-    m_impl->mutex.lock();
-
-    m_impl->owner = std::this_thread::get_id();
-    ++m_lockCounter;
-    return Error::eOk;
-}
-
-std::error_code Mutex::lock(Timeout timeout)
-{
-    (void) timeout;
-    (void) m_impl;
-    return Error::eOk;
-}
-
-std::error_code Mutex::tryLock()
-{
-    std::lock_guard<std::mutex> lock(m_impl->helperMutex);
-    if (m_type == MutexType::eNonRecursive && m_lockCounter == 1) {
-        if (m_impl->owner == std::this_thread::get_id())
-            return Error::eRecursiveUsage;
-    }
-
-    if (!m_impl->mutex.try_lock())
-        return Error::eLocked;
-
-    m_impl->owner = std::this_thread::get_id();
-    ++m_lockCounter;
-    return Error::eOk;
-}
-
-std::error_code Mutex::unlock()
-{
-    std::lock_guard<std::mutex> lock(m_impl->helperMutex);
-    if (m_impl->owner != std::this_thread::get_id())
-        return Error::eNotOwner;
-
-    if (m_lockCounter == 0)
-        return Error::eNotLocked;
-
-    m_impl->mutex.unlock();
-
-    --m_lockCounter;
-    m_impl->owner = {};
-    return Error::eOk;
-}
 
 } // namespace osal

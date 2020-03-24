@@ -30,66 +30,68 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "osal/Thread.h"
+#include "osal/thread.h"
 
-#if __has_include(<pthread.h>)
-  #include <pthread.h>
-  #include <sys/types.h>
-  #include <unistd.h>
+#include <cstdlib>
+#include <pthread.h>
+#include <sched.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-  constexpr bool cUsePthread = true;
-  constexpr bool cUseWinThread = false;
-#elif __has_include(<windows.h>)
-  #include <windows.h>
-  constexpr bool cUsePthread = false;
-  constexpr bool cUseWinThread = true;
-#else
-  #error Unsupported platform
-#endif 
+struct ThreadWrapperData {
+    OsalThreadFunction func{};
+    void* param{};
+};
 
-#include <thread>
+static void* threadWrapper(void* arg)
+{
+    auto* wrapperData = static_cast<ThreadWrapperData*>(arg);
+    wrapperData->func(wrapperData->param);
+
+    std::free(wrapperData); // NOLINT
+    return nullptr;
+}
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
     if (thread == nullptr || func == nullptr)
         return OsalError::eInvalidArgument;
 
-    std::thread handle(func, arg);
+    pthread_t handle{};
 
-    if constexpr (cUsePthread) {
-        const auto cPriorityMin = sched_get_priority_min(SCHED_RR);
-        const auto cPriorityMax = sched_get_priority_max(SCHED_RR);
-        const auto cPriorityStep = (cPriorityMax - cPriorityMin) / 4;
+    const auto cPriorityMin = sched_get_priority_min(SCHED_RR);
+    const auto cPriorityMax = sched_get_priority_max(SCHED_RR);
+    const auto cPriorityStep = (cPriorityMax - cPriorityMin) / 4;
 
-        int priority{};
-        switch (config.priority) {
-            case OsalThreadPriority::eLowest:
-                priority = cPriorityMin;
-                break;
-            case OsalThreadPriority::eLow:
-                priority = cPriorityMin + (cPriorityStep * 1);
-                break;
-            case OsalThreadPriority::eNormal:
-                priority = cPriorityMin + (cPriorityStep * 2);
-                break;
-            case OsalThreadPriority::eHigh:
-                priority = cPriorityMin + (cPriorityStep * 3);
-                break;
-            case OsalThreadPriority::eHighest:
-                priority = cPriorityMax;
-                break;
-            default: break;
-        }
-
-        sched_param schedParam{priority};
-        if (pthread_setschedparam(handle.native_handle(), SCHED_RR, &schedParam) != 0)
-            return OsalError::eOsError;
-    }
-    else if constexpr (cUseWinThread) {
-        // TODO: set priority and stack size.
+    int priority{};
+    switch (config.priority) {
+        case OsalThreadPriority::eLowest: priority = cPriorityMin; break;
+        case OsalThreadPriority::eLow: priority = cPriorityMin + (cPriorityStep * 1); break;
+        case OsalThreadPriority::eNormal: priority = cPriorityMin + (cPriorityStep * 2); break;
+        case OsalThreadPriority::eHigh: priority = cPriorityMin + (cPriorityStep * 3); break;
+        case OsalThreadPriority::eHighest: priority = cPriorityMax; break;
+        default: break;
     }
 
-    thread->impl.handle.swap(handle);
+    pthread_attr_t attr{};
+    if (pthread_attr_init(&attr) != 0)
+        return OsalError::eOsError;
+
+    sched_param schedParam{};
+    schedParam.sched_priority = priority;
+    if (pthread_attr_setschedparam(&attr, &schedParam) != 0)
+        return OsalError::eOsError;
+
+    if (pthread_attr_setstacksize(&attr, config.stackSize) != 0)
+        return OsalError::eOsError;
+
+    auto* wrapper = std::make_unique<ThreadWrapperData>();
+    wrapper->func = func;
+    wrapper->param = arg;
+    if (pthread_create(&handle, &attr, threadWrapper, wrapper) != 0)
+        return OsalError::eOsError;
+
+    thread->impl.handle = handle;
     return OsalError::eOk;
 }
 
@@ -97,9 +99,6 @@ OsalError osalThreadDestroy(OsalThread* thread)
 {
     if (thread == nullptr)
         return OsalError::eInvalidArgument;
-
-    if (thread->impl.handle.joinable())
-        return OsalError::eThreadNotJoined;
 
     return OsalError::eOk;
 }
@@ -109,16 +108,18 @@ OsalError osalThreadJoin(OsalThread* thread)
     if (thread == nullptr)
         return OsalError::eInvalidArgument;
 
-    thread->impl.handle.join();
+    if (pthread_join(thread.impl.handle, nullptr) != 0)
+        return OsalError::eOsError;
+
     return OsalError::eOk;
 }
 
 void osalThreadYield()
 {
-    std::this_thread::yield();
+    sched_yield();
 }
 
 uint32_t osalThreadId()
 {
-    return uint32_t(std::hash<std::thread::id>{}(std::this_thread::get_id()));
+    return std::hash<pthread_t>{}(pthread_self());
 }

@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2019-2020, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2020-2020, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -32,29 +32,21 @@
 
 #pragma once
 
+#include "osal/error.h"
+
 #include <system_error>
 #include <type_traits>
 
 namespace osal {
 
-// clang-format off
-enum class Error {
-    eOk,
-    eRecursiveUsage,
-    eNotOwner,
-    eNotLocked,
-    eLocked
-};
-// clang-format on
-
 // NOLINTNEXTLINE(readability-identifier-naming)
-std::error_code make_error_code(Error error);
+std::error_code make_error_code(OsalError error);
 
 } // namespace osal
 
 namespace std {
 
 template <>
-struct is_error_code_enum<osal::Error> : true_type {};
+struct is_error_code_enum<OsalError> : true_type {};
 
 } // namespace std

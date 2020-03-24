@@ -36,8 +36,8 @@
 extern "C" {
 #endif
 
-#include "Error.h"
-#include "internal/ThreadImpl.h"
+#include "error.h"
+#include "internal/threadImpl.h"
 
 #include <stddef.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 #include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
@@ -46,13 +46,7 @@ struct OsalThread {
     ThreadImpl impl;
 };
 
-enum OsalThreadPriority {
-    eLowest,
-    eLow,
-    eNormal,
-    eHigh,
-    eHighest
-};
+enum OsalThreadPriority { eLowest, eLow, eNormal, eHigh, eHighest };
 
 static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::eNormal;
 static const size_t cOsalThreadDefaultStackSize = 8 * 1024;
@@ -62,7 +56,7 @@ struct OsalThreadConfig {
     size_t stackSize;
 };
 
-typedef void (*OsalThreadFunction)(void*);
+typedef void* (*OsalThreadFunction)(void*);
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg);
 OsalError osalThreadDestroy(OsalThread* thread);

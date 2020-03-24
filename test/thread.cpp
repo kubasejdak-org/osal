@@ -30,10 +30,21 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include <osal/thread.h>
+#include <osal/thread.hpp>
 
-#include <thread>
+#include <catch2/catch.hpp>
 
-struct ThreadImpl {
-    std::thread handle;
-};
+TEST_CASE("Thread creation and destruction", "[unit][c][thread]")
+{
+    auto func = [](void* /*unused*/) -> void* {return 0;};
+
+    OsalThread thread{};
+    auto error = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize}, func, nullptr);
+    REQUIRE(error == OsalError::eOk);
+
+    error = osalThreadJoin(&thread);
+    REQUIRE(error == OsalError::eOk);
+
+    osalThreadDestroy(&thread);
+}

@@ -1,4 +1,5 @@
 add_library(osal-cpp
+    error.cpp
     init.cpp
     sleep.cpp
     timestamp.cpp

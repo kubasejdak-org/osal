@@ -30,19 +30,44 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "osal/error.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <string>
 
-enum OsalError {
-    eOk,
-    eInvalidArgument,
-    eThreadNotJoined,
-    eOsError
+namespace osal {
+
+struct ErrorCategory : std::error_category {
+    [[nodiscard]] const char* name() const noexcept override;
+    [[nodiscard]] std::string message(int value) const override;
 };
 
-#ifdef __cplusplus
+const char* ErrorCategory::name() const noexcept
+{
+    return "osal";
 }
-#endif
+
+std::string ErrorCategory::message(int value) const
+{
+    switch (static_cast<OsalError>(value)) {
+        case OsalError::eOk: return "no error";
+        case OsalError::eInvalidArgument: return "invalid arguments";
+        case OsalError::eOsError: return "OS error";
+        case OsalError::eThreadNotJoined: return "thread has not been joined";
+        case OsalError::eRecursiveUsage: return "";
+        case OsalError::eNotOwner: return "";
+        case OsalError::eNotLocked: return "";
+        case OsalError::eLocked: return "";
+        default: return "(unrecognized error)";
+    }
+}
+
+// NOLINTNEXTLINE(fuchsia-statically-constructed-objects)
+const ErrorCategory cErrorCategory{};
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+std::error_code make_error_code(OsalError error)
+{
+    return {static_cast<int>(error), cErrorCategory};
+}
+
+} // namespace osal
