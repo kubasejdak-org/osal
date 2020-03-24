@@ -32,11 +32,14 @@
 
 #include "osal/thread.h"
 
-#include <cstdlib>
 #include <pthread.h>
 #include <sched.h>
-#include <sys/types.h>
 #include <unistd.h>
+
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
+#include <memory>
 
 struct ThreadWrapperData {
     OsalThreadFunction func{};
@@ -70,7 +73,7 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
         case OsalThreadPriority::eNormal: priority = cPriorityMin + (cPriorityStep * 2); break;
         case OsalThreadPriority::eHigh: priority = cPriorityMin + (cPriorityStep * 3); break;
         case OsalThreadPriority::eHighest: priority = cPriorityMax; break;
-        default: break;
+        default: return OsalError::eInvalidArgument;
     }
 
     pthread_attr_t attr{};
@@ -82,13 +85,14 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
     if (pthread_attr_setschedparam(&attr, &schedParam) != 0)
         return OsalError::eOsError;
 
-    if (pthread_attr_setstacksize(&attr, config.stackSize) != 0)
+    auto stackSize = std::max<std::size_t>(config.stackSize, PTHREAD_STACK_MIN);
+    if (pthread_attr_setstacksize(&attr, stackSize) != 0)
         return OsalError::eOsError;
 
-    auto* wrapper = std::make_unique<ThreadWrapperData>();
+    auto wrapper = std::make_unique<ThreadWrapperData>();
     wrapper->func = func;
     wrapper->param = arg;
-    if (pthread_create(&handle, &attr, threadWrapper, wrapper) != 0)
+    if (pthread_create(&handle, &attr, threadWrapper, wrapper.release()) != 0)
         return OsalError::eOsError;
 
     thread->impl.handle = handle;
@@ -108,7 +112,7 @@ OsalError osalThreadJoin(OsalThread* thread)
     if (thread == nullptr)
         return OsalError::eInvalidArgument;
 
-    if (pthread_join(thread.impl.handle, nullptr) != 0)
+    if (pthread_join(thread->impl.handle, nullptr) != 0)
         return OsalError::eOsError;
 
     return OsalError::eOk;
