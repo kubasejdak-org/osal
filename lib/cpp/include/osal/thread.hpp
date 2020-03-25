@@ -34,11 +34,24 @@
 
 #include "osal/thread.h"
 
+#include <cstdint>
+
 namespace osal {
 
 class Thread {
 public:
     Thread();
+
+    template <typename... Args>
+    Thread(OsalThreadConfig config, OsalThreadFunction func, Args&&... args);
+
+    void join();
+
+    static void yield();
+    static std::uint32_t id();
+
+private:
+    OsalThread m_thread{};
 };
 
 } // namespace osal
