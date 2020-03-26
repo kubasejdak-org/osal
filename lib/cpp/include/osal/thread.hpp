@@ -48,7 +48,7 @@ public:
     Thread() = default;
 
     template <typename... Args>
-    Thread(OsalThreadFunction function, Args&&... args)
+    Thread(OsalThreadFunction function, Args&&... args) // NOLINT(google-explicit-constructor)
         : Thread(nullptr, function, std::forward<Args>(args)...)
     {}
 
@@ -66,6 +66,8 @@ public:
         m_functionWrapper = std::move(other.m_functionWrapper);
         std::swap(m_started, other.m_started);
     }
+
+    ~Thread() { osalThreadDestroy(&m_thread); }
 
     Thread& operator=(const Thread&) = delete;
 
