@@ -74,7 +74,7 @@ public:
     template <typename... Args>
     std::error_code start(OsalThreadFunction function, Args&&... args)
     {
-        return start(nullptr, function, std::forward<Args>(args)...)
+        return start(nullptr, function, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
