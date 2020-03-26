@@ -32,26 +32,78 @@
 
 #pragma once
 
+#include "osal/error.h"
 #include "osal/thread.h"
 
 #include <cstdint>
+#include <functional>
+#include <system_error>
+#include <utility>
 
 namespace osal {
 
+template <OsalThreadPriority priority = cOsalThreadDefaultPriority, std::size_t stackSize = cOsalThreadDefaultStackSize>
 class Thread {
 public:
     Thread() = default;
 
     template <typename... Args>
-    Thread(OsalThreadConfig config, OsalThreadFunction func, Args&&... args);
+    Thread(OsalThreadFunction function, Args&&... args)
+        : Thread(nullptr, function, std::forward<Args>(args)...)
+    {}
 
-    void join();
+    template <typename... Args>
+    Thread(void* stack, OsalThreadFunction function, Args&&... args)
+    {
+        start(stack, function, std::forward<Args>(args)...);
+    }
 
-    static void yield();
-    static std::uint32_t id();
+    Thread(const Thread&) = delete;
+
+    Thread(Thread&& other) noexcept
+    {
+        std::swap(m_thread, other.m_thread);
+        m_functionWrapper = std::move(other.m_functionWrapper);
+        std::swap(m_started, other.m_started);
+    }
+
+    Thread& operator=(const Thread&) = delete;
+
+    Thread& operator=(Thread&& other) = delete;
+
+    template <typename... Args>
+    std::error_code start(OsalThreadFunction function, Args&&... args)
+    {
+        return start(nullptr, function, std::forward<Args>(args)...)
+    }
+
+    template <typename... Args>
+    std::error_code start(void* stack, OsalThreadFunction function, Args&&... args)
+    {
+        if (m_started)
+            return OsalError::eThreadAlreadyStarted;
+
+        auto threadFunction = std::bind(std::forward<OsalThreadFunction>(function), std::forward<Args>(args)...);
+        m_functionWrapper = [threadFunction = threadFunction](void* /*unused*/) { threadFunction(); };
+        auto error = osalThreadCreate(&m_thread,
+                                      {priority, stackSize, stack},
+                                      m_functionWrapper.target<void(void*)>(),
+                                      nullptr);
+
+        m_started = (error == OsalError::eOk);
+        return error;
+    }
+
+    void join() { osalThreadJoin(&m_thread); }
+
+    static void yield() { osalThreadYield(); }
+
+    static std::uint32_t id() { return osalThreadId(); }
 
 private:
     OsalThread m_thread{};
+    std::function<void(void*)> m_functionWrapper;
+    bool m_started{};
 };
 
 } // namespace osal

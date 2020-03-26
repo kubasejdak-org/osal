@@ -42,6 +42,7 @@ enum OsalError {
     eInvalidArgument,
     eOsError,
     eThreadNotJoined,
+    eThreadAlreadyStarted,
     eRecursiveUsage,
     eNotOwner,
     eNotLocked,
