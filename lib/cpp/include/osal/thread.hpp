@@ -48,7 +48,7 @@ public:
     Thread() = default;
 
     template <typename... Args>
-    Thread(OsalThreadFunction function, Args&&... args) // NOLINT(google-explicit-constructor)
+    Thread(OsalThreadFunction function, Args&&... args) // NOLINT
         : Thread(nullptr, function, std::forward<Args>(args)...)
     {}
 
