@@ -37,12 +37,8 @@
 #include <system_error>
 #include <type_traits>
 
-namespace osal {
-
 // NOLINTNEXTLINE(readability-identifier-naming)
 std::error_code make_error_code(OsalError error);
-
-} // namespace osal
 
 namespace std {
 
