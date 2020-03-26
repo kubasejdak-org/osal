@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2019-2020, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2020-2020, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -30,28 +30,23 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-#include "osal/thread.h"
-
-#include <cstdint>
+#include "osal/thread.hpp"
 
 namespace osal {
 
-class Thread {
-public:
-    Thread() = default;
+void Thread::join()
+{
+    osalThreadJoin(&m_thread);
+}
 
-    template <typename... Args>
-    Thread(OsalThreadConfig config, OsalThreadFunction func, Args&&... args);
+void Thread::yield()
+{
+    osalThreadYield();
+}
 
-    void join();
-
-    static void yield();
-    static std::uint32_t id();
-
-private:
-    OsalThread m_thread{};
-};
+std::uint32_t Thread::id()
+{
+    return osalThreadId();
+}
 
 } // namespace osal
