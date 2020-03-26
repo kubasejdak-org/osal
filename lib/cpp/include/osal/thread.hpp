@@ -32,7 +32,7 @@
 
 #pragma once
 
-#include "osal/error.h"
+#include "osal/error.hpp"
 #include "osal/thread.h"
 
 #include <cstdint>
