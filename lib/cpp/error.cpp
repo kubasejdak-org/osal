@@ -34,8 +34,6 @@
 
 #include <string>
 
-namespace osal {
-
 struct ErrorCategory : std::error_category {
     [[nodiscard]] const char* name() const noexcept override;
     [[nodiscard]] std::string message(int value) const override;
@@ -70,5 +68,3 @@ std::error_code make_error_code(OsalError error)
 {
     return {static_cast<int>(error), cErrorCategory};
 }
-
-} // namespace osal
