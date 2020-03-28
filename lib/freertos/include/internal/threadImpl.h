@@ -37,6 +37,7 @@
 
 struct ThreadImpl {
     TaskHandle_t handle;
+    bool initialized;
 
 #if configSUPPORT_STATIC_ALLOCATION
     StackType_t* stack;

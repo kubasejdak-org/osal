@@ -37,8 +37,10 @@
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
-    if (thread == nullptr || func == nullptr)
+    if (thread == nullptr || func == nullptr || thread->impl.initialized)
         return OsalError::eInvalidArgument;
+
+    thread->impl.initialized = false;
 
     const auto cPriorityMin = 0;
     const auto cPriorityMax = configMAX_PRIORITIES - 1;
@@ -67,12 +69,13 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
         return OsalError::eOsError;
 #endif
 
+    thread->impl.initialized = true;
     return OsalError::eOk;
 }
 
 OsalError osalThreadDestroy(OsalThread* thread)
 {
-    if (thread == nullptr)
+    if (thread == nullptr || !thread->impl.initialized)
         return OsalError::eInvalidArgument;
 
     vTaskDelete(thread->impl.handle);
@@ -81,7 +84,7 @@ OsalError osalThreadDestroy(OsalThread* thread)
 
 OsalError osalThreadJoin(OsalThread* thread)
 {
-    if (thread == nullptr)
+    if (thread == nullptr || !thread->impl.initialized)
         return OsalError::eInvalidArgument;
 
     // TODO(kuba): implement once semaphores are available.

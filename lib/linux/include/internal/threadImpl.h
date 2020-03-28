@@ -36,4 +36,5 @@
 
 struct ThreadImpl {
     pthread_t handle;
+    bool initialized;
 };
