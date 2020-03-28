@@ -35,6 +35,8 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include <cstring>
+
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
     if (thread == nullptr || func == nullptr || thread->impl.initialized)
@@ -79,6 +81,7 @@ OsalError osalThreadDestroy(OsalThread* thread)
         return OsalError::eInvalidArgument;
 
     vTaskDelete(thread->impl.handle);
+    std::memset(&thread->impl, 0, sizeof(thread->impl));
     return OsalError::eOk;
 }
 

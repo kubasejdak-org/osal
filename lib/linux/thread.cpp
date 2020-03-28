@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <climits>
 #include <cstdlib>
+#include <cstring>
 #include <memory>
 
 struct ThreadWrapperData {
