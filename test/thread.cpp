@@ -224,7 +224,7 @@ TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
 
     constexpr std::size_t cThreadsCount = 5;
     std::array<OsalThread, cThreadsCount> threads{};
-    std::array<unsigned int, cThreadsCount> ids{};
+    std::array<std::uint32_t, cThreadsCount> ids{};
     bool start{};
 
     auto func = [](void* arg) {
