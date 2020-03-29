@@ -183,24 +183,35 @@ TEST_CASE("Launch 5 threads with different priorities and check their results", 
     osalSleepMs(cDelayMs);
     stop = true; // NOLINT
 
-    for (std::size_t i = 0; i < threads.size(); ++i) {
-        auto error = osalThreadJoin(&threads[i]);
+    for (auto& thread : threads) {
+        auto error = osalThreadJoin(&thread);
         REQUIRE(error == OsalError::eOk);
 
-        auto counter = counters[i];
-        (void) counter;
-        std::printf("counter = %u\n", counter);
-
-        error = osalThreadDestroy(&threads[i]);
+        error = osalThreadDestroy(&thread);
         REQUIRE(error == OsalError::eOk);
     }
 
-//    REQUIRE(counters[0] <= counters[2]);
-//    REQUIRE(counters[0] <= counters[3]);
-//    REQUIRE(counters[0] <= counters[4]);
-//    REQUIRE(counters[1] <= counters[2]);
-//    REQUIRE(counters[1] <= counters[3]);
-//    REQUIRE(counters[1] <= counters[4]);
-//    REQUIRE(counters[2] <= counters[4]);
-//    REQUIRE(counters[3] <= counters[4]);
+    for (auto counter : counters)
+        REQUIRE(counter != 0);
+}
+
+TEST_CASE("Create threads with all priorities", "[unit][c][thread]")
+{
+    auto func = [](void* /*unused*/) {
+      constexpr int cDelayMs = 1000;
+      osalSleepMs(cDelayMs);
+    };
+
+    for (int i = OsalThreadPriority::eLowest; i <= OsalThreadPriority::eLowest; ++i) {
+        OsalThread thread{};
+        auto priority = static_cast<OsalThreadPriority>(i / 2);
+        auto error = osalThreadCreate(&thread, {priority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+        REQUIRE(error == OsalError::eOk);
+
+        error = osalThreadJoin(&thread);
+        REQUIRE(error == OsalError::eOk);
+
+        error = osalThreadDestroy(&thread);
+        REQUIRE(error == OsalError::eOk);
+    }
 }

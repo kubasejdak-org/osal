@@ -4,7 +4,7 @@
     GIT_STRATEGY: none
   script:
     - cd ${AppArtifact}/bin
-    - sudo chrt 49 ./osal-tests ${TestTags}
+    - ./osal-tests ${TestTags}
 
 .Run_Test_Linux:
   extends: .Run_Test
@@ -26,30 +26,30 @@
   variables:
     AppArtifact: "Linux_ARM_GCC_Debug_Build"
 
-#Timeout_Linux_ARM_UT:
-#  extends: .Run_Test_Linux_ARM
-#  variables:
-#    TestTags: "[timeout]"
-#
-#Timeout_Linux_UT:
-#  extends: .Run_Test_Linux
-#  variables:
-#    TestTags: "[timeout]"
-#
-#Timestamp_Linux_ARM_UT:
-#  extends: .Run_Test_Linux_ARM
-#  variables:
-#    TestTags: "[timestamp]"
-#
-#Timestamp_Linux_UT:
-#  extends: .Run_Test_Linux
-#  variables:
-#    TestTags: "[timestamp]"
-#
-#Thread_Linux_ARM_UT:
-#  extends: .Run_Test_Linux_ARM
-#  variables:
-#    TestTags: "[thread]"
+Timeout_Linux_ARM_UT:
+  extends: .Run_Test_Linux_ARM
+  variables:
+    TestTags: "[timeout]"
+
+Timeout_Linux_UT:
+  extends: .Run_Test_Linux
+  variables:
+    TestTags: "[timeout]"
+
+Timestamp_Linux_ARM_UT:
+  extends: .Run_Test_Linux_ARM
+  variables:
+    TestTags: "[timestamp]"
+
+Timestamp_Linux_UT:
+  extends: .Run_Test_Linux
+  variables:
+    TestTags: "[timestamp]"
+
+Thread_Linux_ARM_UT:
+  extends: .Run_Test_Linux_ARM
+  variables:
+    TestTags: "[thread]"
 
 Thread_Linux_UT:
   extends: .Run_Test_Linux
