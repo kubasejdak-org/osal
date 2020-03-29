@@ -37,6 +37,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <system_error>
 #include <utility>
 
@@ -88,7 +89,8 @@ public:
         if (m_started)
             return OsalError::eThreadAlreadyStarted;
 
-        m_userFunction = std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+        m_userFunction = std::make_unique<FunctionWrapper>(
+            std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...));
         if (m_userFunction == nullptr)
             return OsalError::eInvalidArgument;
 
@@ -97,7 +99,7 @@ public:
             threadFunction();
         };
 
-        auto error = osalThreadCreate(&m_thread, {priority, stackSize, stack}, m_workerFunction, &m_userFunction);
+        auto error = osalThreadCreate(&m_thread, {priority, stackSize, stack}, m_workerFunction, m_userFunction.get());
 
         m_started = (error == OsalError::eOk);
         return error;
@@ -113,7 +115,7 @@ private:
     using FunctionWrapper = std::function<void(void)>;
 
     OsalThread m_thread{};
-    FunctionWrapper m_userFunction;
+    std::unique_ptr<FunctionWrapper> m_userFunction;
     OsalThreadFunction m_workerFunction{};
     bool m_started{};
 };
