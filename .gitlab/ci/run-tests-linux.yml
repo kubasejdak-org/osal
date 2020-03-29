@@ -4,7 +4,7 @@
     GIT_STRATEGY: none
   script:
     - cd ${AppArtifact}/bin
-    - ./osal-tests ${TestTags}
+    - chrt ./osal-tests ${TestTags}
 
 .Run_Test_Linux:
   extends: .Run_Test
