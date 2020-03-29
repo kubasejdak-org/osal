@@ -58,8 +58,10 @@ static void* threadWrapper(void* arg)
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
-    if (thread == nullptr || func == nullptr || thread->impl.initialized)
+    if (thread == nullptr || func == nullptr || thread->impl.initialized) {
+        std::printf("-------- AAA\n");
         return OsalError::eInvalidArgument;
+    }
 
     thread->impl.initialized = false;
 
@@ -74,28 +76,41 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
         case OsalThreadPriority::eNormal: priority = cPriorityMin + (cPriorityStep * 2); break;
         case OsalThreadPriority::eHigh: priority = cPriorityMin + (cPriorityStep * 3); break;
         case OsalThreadPriority::eHighest: priority = cPriorityMax; break;
-        default: return OsalError::eInvalidArgument;
+        default: std::printf("-------- BBB\n"); return OsalError::eInvalidArgument;
     }
 
     pthread_attr_t attr{};
-    if (pthread_attr_init(&attr) != 0)
+    if (pthread_attr_init(&attr) != 0) {
+        std::printf("-------- CCC\n");
         return OsalError::eOsError;
+    }
 
     sched_param schedParam{};
     schedParam.sched_priority = priority;
-    if (pthread_attr_setschedparam(&attr, &schedParam) != 0)
+    if (pthread_attr_setschedparam(&attr, &schedParam) != 0) {
+        std::printf("-------- DDD\n");
         return OsalError::eOsError;
+    }
 
     auto stackSize = std::max<std::size_t>(config.stackSize, PTHREAD_STACK_MIN);
-    if (pthread_attr_setstacksize(&attr, stackSize) != 0)
+    if (pthread_attr_setstacksize(&attr, stackSize) != 0) {
+        std::printf("-------- EEE\n");
         return OsalError::eOsError;
+    }
 
     pthread_t handle{};
     auto wrapper = std::make_unique<ThreadWrapperData>();
     wrapper->func = func;
     wrapper->param = arg;
-    if (pthread_create(&handle, &attr, threadWrapper, wrapper.release()) != 0)
+    if (pthread_create(&handle, &attr, threadWrapper, wrapper.release()) != 0) {
+        std::printf("-------- FFF\n");
         return OsalError::eOsError;
+    }
+
+    if (pthread_attr_destroy(&attr) != 0) {
+        std::printf("-------- GGG\n");
+        return OsalError::eOsError;
+    }
 
     thread->impl.handle = handle;
     thread->impl.initialized = true;
@@ -104,8 +119,10 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
 
 OsalError osalThreadDestroy(OsalThread* thread)
 {
-    if (thread == nullptr || !thread->impl.initialized)
+    if (thread == nullptr || !thread->impl.initialized) {
+        std::printf("-------- HHH\n");
         return OsalError::eInvalidArgument;
+    }
 
     std::memset(&thread->impl, 0, sizeof(thread->impl));
     return OsalError::eOk;
