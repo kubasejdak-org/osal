@@ -88,6 +88,8 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
         return OsalError::eOsError;
     }
 
+    pthread_attr_setschedpolicy(&attr, SCHED_RR);
+
     sched_param schedParam{};
     if (pthread_attr_getschedparam(&attr, &schedParam) != 0) {
         std::printf("-------- CCC 2\n");
@@ -95,7 +97,7 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
     }
 
     std::printf("-------- get sched %d\n", schedParam.sched_priority);
-    std::printf("-------- get sched %d\n", (int)cOsalThreadDefaultPriority);
+    std::printf("-------- set sched %d\n", priority);
 
     schedParam.sched_priority = priority;
     if (pthread_attr_setschedparam(&attr, &schedParam) != 0) {
@@ -130,10 +132,8 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
 
 OsalError osalThreadDestroy(OsalThread* thread)
 {
-    if (thread == nullptr || !thread->impl.initialized) {
-        std::printf("-------- HHH\n");
+    if (thread == nullptr || !thread->impl.initialized)
         return OsalError::eInvalidArgument;
-    }
 
     std::memset(&thread->impl, 0, sizeof(thread->impl));
     return OsalError::eOk;
