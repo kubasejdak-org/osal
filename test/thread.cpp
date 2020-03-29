@@ -318,7 +318,7 @@ TEST_CASE("Move thread around", "[unit][cpp][thread]")
     osal::Thread thread1(func, cParam);
     osal::Thread thread2(std::move(thread1));
 
-    auto error = thread1.join();
+    auto error = thread1.join(); // NOLINT
     REQUIRE(error == OsalError::eInvalidArgument);
 
     error = thread2.join();
