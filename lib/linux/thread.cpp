@@ -66,9 +66,6 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
     const auto cPriorityMin = sched_get_priority_min(SCHED_RR);
     const auto cPriorityMax = sched_get_priority_max(SCHED_RR);
     const auto cPriorityStep = (cPriorityMax - cPriorityMin) / 4;
-    std::printf("-------- cPriorityMin %d\n", cPriorityMin);
-    std::printf("-------- cPriorityMax %d\n", cPriorityMax);
-    std::printf("-------- cPriorityStep %d\n", cPriorityStep);
 
     int priority{};
     switch (config.priority) {
@@ -81,45 +78,27 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
     }
 
     pthread_attr_t attr{};
-    if (pthread_attr_init(&attr) != 0) {
-        std::printf("-------- AAA\n");
+    if (pthread_attr_init(&attr) != 0)
         return OsalError::eOsError;
-    }
 
-    if (pthread_attr_setschedpolicy(&attr, SCHED_RR) != 0) {
-        std::printf("-------- BBB\n");
+    if (pthread_attr_setschedpolicy(&attr, SCHED_RR) != 0)
         return OsalError::eOsError;
-    }
 
     sched_param schedParam{};
-    if (pthread_attr_getschedparam(&attr, &schedParam) != 0) {
-        std::printf("-------- CCC 2\n");
-        return OsalError::eOsError;
-    }
-
-    std::printf("-------- get sched %d\n", schedParam.sched_priority);
-    std::printf("-------- set sched %d\n", priority);
-
     schedParam.sched_priority = priority;
-    if (pthread_attr_setschedparam(&attr, &schedParam) != 0) {
-        std::printf("-------- DDD\n");
+    if (pthread_attr_setschedparam(&attr, &schedParam) != 0)
         return OsalError::eOsError;
-    }
 
     auto stackSize = std::max<std::size_t>(config.stackSize, PTHREAD_STACK_MIN);
-    if (pthread_attr_setstacksize(&attr, stackSize) != 0) {
-        std::printf("-------- EEE\n");
+    if (pthread_attr_setstacksize(&attr, stackSize) != 0)
         return OsalError::eOsError;
-    }
 
     pthread_t handle{};
     auto wrapper = std::make_unique<ThreadWrapperData>();
     wrapper->func = func;
     wrapper->param = arg;
-    if (pthread_create(&handle, &attr, threadWrapper, wrapper.release()) != 0) {
-        std::printf("-------- FFF\n");
+    if (pthread_create(&handle, &attr, threadWrapper, wrapper.release()) != 0)
         return OsalError::eOsError;
-    }
 
     if (pthread_attr_destroy(&attr) != 0)
         return OsalError::eOsError;
