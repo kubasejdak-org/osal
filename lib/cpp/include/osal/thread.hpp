@@ -42,18 +42,20 @@
 
 namespace osal {
 
-template <OsalThreadPriority priority = cOsalThreadDefaultPriority, std::size_t stackSize = cOsalThreadDefaultStackSize>
+template <typename ThreadFunction,
+          OsalThreadPriority priority = cOsalThreadDefaultPriority,
+          std::size_t stackSize = cOsalThreadDefaultStackSize>
 class Thread {
 public:
     Thread() = default;
 
     template <typename... Args>
-    Thread(OsalThreadFunction function, Args&&... args) // NOLINT
+    Thread(ThreadFunction function, Args&&... args) // NOLINT
         : Thread(nullptr, function, std::forward<Args>(args)...)
     {}
 
     template <typename... Args>
-    Thread(void* stack, OsalThreadFunction function, Args&&... args)
+    Thread(void* stack, ThreadFunction function, Args&&... args)
     {
         start(stack, function, std::forward<Args>(args)...);
     }
@@ -63,7 +65,8 @@ public:
     Thread(Thread&& other) noexcept
     {
         std::swap(m_thread, other.m_thread);
-        m_functionWrapper = std::move(other.m_functionWrapper);
+        m_userFunction = std::move(other.m_userFunction);
+        std::swap(m_workerFunction, other.m_workerFunction);
         std::swap(m_started, other.m_started);
     }
 
@@ -74,37 +77,41 @@ public:
     Thread& operator=(Thread&& other) = delete;
 
     template <typename... Args>
-    std::error_code start(OsalThreadFunction function, Args&&... args)
+    std::error_code start(ThreadFunction function, Args&&... args)
     {
         return start(nullptr, function, std::forward<Args>(args)...);
     }
 
     template <typename... Args>
-    std::error_code start(void* stack, OsalThreadFunction function, Args&&... args)
+    std::error_code start(void* stack, ThreadFunction function, Args&&... args)
     {
         if (m_started)
             return OsalError::eThreadAlreadyStarted;
 
-        auto threadFunction = std::bind(std::forward<OsalThreadFunction>(function), std::forward<Args>(args)...);
-        m_functionWrapper = [threadFunction = threadFunction](void* /*unused*/) { threadFunction(); };
-        auto error = osalThreadCreate(&m_thread,
-                                      {priority, stackSize, stack},
-                                      m_functionWrapper.target<void(void*)>(),
-                                      nullptr);
+        m_userFunction = std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+        m_workerFunction = [](void* arg) {
+            auto threadFunction = *static_cast<std::function<void(void)>*>(arg);
+            threadFunction();
+        };
+
+        auto error = osalThreadCreate(&m_thread, {priority, stackSize, stack}, m_workerFunction, &m_userFunction);
 
         m_started = (error == OsalError::eOk);
         return error;
     }
 
-    void join() { osalThreadJoin(&m_thread); }
+    std::error_code join() { return osalThreadJoin(&m_thread); }
 
     static void yield() { osalThreadYield(); }
 
     static std::uint32_t id() { return osalThreadId(); }
 
 private:
+    using FunctionWrapper = std::function<void(void)>;
+
     OsalThread m_thread{};
-    std::function<void(void*)> m_functionWrapper;
+    FunctionWrapper m_userFunction;
+    OsalThreadFunction m_workerFunction{};
     bool m_started{};
 };
 

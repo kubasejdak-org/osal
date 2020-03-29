@@ -37,6 +37,8 @@
 #include <catch2/catch.hpp>
 
 #include <array>
+#include <set>
+#include <utility>
 
 TEST_CASE("Thread creation and destruction", "[unit][c][thread]")
 {
@@ -198,8 +200,8 @@ TEST_CASE("Launch 5 threads with different priorities and check their results", 
 TEST_CASE("Create threads with all priorities", "[unit][c][thread]")
 {
     auto func = [](void* /*unused*/) {
-      constexpr int cDelayMs = 1000;
-      osalSleepMs(cDelayMs);
+        constexpr int cDelayMs = 1000;
+        osalSleepMs(cDelayMs);
     };
 
     for (int i = OsalThreadPriority::eLowest; i <= OsalThreadPriority::eLowest; ++i) {
@@ -214,4 +216,113 @@ TEST_CASE("Create threads with all priorities", "[unit][c][thread]")
         error = osalThreadDestroy(&thread);
         REQUIRE(error == OsalError::eOk);
     }
+}
+
+TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
+{
+    using ThreadArgs = std::tuple<std::uint32_t&, bool&>;
+
+    constexpr std::size_t cThreadsCount = 5;
+    std::array<OsalThread, cThreadsCount> threads{};
+    std::array<unsigned int, cThreadsCount> ids{};
+    bool start{};
+
+    auto func = [](void* arg) {
+        auto& params = *static_cast<ThreadArgs*>(arg);
+        auto& id = std::get<0>(params);
+        auto& start = std::get<1>(params);
+
+        while (!start)
+            osalThreadYield();
+
+        id = osalThreadId();
+        constexpr int cIterationsCount = 1000;
+        for (int i = 0; i < cIterationsCount; ++i) {
+            auto tmpId = osalThreadId();
+            if (tmpId != id)
+                REQUIRE(tmpId == id);
+
+            osalThreadYield();
+        }
+    };
+
+    std::array<ThreadArgs, cThreadsCount> args = {std::make_tuple(std::ref(ids[0]), std::ref(start)),
+                                                  std::make_tuple(std::ref(ids[1]), std::ref(start)),
+                                                  std::make_tuple(std::ref(ids[2]), std::ref(start)),
+                                                  std::make_tuple(std::ref(ids[3]), std::ref(start)),
+                                                  std::make_tuple(std::ref(ids[4]), std::ref(start))};
+
+    for (std::size_t i = 0; i < threads.size(); ++i) {
+        auto priority = static_cast<OsalThreadPriority>(i / 2);
+        auto error = osalThreadCreate(&threads[i], {priority, cOsalThreadDefaultStackSize, nullptr}, func, &args[i]);
+        REQUIRE(error == OsalError::eOk);
+    }
+
+    start = true; // NOLINT
+
+    for (auto& thread : threads) {
+        auto error = osalThreadJoin(&thread);
+        REQUIRE(error == OsalError::eOk);
+
+        error = osalThreadDestroy(&thread);
+        REQUIRE(error == OsalError::eOk);
+    }
+
+    std::set<std::uint32_t> uniqueIds;
+    for (auto id : ids)
+        uniqueIds.insert(id);
+
+    REQUIRE(uniqueIds.size() == cThreadsCount);
+}
+
+TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
+{
+    constexpr unsigned int cParam = 0xdeadbeef;
+    bool launched = false;
+    auto func = [&](unsigned int arg) {
+        constexpr int cDelayMs = 1000;
+        osalSleepMs(cDelayMs);
+
+        REQUIRE(arg == cParam);
+        launched = true;
+    };
+
+    SECTION("Create thread via constructor")
+    {
+        osal::Thread thread(func, cParam);
+        thread.join();
+    }
+
+    SECTION("Create thread via start() method")
+    {
+        osal::Thread<decltype(func)> thread;
+        thread.start(func, cParam);
+        thread.join();
+    }
+
+    REQUIRE(launched);
+}
+
+TEST_CASE("Move thread around", "[unit][cpp][thread]")
+{
+    constexpr unsigned int cParam = 0xdeadbeef;
+    bool launched = false;
+    auto func = [&](unsigned int arg) {
+        constexpr int cDelayMs = 5000;
+        osalSleepMs(cDelayMs);
+
+        REQUIRE(arg == cParam);
+        launched = true;
+    };
+
+    osal::Thread thread1(func, cParam);
+    osal::Thread thread2(std::move(thread1));
+
+    auto error = thread1.join();
+    REQUIRE(error == OsalError::eInvalidArgument);
+
+    error = thread2.join();
+    REQUIRE(error == OsalError::eOk);
+
+    REQUIRE(launched);
 }
