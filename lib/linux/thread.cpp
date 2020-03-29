@@ -68,6 +68,9 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
     const auto cPriorityMin = sched_get_priority_min(SCHED_RR);
     const auto cPriorityMax = sched_get_priority_max(SCHED_RR);
     const auto cPriorityStep = (cPriorityMax - cPriorityMin) / 4;
+    std::printf("-------- cPriorityMin %d\n", cPriorityMin);
+    std::printf("-------- cPriorityMax %d\n", cPriorityMax);
+    std::printf("-------- cPriorityStep %d\n", cPriorityStep);
 
     int priority{};
     switch (config.priority) {
@@ -86,6 +89,14 @@ OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThre
     }
 
     sched_param schedParam{};
+    if (pthread_attr_getschedparam(&attr, &schedParam) != 0) {
+        std::printf("-------- CCC 2\n");
+        return OsalError::eOsError;
+    }
+
+    std::printf("-------- get sched %d\n", schedParam.sched_priority);
+    std::printf("-------- get sched %d\n", (int)cOsalThreadDefaultPriority);
+
     schedParam.sched_priority = priority;
     if (pthread_attr_setschedparam(&attr, &schedParam) != 0) {
         std::printf("-------- DDD\n");
