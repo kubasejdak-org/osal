@@ -50,7 +50,7 @@ public:
     Thread() = default;
 
     template <typename... Args>
-    Thread(ThreadFunction function, Args&&... args) // NOLINT
+    explicit Thread(ThreadFunction function, Args&&... args)
         : Thread(nullptr, function, std::forward<Args>(args)...)
     {}
 
@@ -65,7 +65,7 @@ public:
     Thread(Thread&& other) noexcept
     {
         std::swap(m_thread, other.m_thread);
-        m_userFunction = std::move(other.m_userFunction);
+        std::swap(m_userFunction, other.m_userFunction);
         std::swap(m_workerFunction, other.m_workerFunction);
         std::swap(m_started, other.m_started);
     }
@@ -89,8 +89,11 @@ public:
             return OsalError::eThreadAlreadyStarted;
 
         m_userFunction = std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+        if (m_userFunction == nullptr)
+            return OsalError::eInvalidArgument;
+
         m_workerFunction = [](void* arg) {
-            auto threadFunction = *static_cast<std::function<void(void)>*>(arg);
+            auto threadFunction = *static_cast<FunctionWrapper*>(arg);
             threadFunction();
         };
 
@@ -104,7 +107,7 @@ public:
 
     static void yield() { osalThreadYield(); }
 
-    static std::uint32_t id() { return osalThreadId(); }
+    [[nodiscard]] static std::uint32_t id() { return osalThreadId(); }
 
 private:
     using FunctionWrapper = std::function<void(void)>;
