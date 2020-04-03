@@ -31,6 +31,7 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 #include <osal/sleep.h>
+#include <osal/sleep.hpp>
 #include <osal/thread.h>
 #include <osal/thread.hpp>
 
@@ -334,36 +335,69 @@ TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
 
 TEST_CASE("Thread creation with variadic arguments", "[unit][cpp][thread]")
 {
+    bool launched = false;
+    int counter = 0;
+    int expectedCounter = 0;
+
     SECTION("No arguments")
-    {}
+    {
+        auto func = [&] {
+            osal::sleep(100ms);
+            launched = true;
+        };
+
+        osal::Thread thread(func);
+    }
 
     SECTION("1 argument")
-    {}
+    {
+        auto func = [&](int a) {
+            osal::sleep(100ms);
+            counter += a;
+            launched = true;
+        };
+
+        osal::Thread thread(func, 1);
+        expectedCounter = 1;
+    }
 
     SECTION("7 arguments")
-    {}
+    {
+        auto func = [&](int a, int b, int c, int d, int e, int f, int g) {
+            osal::sleep(100ms);
+            counter += (a + b + c + d + e + f + g);
+            launched = true;
+        };
+
+        osal::Thread thread(func, 1, 2, 3, 4, 1, 2, 3);
+        constexpr int cExpectedCounter = 16;
+        expectedCounter = cExpectedCounter;
+    }
+
+    REQUIRE(launched);
+    REQUIRE(counter == expectedCounter);
 }
 
 TEST_CASE("Thread creation in C++ with different priorities", "[unit][cpp][thread]")
 {
-    SECTION("eLowest priority")
-    {}
+    bool launched = false;
 
-    SECTION("eLow priority")
-    {}
+    auto func = [&] {
+        osal::sleep(100ms);
+        launched = true;
+    };
 
-    SECTION("eNormal priority")
-    {}
+    SECTION("eLowest priority") { osal::Thread<decltype(func), OsalThreadPriority::eLowest> thread(func); }
 
-    SECTION("eHigh priority")
-    {}
+    SECTION("eLow priority") { osal::Thread<decltype(func), OsalThreadPriority::eLow> thread(func); }
 
-    SECTION("eHighest priority")
-    {}
-}
+    SECTION("eNormal priority") { osal::Thread<decltype(func), OsalThreadPriority::eNormal> thread(func); }
 
-TEST_CASE("Thread creation in C++ with invalid arguments", "[unit][cpp][thread]")
-{
+    SECTION("eHigh priority") { osal::Thread<decltype(func), OsalThreadPriority::eHigh> thread(func); }
+
+    SECTION("eHighest priority") { osal::Thread<decltype(func), OsalThreadPriority::eHighest> thread(func); }
+
+    REQUIRE(launched);
 }
 
 TEST_CASE("Move thread around", "[unit][cpp][thread]")
@@ -392,37 +426,56 @@ TEST_CASE("Move thread around", "[unit][cpp][thread]")
 
 TEST_CASE("Multiple thread joins in C++", "[unit][cpp][thread]")
 {
-    // auto func = [](void* /*unused*/) {};
+    auto func = [] {};
 
-    // osal::Thread thread(func);
+    osal::Thread thread(func);
 
-    // auto error = thread.join();
-    // REQUIRE(error == OsalError::eOk);
+    auto error = thread.join();
+    REQUIRE(error == OsalError::eOk);
 
-    // error = thread.join();
-    // REQUIRE(error == OsalError::eOsError);
+    error = thread.join();
+    REQUIRE(error == OsalError::eOsError);
 }
 
 TEST_CASE("Join invalid thread in C++", "[unit][cpp][thread]")
 {
-    // osal::Thread thread;
+    osal::Thread thread;
 
-    // auto error = thread.join();
-    // REQUIRE(error == OsalError::eInvalidArgument);
+    auto error = thread.join();
+    REQUIRE(error == OsalError::eInvalidArgument);
 }
 
 TEST_CASE("Launch 5 threads in C++ and check their results", "[unit][cpp][thread]")
 {
+    constexpr int cIterationsCount = 100;
+    auto func = [](int& counter) {
+      for (counter = 0; counter < cIterationsCount; ++counter)
+          ;
+    };
+
+    constexpr std::size_t cThreadsCount = 5;
+    std::array<osal::Thread<decltype(func)>, cThreadsCount> threads{};
+    std::array<int, cThreadsCount> counters{};
+
+    for (std::size_t i = 0; i < threads.size(); ++i) {
+        auto error = threads[i].start(func, std::ref(counters[i]));
+        REQUIRE(error == OsalError::eOk);
+    }
+
+    for (std::size_t i = 0; i < threads.size(); ++i) {
+        auto error = threads[i].join();
+        REQUIRE(error == OsalError::eOk);
+
+        auto counter = counters[i];
+        REQUIRE(counter == cIterationsCount);
+    }
 }
 
 TEST_CASE("Launch 5 threads in C++ with different priorities and check their results", "[unit][cpp][thread]")
-{
-}
+{}
 
 TEST_CASE("Create threads with all priorities in C++", "[unit][cpp][thread]")
-{
-}
+{}
 
 TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thread]")
-{
-}
+{}

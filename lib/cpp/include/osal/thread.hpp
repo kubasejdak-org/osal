@@ -43,7 +43,7 @@
 
 namespace osal {
 
-template <typename ThreadFunction,
+template <typename ThreadFunction = OsalThreadFunction,
           OsalThreadPriority cPriority = cOsalThreadDefaultPriority,
           std::size_t cStackSize = cOsalThreadDefaultStackSize>
 class Thread {
@@ -61,6 +61,12 @@ public:
         start(stack, function, std::forward<Args>(args)...);
     }
 
+    explicit Thread(ThreadFunction function)
+        : Thread(nullptr, function)
+    {}
+
+    Thread(void* stack, ThreadFunction function) { start(stack, function); }
+
     Thread(const Thread&) = delete;
 
     Thread(Thread&& other) noexcept
@@ -71,7 +77,11 @@ public:
         std::swap(m_started, other.m_started);
     }
 
-    ~Thread() { osalThreadDestroy(&m_thread); }
+    ~Thread()
+    {
+        osalThreadJoin(&m_thread);
+        osalThreadDestroy(&m_thread);
+    }
 
     Thread& operator=(const Thread&) = delete;
 
@@ -91,6 +101,29 @@ public:
 
         m_userFunction = std::make_unique<FunctionWrapper>(
             std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...));
+        if (m_userFunction == nullptr)
+            return OsalError::eInvalidArgument;
+
+        m_workerFunction = [](void* arg) {
+            auto threadFunction = *static_cast<FunctionWrapper*>(arg);
+            threadFunction();
+        };
+
+        auto error
+            = osalThreadCreate(&m_thread, {cPriority, cStackSize, stack}, m_workerFunction, m_userFunction.get());
+
+        m_started = (error == OsalError::eOk);
+        return error;
+    }
+
+    std::error_code start(ThreadFunction function) { return start(nullptr, function); }
+
+    std::error_code start(void* stack, ThreadFunction function)
+    {
+        if (m_started)
+            return OsalError::eThreadAlreadyStarted;
+
+        m_userFunction = std::make_unique<FunctionWrapper>(function);
         if (m_userFunction == nullptr)
             return OsalError::eInvalidArgument;
 
