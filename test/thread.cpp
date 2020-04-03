@@ -290,17 +290,80 @@ TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
     SECTION("Create thread via constructor")
     {
         osal::Thread thread(func, cParam);
-        thread.join();
+
+        auto error = thread.join();
+        REQUIRE(error == OsalError::eOk);
     }
 
     SECTION("Create thread via start() method")
     {
         osal::Thread<decltype(func)> thread;
-        thread.start(func, cParam);
-        thread.join();
+        auto error = thread.start(func, cParam);
+        REQUIRE(error == OsalError::eOk);
+
+        error = thread.join();
+        REQUIRE(error == OsalError::eOk);
+    }
+
+    SECTION("Start thread multiple times: via constructor and via start() method")
+    {
+        osal::Thread thread(func, cParam);
+
+        auto error = thread.start(func, cParam);
+        REQUIRE(error == OsalError::eThreadAlreadyStarted);
+
+        error = thread.join();
+        REQUIRE(error == OsalError::eOk);
+    }
+
+    SECTION("Start thread multiple times: 2 times via start() method")
+    {
+        osal::Thread<decltype(func)> thread;
+        auto error = thread.start(func, cParam);
+        REQUIRE(error == OsalError::eOk);
+
+        error = thread.start(func, cParam);
+        REQUIRE(error == OsalError::eThreadAlreadyStarted);
+
+        error = thread.join();
+        REQUIRE(error == OsalError::eOk);
     }
 
     REQUIRE(launched);
+}
+
+TEST_CASE("Thread creation with variadic arguments", "[unit][cpp][thread]")
+{
+    SECTION("No arguments")
+    {}
+
+    SECTION("1 argument")
+    {}
+
+    SECTION("7 arguments")
+    {}
+}
+
+TEST_CASE("Thread creation in C++ with different priorities", "[unit][cpp][thread]")
+{
+    SECTION("eLowest priority")
+    {}
+
+    SECTION("eLow priority")
+    {}
+
+    SECTION("eNormal priority")
+    {}
+
+    SECTION("eHigh priority")
+    {}
+
+    SECTION("eHighest priority")
+    {}
+}
+
+TEST_CASE("Thread creation in C++ with invalid arguments", "[unit][cpp][thread]")
+{
 }
 
 TEST_CASE("Move thread around", "[unit][cpp][thread]")
@@ -325,4 +388,41 @@ TEST_CASE("Move thread around", "[unit][cpp][thread]")
     REQUIRE(error == OsalError::eOk);
 
     REQUIRE(launched);
+}
+
+TEST_CASE("Multiple thread joins in C++", "[unit][cpp][thread]")
+{
+    // auto func = [](void* /*unused*/) {};
+
+    // osal::Thread thread(func);
+
+    // auto error = thread.join();
+    // REQUIRE(error == OsalError::eOk);
+
+    // error = thread.join();
+    // REQUIRE(error == OsalError::eOsError);
+}
+
+TEST_CASE("Join invalid thread in C++", "[unit][cpp][thread]")
+{
+    // osal::Thread thread;
+
+    // auto error = thread.join();
+    // REQUIRE(error == OsalError::eInvalidArgument);
+}
+
+TEST_CASE("Launch 5 threads in C++ and check their results", "[unit][cpp][thread]")
+{
+}
+
+TEST_CASE("Launch 5 threads in C++ with different priorities and check their results", "[unit][cpp][thread]")
+{
+}
+
+TEST_CASE("Create threads with all priorities in C++", "[unit][cpp][thread]")
+{
+}
+
+TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thread]")
+{
 }
