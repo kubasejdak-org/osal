@@ -205,7 +205,7 @@ TEST_CASE("Create threads with all priorities", "[unit][c][thread]")
         osalSleepMs(cDelayMs);
     };
 
-    for (int i = OsalThreadPriority::eLowest; i <= OsalThreadPriority::eLowest; ++i) {
+    for (int i = OsalThreadPriority::eLowest; i <= OsalThreadPriority::eHighest; ++i) {
         OsalThread thread{};
         auto priority = static_cast<OsalThreadPriority>(i / 2);
         auto error = osalThreadCreate(&thread, {priority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
@@ -449,8 +449,8 @@ TEST_CASE("Launch 5 threads in C++ and check their results", "[unit][cpp][thread
 {
     constexpr int cIterationsCount = 100;
     auto func = [](int& counter) {
-      for (counter = 0; counter < cIterationsCount; ++counter)
-          ;
+        for (counter = 0; counter < cIterationsCount; ++counter)
+            ;
     };
 
     constexpr std::size_t cThreadsCount = 5;
@@ -472,10 +472,105 @@ TEST_CASE("Launch 5 threads in C++ and check their results", "[unit][cpp][thread
 }
 
 TEST_CASE("Launch 5 threads in C++ with different priorities and check their results", "[unit][cpp][thread]")
-{}
+{
+    constexpr std::size_t cThreadsCount = 5;
+    std::array<unsigned int, cThreadsCount> counters{};
+    bool start{};
+    bool stop{};
 
-TEST_CASE("Create threads with all priorities in C++", "[unit][cpp][thread]")
-{}
+    auto func = [](unsigned int& counter, bool& start, bool& stop) {
+        while (!start)
+            osal::thread::yield();
+
+        while (!stop) {
+            ++counter;
+            osal::thread::yield();
+        }
+    };
+
+    osal::Thread<decltype(func), OsalThreadPriority::eLowest> thread1(func,
+                                                                      std::ref(counters[0]),
+                                                                      std::ref(start),
+                                                                      std::ref(stop));
+    osal::Thread<decltype(func), OsalThreadPriority::eLowest> thread2(func,
+                                                                      std::ref(counters[1]),
+                                                                      std::ref(start),
+                                                                      std::ref(stop));
+    osal::Thread<decltype(func), OsalThreadPriority::eLow> thread3(func,
+                                                                   std::ref(counters[2]),
+                                                                   std::ref(start),
+                                                                   std::ref(stop));
+    osal::Thread<decltype(func), OsalThreadPriority::eLow> thread4(func,
+                                                                   std::ref(counters[3]),
+                                                                   std::ref(start),
+                                                                   std::ref(stop));
+    osal::Thread<decltype(func), OsalThreadPriority::eNormal> thread5(func,
+                                                                      std::ref(counters[4]),
+                                                                      std::ref(start),
+                                                                      std::ref(stop));
+
+    start = true; // NOLINT
+    osal::sleep(5s);
+    stop = true; // NOLINT
+
+    auto error = thread1.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread2.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread3.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread4.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread5.join();
+    REQUIRE(error == OsalError::eOk);
+
+    for (auto counter : counters)
+        REQUIRE(counter != 0);
+}
 
 TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thread]")
-{}
+{
+    constexpr std::size_t cThreadsCount = 5;
+    std::array<std::uint32_t, cThreadsCount> ids{};
+    bool start{};
+
+    auto func = [](std::uint32_t& id, bool& start) {
+        while (!start)
+            osal::thread::yield();
+
+        id = osal::thread::id();
+        constexpr int cIterationsCount = 1000;
+        for (int i = 0; i < cIterationsCount; ++i) {
+            auto tmpId = osal::thread::id();
+            if (tmpId != id)
+                REQUIRE(tmpId == id);
+
+            osal::thread::yield();
+        }
+    };
+
+    osal::Thread<decltype(func), OsalThreadPriority::eLowest> thread1(func, std::ref(ids[0]), std::ref(start));
+    osal::Thread<decltype(func), OsalThreadPriority::eLowest> thread2(func, std::ref(ids[1]), std::ref(start));
+    osal::Thread<decltype(func), OsalThreadPriority::eLow> thread3(func, std::ref(ids[2]), std::ref(start));
+    osal::Thread<decltype(func), OsalThreadPriority::eLow> thread4(func, std::ref(ids[3]), std::ref(start));
+    osal::Thread<decltype(func), OsalThreadPriority::eNormal> thread5(func, std::ref(ids[4]), std::ref(start));
+
+    start = true; // NOLINT
+
+    auto error = thread1.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread2.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread3.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread4.join();
+    REQUIRE(error == OsalError::eOk);
+    error = thread5.join();
+    REQUIRE(error == OsalError::eOk);
+
+    std::set<std::uint32_t> uniqueIds;
+    for (auto id : ids)
+        uniqueIds.insert(id);
+
+    REQUIRE(uniqueIds.size() == cThreadsCount);
+}

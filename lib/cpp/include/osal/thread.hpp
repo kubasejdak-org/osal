@@ -141,10 +141,6 @@ public:
 
     std::error_code join() { return osalThreadJoin(&m_thread); }
 
-    static void yield() { osalThreadYield(); }
-
-    [[nodiscard]] static std::uint32_t id() { return osalThreadId(); }
-
 private:
     using FunctionWrapper = std::function<void(void)>;
 
@@ -154,4 +150,17 @@ private:
     bool m_started{};
 };
 
+namespace thread {
+
+inline void yield()
+{
+    osalThreadYield();
+}
+
+[[nodiscard]] inline std::uint32_t id()
+{
+    return osalThreadId();
+}
+
+} // namespace thread
 } // namespace osal
