@@ -113,7 +113,7 @@ OsalError osalThreadJoin(OsalThread* thread);
 void osalThreadYield();
 
 /// Returns numerical id of the current thread.
-/// @note It is up to the concrete implementation what this numer means. The only thing that caller can depend on
+/// @note It is up to the concrete implementation what this number means. The only thing that caller can depend on
 ///       is that on the given platform this value will be unique among all created threads.
 uint32_t osalThreadId();
 
