@@ -32,10 +32,47 @@
 
 #pragma once
 
-#include <pthread.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/// @struct ThreadImpl
-/// Helper class with concrete platform implementation of the thread handle.
-struct ThreadImpl {
-    pthread_t handle;
+#include "error.h"
+#include "internal/mutexImpl.h"
+
+#include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+
+// clang-format off
+/// @enum OsalMutexType
+/// Represents possible types of the OSAL mutex. These types define how mutex will react to multiple recursive
+/// locks made by the same thread.
+enum OsalMutexType {
+    eRecursive,
+    eNonRecursive
 };
+// clang-format on
+
+/// @struct OsalMutex
+/// Represents OSAL mutex handle.
+/// @note Size of this structure depends on the concrete implementation. In particular, MutexImpl
+///       contains objects from the target platform. Thus depending on its size is not recommended.
+struct OsalMutex {
+    MutexImpl impl;
+    OsalMutexType type;
+    bool initialized;
+};
+
+/// Helper constant with default mutex type.
+static const OsalMutexType cOsalMutexDefaultType = OsalMutexType::eNonRecursive;
+
+OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type);
+OsalError osalMutexDestroy(OsalMutex* mutex);
+OsalError osalMutexLock(OsalMutex* mutex);
+OsalError osalMutexTryLock(OsalMutex* mutex);
+OsalError osalMutexTryLockIsr(OsalMutex* mutex);
+OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs);
+OsalError osalMutexUnlock(OsalMutex* mutex);
+OsalError osalMutexUnlockIsr(OsalMutex* mutex);
+
+#ifdef __cplusplus
+}
+#endif
