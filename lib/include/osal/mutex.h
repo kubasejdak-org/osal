@@ -64,13 +64,54 @@ struct OsalMutex {
 /// Helper constant with default mutex type.
 static const OsalMutexType cOsalMutexDefaultType = OsalMutexType::eNonRecursive;
 
+/// Creates new mutex with the given type.
+/// @param mutex            Mutex handle to be initialized.
+/// @param type             Type of the mutex to be created.
+/// @return Error code of the operation.
+/// @note Created mutex is in unlocked state.
 OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type);
+
+/// Destroys mutex represented by the given handle.
+/// @param mutex            Mutex handle to be destroyed.
+/// @return Error code of the operation.
 OsalError osalMutexDestroy(OsalMutex* mutex);
+
+/// Locks the given mutex. If it is currently locked any thread, then the calling thread will block until mutex
+/// is released. If mutex is recursive, then it can be locked multiple times by the same thread.
+/// @param mutex            Mutex to be locked.
+/// @return Error code of the operation.
+/// @note If mutex is non-recursive, then calling this function twice by the same thread will result in a deadlock.
 OsalError osalMutexLock(OsalMutex* mutex);
+
+/// Locks the given mutex. If it is currently locked any thread, then it returns immediately with a proper error.
+/// @param mutex            Mutex to be locked.
+/// @return Error code of the operation.
+/// @note If mutex is non-recursive, then calling this function twice by the same thread will not result in a deadlock.
 OsalError osalMutexTryLock(OsalMutex* mutex);
+
+/// Locks the given mutex. If it is currently locked any thread, then it returns immediately with a proper error.
+/// @param mutex            Mutex to be locked.
+/// @return Error code of the operation.
+/// @note This function will never block and is supposed to be called from ISR.
 OsalError osalMutexTryLockIsr(OsalMutex* mutex);
+
+/// Locks the given mutex. If it is currently locked any thread, then the calling thread will block until mutex
+/// is released or the specified time elapses. If mutex is recursive, then it can be locked multiple times by the
+/// same thread.
+/// @param mutex            Mutex to be locked.
+/// @param timeoutMs        Maximal time in ms to wait for the operation.
+/// @return Error code of the operation.
 OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs);
+
+/// Unlocks the given mutex.
+/// @param mutex            Mutex to be unlocked.
+/// @return Error code of the operation.
 OsalError osalMutexUnlock(OsalMutex* mutex);
+
+/// Unlocks the given mutex.
+/// @param mutex            Mutex to be unlocked.
+/// @return Error code of the operation.
+/// @note This function will never block and is supposed to be called from ISR.
 OsalError osalMutexUnlockIsr(OsalMutex* mutex);
 
 #ifdef __cplusplus
