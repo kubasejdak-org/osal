@@ -145,13 +145,16 @@ TEST_CASE("Lock called from two threads", "[unit][c][mutex]")
         auto start = osal::timestamp();
 
         auto error = osalMutexLock(&mutex);
-        REQUIRE(error == OsalError::eOk);
+        if (error != OsalError::eOk)
+            REQUIRE(error == OsalError::eOk);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        if ((end - start) < 100ms)
+            REQUIRE((end - start) >= 100ms);
 
         error = osalMutexUnlock(&mutex);
-        REQUIRE(error == OsalError::eOk);
+        if (error != OsalError::eOk)
+            REQUIRE(error == OsalError::eOk);
     };
 
     osal::Thread thread(func);
@@ -190,10 +193,12 @@ TEST_CASE("TryLock called from second threads", "[unit][c][mutex]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        if ((end - start) < 100ms)
+            REQUIRE((end - start) >= 100ms);
 
         auto error = osalMutexUnlock(&mutex);
-        REQUIRE(error == OsalError::eOk);
+        if (error != OsalError::eOk)
+            REQUIRE(error == OsalError::eOk);
     };
 
     osal::Thread thread(func);
