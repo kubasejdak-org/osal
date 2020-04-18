@@ -106,12 +106,14 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs);
 /// Unlocks the given mutex.
 /// @param mutex            Mutex to be unlocked.
 /// @return Error code of the operation.
+/// @note Unlocking mutex that was already locked by another thread invokes undefined behavior.
 OsalError osalMutexUnlock(OsalMutex* mutex);
 
 /// Unlocks the given mutex.
 /// @param mutex            Mutex to be unlocked.
 /// @return Error code of the operation.
 /// @note This function will never block and is supposed to be called from ISR.
+/// @note Unlocking mutex that was already locked by another thread invokes undefined behavior.
 OsalError osalMutexUnlockIsr(OsalMutex* mutex);
 
 #ifdef __cplusplus
