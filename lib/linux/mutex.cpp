@@ -118,7 +118,7 @@ OsalError osalMutexTryLock(OsalMutex* mutex)
 
 OsalError osalMutexTryLockIsr(OsalMutex* mutex)
 {
-    if (mutex->type == OsalMutexType::eRecursive)
+    if (mutex == nullptr || mutex->type == OsalMutexType::eRecursive)
         return OsalError::eInvalidArgument;
 
     return osalMutexTryLock(mutex);
@@ -171,7 +171,7 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
 
 OsalError osalMutexUnlockIsr(OsalMutex* mutex)
 {
-    if (mutex->type == OsalMutexType::eRecursive)
+    if (mutex == nullptr || mutex->type == OsalMutexType::eRecursive)
         return OsalError::eInvalidArgument;
 
     return osalMutexUnlock(mutex);

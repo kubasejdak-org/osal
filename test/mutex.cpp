@@ -33,51 +33,42 @@
 #include <osal/mutex.h>
 #include <osal/sleep.hpp>
 #include <osal/thread.hpp>
+#include <osal/timestamp.hpp>
 
 #include <catch2/catch.hpp>
 
 TEST_CASE("Mutex creation and destruction", "[unit][c][mutex]")
 {
+    OsalMutexType type{};
+
+    SECTION("Non recursive mutex") { type = OsalMutexType::eNonRecursive; }
+
+    SECTION("Recursive mutex") { type = OsalMutexType::eRecursive; }
+
+    SECTION("Default mutex") { type = cOsalMutexDefaultType; }
+
     OsalMutex mutex{};
-    auto error = osalMutexCreate(&mutex, OsalMutexType::eNonRecursive);
+    auto error = osalMutexCreate(&mutex, type);
     REQUIRE(error == OsalError::eOk);
 
     error = osalMutexDestroy(&mutex);
     REQUIRE(error == OsalError::eOk);
 
     error = osalMutexDestroy(&mutex);
-    REQUIRE(error == OsalError::eInvalidArgument);
-
-    OsalMutex mutex2{};
-    error = osalMutexCreate(&mutex2, OsalMutexType::eRecursive);
-    REQUIRE(error == OsalError::eOk);
-
-    error = osalMutexDestroy(&mutex2);
-    REQUIRE(error == OsalError::eOk);
-
-    error = osalMutexDestroy(&mutex2);
-    REQUIRE(error == OsalError::eInvalidArgument);
-
-    OsalMutex mutex3{};
-    error = osalMutexCreate(&mutex3, cOsalMutexDefaultType);
-    REQUIRE(error == OsalError::eOk);
-
-    error = osalMutexDestroy(&mutex3);
-    REQUIRE(error == OsalError::eOk);
-
-    error = osalMutexDestroy(&mutex3);
     REQUIRE(error == OsalError::eInvalidArgument);
 }
 
 TEST_CASE("Invalid parameters to mutex creation and destruction functions", "[unit][c][mutex]")
 {
-    auto error = osalMutexCreate(nullptr, OsalMutexType::eNonRecursive);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    OsalMutexType type{};
 
-    error = osalMutexCreate(nullptr, OsalMutexType::eRecursive);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    SECTION("Non recursive mutex") { type = OsalMutexType::eNonRecursive; }
 
-    error = osalMutexCreate(nullptr, cOsalMutexDefaultType);
+    SECTION("Recursive mutex") { type = OsalMutexType::eRecursive; }
+
+    SECTION("Default mutex") { type = cOsalMutexDefaultType; }
+
+    auto error = osalMutexCreate(nullptr, type);
     REQUIRE(error == OsalError::eInvalidArgument);
 
     error = osalMutexDestroy(nullptr);
@@ -86,4 +77,133 @@ TEST_CASE("Invalid parameters to mutex creation and destruction functions", "[un
     OsalMutex mutex{};
     error = osalMutexCreate(&mutex, static_cast<OsalMutexType>(4));
     REQUIRE(error == OsalError::eInvalidArgument);
+}
+
+TEST_CASE("Lock and unlock from one thread", "[unit][c][mutex]")
+{
+    OsalMutexType type{};
+
+    SECTION("Non recursive mutex") { type = OsalMutexType::eNonRecursive; }
+
+    SECTION("Recursive mutex") { type = OsalMutexType::eRecursive; }
+
+    SECTION("Default mutex") { type = cOsalMutexDefaultType; }
+
+    OsalMutex mutex{};
+    auto error = osalMutexCreate(&mutex, type);
+    REQUIRE(error == OsalError::eOk);
+
+    error = osalMutexLock(&mutex);
+    REQUIRE(error == OsalError::eOk);
+
+    error = osalMutexUnlock(&mutex);
+    REQUIRE(error == OsalError::eOk);
+
+    error = osalMutexDestroy(&mutex);
+    REQUIRE(error == OsalError::eOk);
+}
+
+TEST_CASE("Invalid arguments passed to mutex functions in one thread", "[unit][c][mutex]")
+{
+    auto error = osalMutexLock(nullptr);
+    REQUIRE(error == OsalError::eInvalidArgument);
+
+    error = osalMutexTryLock(nullptr);
+    REQUIRE(error == OsalError::eInvalidArgument);
+
+    error = osalMutexTryLockIsr(nullptr);
+    REQUIRE(error == OsalError::eInvalidArgument);
+
+    error = osalMutexTimedLock(nullptr, 3);
+    REQUIRE(error == OsalError::eInvalidArgument);
+
+    error = osalMutexUnlock(nullptr);
+    REQUIRE(error == OsalError::eInvalidArgument);
+
+    error = osalMutexUnlockIsr(nullptr);
+    REQUIRE(error == OsalError::eInvalidArgument);
+}
+
+TEST_CASE("Lock called from two threads", "[unit][c][mutex]")
+{
+    OsalMutexType type{};
+
+    SECTION("Non recursive mutex") { type = OsalMutexType::eNonRecursive; }
+
+    SECTION("Recursive mutex") { type = OsalMutexType::eRecursive; }
+
+    SECTION("Default mutex") { type = cOsalMutexDefaultType; }
+
+    OsalMutex mutex{};
+    auto error = osalMutexCreate(&mutex, type);
+    REQUIRE(error == OsalError::eOk);
+
+    error = osalMutexLock(&mutex);
+    REQUIRE(error == OsalError::eOk);
+
+    auto func = [&mutex] {
+        auto start = osal::timestamp();
+
+        auto error = osalMutexLock(&mutex);
+        REQUIRE(error == OsalError::eOk);
+
+        auto end = osal::timestamp();
+        REQUIRE((end - start) >= 100ms);
+
+        error = osalMutexUnlock(&mutex);
+        REQUIRE(error == OsalError::eOk);
+    };
+
+    osal::Thread thread(func);
+
+    osal::sleep(120ms);
+    error = osalMutexUnlock(&mutex);
+    REQUIRE(error == OsalError::eOk);
+
+    thread.join();
+
+    error = osalMutexDestroy(&mutex);
+    REQUIRE(error == OsalError::eOk);
+}
+
+TEST_CASE("TryLock called from second threads", "[unit][c][mutex]")
+{
+    OsalMutexType type{};
+
+    SECTION("Non recursive mutex") { type = OsalMutexType::eNonRecursive; }
+
+    SECTION("Recursive mutex") { type = OsalMutexType::eRecursive; }
+
+    SECTION("Default mutex") { type = cOsalMutexDefaultType; }
+
+    OsalMutex mutex{};
+    auto error = osalMutexCreate(&mutex, type);
+    REQUIRE(error == OsalError::eOk);
+
+    error = osalMutexLock(&mutex);
+    REQUIRE(error == OsalError::eOk);
+
+    auto func = [&mutex] {
+        auto start = osal::timestamp();
+
+        while (osalMutexTryLock(&mutex) != OsalError::eOk)
+            osal::sleep(10ms);
+
+        auto end = osal::timestamp();
+        REQUIRE((end - start) >= 100ms);
+
+        auto error = osalMutexUnlock(&mutex);
+        REQUIRE(error == OsalError::eOk);
+    };
+
+    osal::Thread thread(func);
+
+    osal::sleep(120ms);
+    error = osalMutexUnlock(&mutex);
+    REQUIRE(error == OsalError::eOk);
+
+    thread.join();
+
+    error = osalMutexDestroy(&mutex);
+    REQUIRE(error == OsalError::eOk);
 }
