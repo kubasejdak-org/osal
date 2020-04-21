@@ -2,7 +2,7 @@ add_library(osal-cpp
     Error.cpp
     init.cpp
     Mutex.cpp
-    ScopedMutex.cpp
+    ScopedLock.cpp
     sleep.cpp
     timestamp.cpp
 )

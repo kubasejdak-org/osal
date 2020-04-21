@@ -42,7 +42,7 @@ using Clock = std::chrono::steady_clock;
 
 /// @typedef Duration
 /// Default duration type used by OSAL to represent the timestamp.
-using Duration = std::chrono::nanoseconds;
+using Duration = std::chrono::milliseconds;
 
 /// Returns the timestamp relative to the call to osal::init() function in ns.
 /// @return Timestamp relative to the osal::init() function in ns.

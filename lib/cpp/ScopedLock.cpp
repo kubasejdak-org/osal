@@ -30,28 +30,28 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "osal/ScopedMutex.hpp"
+#include "osal/ScopedLock.hpp"
 
 namespace osal {
 
-ScopedMutex::ScopedMutex(Mutex& mutex)
+ScopedLock::ScopedLock(Mutex& mutex)
     : m_mutex(mutex)
 {
     lock();
 }
 
-ScopedMutex::ScopedMutex(Mutex& mutex, Timeout timeout)
+ScopedLock::ScopedLock(Mutex& mutex, Timeout timeout)
     : m_mutex(mutex)
 {
     timedLock(timeout);
 }
 
-ScopedMutex::~ScopedMutex()
+ScopedLock::~ScopedLock()
 {
     unlock();
 }
 
-std::error_code ScopedMutex::lock()
+std::error_code ScopedLock::lock()
 {
     auto error = m_mutex.lock();
     if (!error)
@@ -60,7 +60,7 @@ std::error_code ScopedMutex::lock()
     return error;
 }
 
-std::error_code ScopedMutex::timedLock(Timeout timeout)
+std::error_code ScopedLock::timedLock(Timeout timeout)
 {
     auto error = m_mutex.timedLock(timeout);
     if (!error)
@@ -69,7 +69,7 @@ std::error_code ScopedMutex::timedLock(Timeout timeout)
     return error;
 }
 
-std::error_code ScopedMutex::unlock()
+std::error_code ScopedLock::unlock()
 {
     auto error = m_mutex.unlock();
     if (!error)

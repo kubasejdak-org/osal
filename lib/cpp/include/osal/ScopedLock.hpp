@@ -40,47 +40,47 @@
 
 namespace osal {
 
-/// @class ScopedMutex
+/// @class ScopedLock
 /// Helper RAII type to perform automatic lock/unlock on the specified mutex.
 /// @note Objects of this class should not be shared across threads.
-class ScopedMutex {
+class ScopedLock {
 public:
     /// Constructor.
     /// @param mutex        Mutex for which all the operations should be performed
     /// @note This constructor automatically locks the underlying mutex.
-    explicit ScopedMutex(Mutex& mutex);
+    explicit ScopedLock(Mutex& mutex);
 
     /// Constructor.
     /// @param mutex        Mutex for which all the operations should be performed
     /// @param timeout      Timeout to wait for the operation.
     /// @note This constructor automatically locks the underlying mutex.
-    ScopedMutex(Mutex& mutex, Timeout timeout);
+    ScopedLock(Mutex& mutex, Timeout timeout);
 
     /// Copy constructor.
-    /// @note This constructor is deleted, because ScopedMutex is not meant to be copied.
-    ScopedMutex(const ScopedMutex&) = delete;
+    /// @note This constructor is deleted, because ScopedLock is not meant to be copied.
+    ScopedLock(const ScopedLock&) = delete;
 
     /// Move constructor.
-    /// @note This constructor is deleted, because ScopedMutex is not meant to be copied.
-    ScopedMutex(ScopedMutex&& other) noexcept = delete;
+    /// @note This constructor is deleted, because ScopedLock is not meant to be copied.
+    ScopedLock(ScopedLock&& other) noexcept = delete;
 
     /// Destructor.
     /// @note Destructor automatically unlock the underlying mutex.
-    ~ScopedMutex();
+    ~ScopedLock();
 
     /// Copy assignment operator.
-    /// @note This operator is deleted, because ScopedMutex is not meant to be copied.
-    ScopedMutex& operator=(const ScopedMutex&) = delete;
+    /// @note This operator is deleted, because ScopedLock is not meant to be copied.
+    ScopedLock& operator=(const ScopedLock&) = delete;
 
     /// Move assignment operator.
-    /// @note This operator is deleted, because ScopedMutex is not meant to be move assigned.
-    ScopedMutex& operator=(ScopedMutex&&) = delete;
+    /// @note This operator is deleted, because ScopedLock is not meant to be move assigned.
+    ScopedLock& operator=(ScopedLock&&) = delete;
 
     /// Returns flag indicating if the underlying mutex is locked.
     /// @return Flag indicating if the underlying mutex is locked.
     /// @retval true        Underlying mutex is locked.
     /// @retval false       Underlying mutex is not locked.
-    operator bool() { return isAcquired(); }
+    operator bool() { return isAcquired(); } // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 
     /// Returns flag indicating if the underlying mutex is locked.
     /// @return Flag indicating if the underlying mutex is locked.
