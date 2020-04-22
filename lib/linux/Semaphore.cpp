@@ -30,7 +30,7 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "osal/Mutex.h"
+#include "osal/Semaphore.h"
 
 #include "osal/timestamp.h"
 
@@ -38,67 +38,50 @@
 #include <cerrno>
 #include <cstring>
 #include <ctime>
+#include <semaphore.h>
 
-OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
+OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValue)
 {
-    if (mutex == nullptr)
+    if (semaphore == nullptr)
         return OsalError::eInvalidArgument;
 
-    mutex->initialized = false;
-
-    int mutexType;
-    switch (type) {
-        case OsalMutexType::eRecursive: mutexType = PTHREAD_MUTEX_RECURSIVE; break;
-        case OsalMutexType::eNonRecursive: mutexType = PTHREAD_MUTEX_NORMAL; break;
-        default: return OsalError::eInvalidArgument;
-    }
-
-    pthread_mutexattr_t attr{};
-    pthread_mutexattr_init(&attr);
-    [[maybe_unused]] auto result = pthread_mutexattr_settype(&attr, mutexType);
+    sem_t handle{};
+    [[maybe_unused]] auto result = sem_init(&handle, 0, initialValue);
     assert(result == 0);
 
-    pthread_mutex_t handle{};
-    result = pthread_mutex_init(&handle, &attr);
-    assert(result == 0);
-
-    pthread_mutexattr_destroy(&attr);
-    assert(result == 0);
-
-    mutex->impl.handle = handle;
-    mutex->type = type;
-    mutex->initialized = true;
+    semaphore->impl.handle = handle;
+    semaphore->initialized = true;
     return OsalError::eOk;
 }
 
-OsalError osalMutexDestroy(OsalMutex* mutex)
+OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
 {
-    if (mutex == nullptr || !mutex->initialized)
+    if (semaphore == nullptr || !semaphore->initialized)
         return OsalError::eInvalidArgument;
 
-    [[maybe_unused]] auto result = pthread_mutex_destroy(&mutex->impl.handle);
+    [[maybe_unused]] auto result = sem_destroy(&semaphore->impl.handle);
     assert(result == 0);
 
-    std::memset(mutex, 0, sizeof(OsalMutex));
+    std::memset(semaphore, 0, sizeof(OsalSemaphore));
     return OsalError::eOk;
 }
 
-OsalError osalMutexLock(OsalMutex* mutex)
+OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 {
-    if (mutex == nullptr || !mutex->initialized)
+    if (semaphore == nullptr || !semaphore->initialized)
         return OsalError::eInvalidArgument;
 
-    [[maybe_unused]] auto result = pthread_mutex_lock(&mutex->impl.handle);
+    [[maybe_unused]] auto result = sem_wait(&semaphore->impl.handle);
     assert(result == 0);
     return OsalError::eOk;
 }
 
-OsalError osalMutexTryLock(OsalMutex* mutex)
+OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
 {
-    if (mutex == nullptr || !mutex->initialized)
+    if (semaphore == nullptr || !semaphore->initialized)
         return OsalError::eInvalidArgument;
 
-    auto result = pthread_mutex_trylock(&mutex->impl.handle);
+    auto result = sem_trywait(&semaphore->impl.handle);
     switch (result) {
         case EAGAIN: [[fallthrough]];
         case EBUSY: return OsalError::eLocked;
@@ -109,17 +92,14 @@ OsalError osalMutexTryLock(OsalMutex* mutex)
     return OsalError::eOk;
 }
 
-OsalError osalMutexTryLockIsr(OsalMutex* mutex)
+OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore)
 {
-    if (mutex->type == OsalMutexType::eRecursive)
-        return OsalError::eInvalidArgument;
-
-    return osalMutexTryLock(mutex);
+    return osalSemaphoreTryWait(semaphore);
 }
 
-OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
+OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 {
-    if (mutex == nullptr || !mutex->initialized)
+    if (semaphore == nullptr || !semaphore->initialized)
         return OsalError::eInvalidArgument;
 
     timespec ts{};
@@ -131,7 +111,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
     ts.tv_sec += secs;
     ts.tv_nsec -= osalSecToNs(secs);
 
-    result = pthread_mutex_timedlock(&mutex->impl.handle, &ts);
+    result = sem_timedwait(&semaphore->impl.handle, &ts);
     if (result == ETIMEDOUT)
         return OsalError::eTimeout;
 
@@ -139,19 +119,17 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
     return OsalError::eOk;
 }
 
-OsalError osalMutexUnlock(OsalMutex* mutex)
+OsalError osalSemaphoreSignal(OsalSemaphore* semaphore)
 {
-    if (mutex == nullptr || !mutex->initialized)
+    if (semaphore == nullptr || !semaphore->initialized)
         return OsalError::eInvalidArgument;
 
-    auto result = pthread_mutex_unlock(&mutex->impl.handle);
-    return (result == 0) ? OsalError::eOk : OsalError::eOsError;
+    [[maybe_unused]] auto result = sem_post(&semaphore->impl.handle);
+    assert(result == 0);
+    return OsalError::eOk;
 }
 
-OsalError osalMutexUnlockIsr(OsalMutex* mutex)
+OsalError osalSemaphoreSignalIsr(OsalSemaphore* semaphore)
 {
-    if (mutex == nullptr || mutex->type == OsalMutexType::eRecursive)
-        return OsalError::eInvalidArgument;
-
-    return osalMutexUnlock(mutex);
+    return osalSemaphoreSignal(semaphore);
 }
