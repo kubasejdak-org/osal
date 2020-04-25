@@ -44,9 +44,9 @@ Clang_Tidy_Linux:
 
 Clang_Tidy_Linux_ARM:
   extends: .Clang_Tidy
-  image: kubasejdak/arm-linux-gnueabihf-clang:latest
+  image: kubasejdak/arm-linux-gnueabihf-clang:10
   variables:
-    Toolchain: "arm-linux-gnueabihf-clang-9"
+    Toolchain: "arm-linux-gnueabihf-clang-10"
 
 Coverage_Total:
   stage: quality
