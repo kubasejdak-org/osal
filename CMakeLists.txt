@@ -9,7 +9,7 @@ include(cmake/coverage.cmake)
 include(cmake/doxygen.cmake)
 include(cmake/platform.cmake)
 
-project(osal VERSION 1.0 LANGUAGES ASM C CXX)
+project(osal VERSION 1.0.0 LANGUAGES ASM C CXX)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)

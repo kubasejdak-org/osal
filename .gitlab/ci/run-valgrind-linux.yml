@@ -27,6 +27,11 @@ Mutex_Valgrind_Linux:
   variables:
     TestTags: "[mutex]"
 
+Semaphore_Valgrind_Linux:
+  extends: .Run_Valgrind_Linux
+  variables:
+    TestTags: "[semaphore]"
+
 Timeout_Valgrind_Linux:
   extends: .Run_Valgrind_Linux
   variables:
