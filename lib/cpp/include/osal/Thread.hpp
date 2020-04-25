@@ -149,8 +149,9 @@ public:
         if (m_started)
             return OsalError::eThreadAlreadyStarted;
 
-        m_userFunction = std::make_unique<FunctionWrapper>(
-            std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...));
+        m_userFunction
+            = std::make_unique<FunctionWrapper>(std::bind(std::forward<ThreadFunction>(function),
+                                                          std::forward<Args>(args)...)); // NOLINT(modernize-avoid-bind)
         assert(m_userFunction);
 
         m_workerFunction = [](void* arg) {
