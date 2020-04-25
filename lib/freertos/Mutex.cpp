@@ -44,7 +44,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 
     mutex->initialized = false;
 
-    SemaphoreHandle_t handle;
+    SemaphoreHandle_t handle{};
 #if configSUPPORT_STATIC_ALLOCATION
     switch (type) {
 #    if configUSE_RECURSIVE_MUTEXES
@@ -111,7 +111,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
     if (mutex == nullptr || !mutex->initialized)
         return OsalError::eInvalidArgument;
 
-    BaseType_t result;
+    BaseType_t result{};
     TickType_t tickTimeout = (timeoutMs == portMAX_DELAY) ? portMAX_DELAY : (timeoutMs / portTICK_PERIOD_MS);
 
     if (mutex->type == OsalMutexType::eRecursive) {
@@ -133,7 +133,7 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
     if (mutex == nullptr || !mutex->initialized)
         return OsalError::eInvalidArgument;
 
-    BaseType_t result;
+    BaseType_t result{};
 
     if (mutex->type == OsalMutexType::eRecursive) {
 #if configUSE_RECURSIVE_MUTEXES

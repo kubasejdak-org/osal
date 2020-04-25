@@ -46,7 +46,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 
     mutex->initialized = false;
 
-    int mutexType;
+    int mutexType{};
     switch (type) {
         case OsalMutexType::eRecursive: mutexType = PTHREAD_MUTEX_RECURSIVE; break;
         case OsalMutexType::eNonRecursive: mutexType = PTHREAD_MUTEX_NORMAL; break;
