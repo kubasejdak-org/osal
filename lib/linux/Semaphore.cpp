@@ -34,11 +34,12 @@
 
 #include "osal/timestamp.h"
 
+#include <semaphore.h>
+
 #include <cassert>
 #include <cerrno>
 #include <cstring>
 #include <ctime>
-#include <semaphore.h>
 
 OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValue)
 {
