@@ -57,6 +57,7 @@ Coverage_Total:
   dependencies:
     - Error_Coverage
     - Mutex_Coverage
+    - Semaphore_Coverage
     - Timestamp_Coverage
     - Timeout_Coverage
     - Thread_Coverage
@@ -72,6 +73,7 @@ Coverage_Total:
     - |
       lcov -a ../Error_Coverage/coverage/coverage.info \
            -a ../Mutex_Coverage/coverage/coverage.info \
+           -a ../Semaphore_Coverage/coverage/coverage.info \
            -a ../Timestamp_Coverage/coverage/coverage.info \
            -a ../Timeout_Coverage/coverage/coverage.info \
            -a ../Thread_Coverage/coverage/coverage.info \

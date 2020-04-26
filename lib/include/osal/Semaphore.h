@@ -56,13 +56,13 @@ struct OsalSemaphore {
 /// @return Error code of the operation.
 OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValue);
 
-/// Destroys mutex represented by the given handle.
+/// Destroys semaphore represented by the given handle.
 /// @param semaphore        Semaphore handle to be destroyed.
 /// @return Error code of the operation.
 OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore);
 
 /// Decrements value of the given semaphore. If its value is currently 0, then the calling thread will block until
-/// mutex is positive again.
+/// semaphore is positive again.
 /// @param semaphore        Semaphore to be decremented.
 /// @return Error code of the operation.
 OsalError osalSemaphoreWait(OsalSemaphore* semaphore);
@@ -81,7 +81,7 @@ OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore);
 OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore);
 
 /// Decrements value of the given semaphore. If its value is currently 0, then the calling thread will block until
-/// mutex is positive again or the specified time elapses.
+/// semaphore is positive again or the specified time elapses.
 /// @param semaphore        Semaphore to be decremented.
 /// @param timeoutMs        Maximal time in ms to wait for the operation.
 /// @return Error code of the operation.
