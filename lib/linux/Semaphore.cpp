@@ -83,13 +83,8 @@ OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
         return OsalError::eInvalidArgument;
 
     auto result = sem_trywait(&semaphore->impl.handle);
-    if (result == -1) {
-        switch (errno) {
-            case EAGAIN: [[fallthrough]];
-            case EBUSY: return OsalError::eLocked;
-            default: break;
-        }
-    }
+    if (result == -1)
+        return OsalError::eLocked;
 
     assert(result == 0);
     return OsalError::eOk;

@@ -171,19 +171,19 @@ TEST_CASE("Wait called from two threads in C++", "[unit][cpp][semaphore]")
     REQUIRE(!error);
 
     auto func = [&semaphore] {
-      auto start = osal::timestamp();
+        auto start = osal::timestamp();
 
-      auto error = semaphore.wait();
-      if (error != OsalError::eOk)
-          REQUIRE(!error);
+        auto error = semaphore.wait();
+        if (error != OsalError::eOk)
+            REQUIRE(!error);
 
-      auto end = osal::timestamp();
-      if ((end - start) < 100ms)
-          REQUIRE((end - start) >= 100ms);
+        auto end = osal::timestamp();
+        if ((end - start) < 100ms)
+            REQUIRE((end - start) >= 100ms);
 
-      error = semaphore.signal();
-      if (error != OsalError::eOk)
-          REQUIRE(!error);
+        error = semaphore.signal();
+        if (error != OsalError::eOk)
+            REQUIRE(!error);
     };
 
     osal::Thread thread(func);
@@ -201,18 +201,18 @@ TEST_CASE("TryWait called from second thread in C++", "[unit][cpp][semaphore]")
     REQUIRE(!error);
 
     auto func = [&semaphore] {
-      auto start = osal::timestamp();
+        auto start = osal::timestamp();
 
-      while (semaphore.tryWait() != OsalError::eOk)
-          osal::sleep(10ms);
+        while (semaphore.tryWait() != OsalError::eOk)
+            osal::sleep(10ms);
 
-      auto end = osal::timestamp();
-      if ((end - start) < 100ms)
-          REQUIRE((end - start) >= 100ms);
+        auto end = osal::timestamp();
+        if ((end - start) < 100ms)
+            REQUIRE((end - start) >= 100ms);
 
-      auto error = semaphore.signal();
-      if (error != OsalError::eOk)
-          REQUIRE(!error);
+        auto error = semaphore.signal();
+        if (error != OsalError::eOk)
+            REQUIRE(!error);
     };
 
     osal::Thread thread(func);
@@ -230,18 +230,18 @@ TEST_CASE("TryWait and signal called from ISR in C++", "[unit][cpp][semaphore]")
     REQUIRE(!error);
 
     auto func = [&semaphore] {
-      auto start = osal::timestamp();
+        auto start = osal::timestamp();
 
-      while (semaphore.tryWaitIsr() != OsalError::eOk)
-          osal::sleep(10ms);
+        while (semaphore.tryWaitIsr() != OsalError::eOk)
+            osal::sleep(10ms);
 
-      auto end = osal::timestamp();
-      if ((end - start) < 100ms)
-          REQUIRE((end - start) >= 100ms);
+        auto end = osal::timestamp();
+        if ((end - start) < 100ms)
+            REQUIRE((end - start) >= 100ms);
 
-      auto error = semaphore.signal();
-      if (error != OsalError::eOk)
-          REQUIRE(!error);
+        auto error = semaphore.signal();
+        if (error != OsalError::eOk)
+            REQUIRE(!error);
     };
 
     osal::Thread thread(func);
@@ -346,15 +346,15 @@ TEST_CASE("TimedWait called from second thread in C++, timeout", "[unit][cpp][se
     REQUIRE(!error);
 
     auto func = [&semaphore] {
-      auto start = osal::timestamp();
+        auto start = osal::timestamp();
 
-      auto error = semaphore.timedWait(100ms);
-      if (error != OsalError::eTimeout)
-          REQUIRE(error == OsalError::eTimeout);
+        auto error = semaphore.timedWait(100ms);
+        if (error != OsalError::eTimeout)
+            REQUIRE(error == OsalError::eTimeout);
 
-      auto end = osal::timestamp();
-      if ((end - start) < 100ms)
-          REQUIRE((end - start) >= 100ms);
+        auto end = osal::timestamp();
+        if ((end - start) < 100ms)
+            REQUIRE((end - start) >= 100ms);
     };
 
     osal::Thread thread(func);
@@ -372,17 +372,17 @@ TEST_CASE("TimedWait called from second thread in C++, success", "[unit][cpp][se
     REQUIRE(!error);
 
     auto func = [&semaphore] {
-      auto start = osal::timestamp();
+        auto start = osal::timestamp();
 
-      if (auto error = semaphore.timedWait(100ms))
-          REQUIRE(!error);
+        if (auto error = semaphore.timedWait(100ms))
+            REQUIRE(!error);
 
-      auto end = osal::timestamp();
-      if ((end - start) > 100ms)
-          REQUIRE((end - start) <= 100ms);
+        auto end = osal::timestamp();
+        if ((end - start) > 100ms)
+            REQUIRE((end - start) <= 100ms);
 
-      if (auto error = semaphore.signal())
-          REQUIRE(!error);
+        if (auto error = semaphore.signal())
+            REQUIRE(!error);
     };
 
     osal::Thread thread(func);

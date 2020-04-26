@@ -199,9 +199,7 @@ TEST_CASE("Launch 5 threads with different priorities and check their results", 
 
 TEST_CASE("Create threads with all priorities", "[unit][c][thread]")
 {
-    auto func = [](void* /*unused*/) {
-        osal::sleep(1s);
-    };
+    auto func = [](void* /*unused*/) { osal::sleep(1s); };
 
     for (int i = OsalThreadPriority::eLowest; i <= OsalThreadPriority::eHighest; ++i) {
         OsalThread thread{};
