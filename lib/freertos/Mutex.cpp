@@ -84,12 +84,15 @@ OsalError osalMutexDestroy(OsalMutex* mutex)
 
 OsalError osalMutexLock(OsalMutex* mutex)
 {
-    return osalMutexTimedLock(mutex, portMAX_DELAY);
+    auto error = osalMutexTimedLock(mutex, portMAX_DELAY);
+    configASSERT(error == OsalError::eOk);
+    return error;
 }
 
 OsalError osalMutexTryLock(OsalMutex* mutex)
 {
-    return osalMutexTimedLock(mutex, 0);
+    auto error = osalMutexTimedLock(mutex, 0);
+    return (error == OsalError::eTimeout) ? OsalError::eLocked : error;
 }
 
 OsalError osalMutexTryLockIsr(OsalMutex* mutex)
@@ -123,7 +126,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
         result = xSemaphoreTake(mutex->impl.handle, tickTimeout);
 
     if (result == pdFALSE)
-        return (timeoutMs == 0) ? OsalError::eLocked : OsalError::eTimeout;
+        return OsalError::eTimeout;
 
     return OsalError::eOk;
 }

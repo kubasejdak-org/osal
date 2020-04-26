@@ -6,6 +6,7 @@ add_library(apposal-tests OBJECT EXCLUDE_FROM_ALL
     Error.cpp
     Mutex.cpp
     ScopedLock.cpp
+    Semaphore.cpp
     Thread.cpp
     time.cpp
     Timeout.cpp

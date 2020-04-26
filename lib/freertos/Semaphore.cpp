@@ -72,12 +72,15 @@ OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
 
 OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 {
-    return osalSemaphoreTimedWait(semaphore, portMAX_DELAY);
+    auto error = osalSemaphoreTimedWait(semaphore, portMAX_DELAY);
+    configASSERT(error == OsalError::eOk);
+    return error;
 }
 
 OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
 {
-    return osalSemaphoreTimedWait(semaphore, 0);
+    auto error = osalSemaphoreTimedWait(semaphore, 0);
+    return (error == OsalError::eTimeout) ? OsalError::eLocked : error;
 }
 
 OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore)
@@ -98,7 +101,7 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 
     TickType_t tickTimeout = (timeoutMs == portMAX_DELAY) ? portMAX_DELAY : (timeoutMs / portTICK_PERIOD_MS);
     if (xSemaphoreTake(semaphore->impl.handle, tickTimeout) == pdFALSE)
-        return (timeoutMs == 0) ? OsalError::eLocked : OsalError::eTimeout;
+        return OsalError::eTimeout;
 
     return OsalError::eOk;
 }

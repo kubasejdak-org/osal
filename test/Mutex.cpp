@@ -170,7 +170,7 @@ TEST_CASE("Lock called from two threads", "[unit][c][mutex]")
     REQUIRE(error == OsalError::eOk);
 }
 
-TEST_CASE("TryLock called from second threads", "[unit][c][mutex]")
+TEST_CASE("TryLock called from second thread", "[unit][c][mutex]")
 {
     OsalMutexType type{};
 

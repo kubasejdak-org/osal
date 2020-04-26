@@ -83,10 +83,12 @@ OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
         return OsalError::eInvalidArgument;
 
     auto result = sem_trywait(&semaphore->impl.handle);
-    switch (result) {
-        case EAGAIN: [[fallthrough]];
-        case EBUSY: return OsalError::eLocked;
-        default: break;
+    if (result == -1) {
+        switch (errno) {
+            case EAGAIN: [[fallthrough]];
+            case EBUSY: return OsalError::eLocked;
+            default: break;
+        }
     }
 
     assert(result == 0);
@@ -113,7 +115,7 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
     ts.tv_nsec -= osalSecToNs(secs);
 
     result = sem_timedwait(&semaphore->impl.handle, &ts);
-    if (result == ETIMEDOUT)
+    if ((result == -1) && (errno == ETIMEDOUT))
         return OsalError::eTimeout;
 
     assert(result == 0);
