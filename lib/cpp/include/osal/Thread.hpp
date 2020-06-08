@@ -78,6 +78,7 @@ public:
     Thread(Thread&& other) noexcept
     {
         std::swap(m_thread, other.m_thread);
+        std::swap(m_stack, other.m_stack);
         std::swap(m_userFunction, other.m_userFunction);
         std::swap(m_workerFunction, other.m_workerFunction);
         std::swap(m_started, other.m_started);
@@ -125,14 +126,13 @@ public:
         if (m_started)
             return OsalError::eThreadAlreadyStarted;
 
-        m_userFunction = std::make_unique<FunctionWrapper>(
-            // NOLINTNEXTLINE(modernize-avoid-bind)
-            std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...));
+        m_userFunction
+            = std::make_unique<FunctionWrapper>([function, &args...] { function(std::forward<Args>(args)...); });
         assert(m_userFunction);
 
         m_workerFunction = [](void* arg) {
-            auto threadFunction = *static_cast<FunctionWrapper*>(arg);
-            threadFunction();
+            auto userFunction = *static_cast<FunctionWrapper*>(arg);
+            userFunction();
         };
 
         auto error
