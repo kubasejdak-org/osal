@@ -67,28 +67,6 @@ TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
         REQUIRE(error == OsalError::eOk);
     }
 
-    SECTION("Create thread with custom stack")
-    {
-        std::array<char, cOsalThreadDefaultStackSize> stack{};
-        osal::Thread thread;
-
-        auto error = thread.setStack(stack.data());
-        REQUIRE(error == OsalError::eOk);
-
-        error = thread.start(func, cParam);
-        REQUIRE(error == OsalError::eOk);
-
-        error = thread.join();
-        REQUIRE(error == OsalError::eOk);
-    }
-
-    SECTION("Create thread with nullptr stack")
-    {
-        osal::Thread thread;
-        auto error = thread.setStack(nullptr);
-        REQUIRE(error == OsalError::eInvalidArgument);
-    }
-
     SECTION("Create thread via start() method")
     {
         osal::Thread thread;
@@ -132,6 +110,41 @@ TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
     }
 
     REQUIRE(launched);
+}
+
+TEST_CASE("Thread creation with custom stack", "[unit][cpp][thread]")
+{
+    bool launched = false;
+    auto func = [&]() {
+        constexpr int cDelayMs = 1000;
+        osalSleepMs(cDelayMs);
+
+        launched = true;
+    };
+
+    SECTION("Create thread with custom stack")
+    {
+        std::array<char, cOsalThreadDefaultStackSize> stack{};
+        osal::Thread thread;
+
+        auto error = thread.setStack(stack.data());
+        REQUIRE(error == OsalError::eOk);
+
+        error = thread.start(func);
+        REQUIRE(error == OsalError::eOk);
+
+        error = thread.join();
+        REQUIRE(error == OsalError::eOk);
+
+        REQUIRE(launched);
+    }
+
+    SECTION("Create thread with nullptr stack")
+    {
+        osal::Thread thread;
+        auto error = thread.setStack(nullptr);
+        REQUIRE(error == OsalError::eInvalidArgument);
+    }
 }
 
 TEST_CASE("Thread creation with variadic arguments", "[unit][cpp][thread]")
