@@ -1,7 +1,7 @@
 .Linux_Coverage:
   stage: coverage
-  #  only:
-  #  - master
+    only:
+      - master
   image: kubasejdak/gcc:10
   tags:
     - linux
