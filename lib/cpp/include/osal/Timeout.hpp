@@ -72,9 +72,7 @@ public:
         : m_duration(duration)
         , m_expireTimestamp(timestamp() + (forceExpire ? Duration::zero() : duration))
         , m_infinity(duration == Duration::max())
-    {
-        assert(duration >= Duration::zero());
-    }
+    {}
 
     /// Conversion operator to Duration.
     /// @return Duration value representing time left in std::chrono unit to the deadline timestamp.
