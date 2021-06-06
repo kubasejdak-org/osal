@@ -20,7 +20,7 @@ endif ()
 conan_init()
 
 # Project-wide compilation options.
-add_compile_options(-Wall -Wextra -Wpedantic -Werror $<$<COMPILE_LANGUAGE:CXX>:-std=c++20>)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>)
 
 if (SANITIZE)
     # Enable compiler sanitizers.
