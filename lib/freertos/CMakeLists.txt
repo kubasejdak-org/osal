@@ -7,6 +7,6 @@ target_sources(osal-c PRIVATE
     timestamp.cpp
 )
 
-target_link_libraries(osal-freertos
+target_link_libraries(osal-c
     PUBLIC freertos
 )
