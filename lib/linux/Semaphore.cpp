@@ -103,8 +103,8 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 
     auto toTimespec = [](const auto& timePoint) {
         auto secs = std::chrono::time_point_cast<std::chrono::seconds>(timePoint);
-        auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(timePoint) -
-                  std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
+        auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(timePoint)
+                  - std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
 
         return timespec{int(secs.time_since_epoch().count()), int(ns.count())};
     };
