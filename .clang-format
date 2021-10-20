@@ -28,7 +28,6 @@ BraceWrapping:
   AfterCaseLabel: false
   AfterClass: false
   AfterControlStatement: Never
-  AfterEnum: false
   AfterFunction: true
   AfterNamespace: false
   AfterStruct: false
