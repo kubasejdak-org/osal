@@ -50,7 +50,6 @@ struct OsalThread {
     bool initialized;
 };
 
-// clang-format off
 /// Represents possible thread priorities that can be set with the OSAL API.
 /// @note It is up to the concrete implementation which physical priorities will be used for each
 ///       enum value. The only assumption client can make, is that eLowest will set the lowest
@@ -63,7 +62,6 @@ enum OsalThreadPriority {
     eHigh,
     eHighest
 };
-// clang-format on
 
 /// Helper constant with default thread priority of new thread.
 static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::eNormal;
