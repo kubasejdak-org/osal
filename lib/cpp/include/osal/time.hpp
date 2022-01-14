@@ -32,46 +32,32 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "osal/time.h" // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
-#include "osal/Error.h"
+#include <ctime>
+#include <string>
 
-#include <stdint.h>   // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
-#include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
-#include <time.h>     // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+namespace osal {
 
-struct tm osalTimeToTm(time_t value);
-struct tm osalTimespecToTm(struct timespec value);
-struct tm osalTimevalToTm(struct timeval value);
+std::tm toTm(std::time_t value);
+std::tm toTm(std::timespec value);
+std::tm toTm(timeval value);
 
-time_t osalTmToTime(struct tm value);
-time_t osalTimespecToTime(struct timespec value);
-time_t osalTimevalToTime(struct timeval value);
+std::time_t toTime(std::tm value);
+std::time_t toTime(std::timespec value);
+std::time_t toTime(timeval value);
 
-struct timespec osalTimeToTimespec(time_t value);
-struct timespec osalTmToTimespec(struct tm value);
-struct timespec osalTimevalToTimespec(struct timeval value);
+std::timespec toTimespec(std::time_t value);
+std::timespec toTimespec(std::tm value);
+std::timespec toTimespec(timeval value);
 
-struct timeval osalTimeToTimeval(time_t value);
-struct timeval osalTmToTimeval(struct tm value);
-struct timeval osalTimespecToTimeval(struct timespec value);
+timeval toTimeval(std::time_t value);
+timeval toTimeval(std::tm value);
+timeval toTimeval(std::timespec value);
 
-// clang-format off
-enum OsalTimeStringFormat {
-    eTime,          // "15:30:59"
-    eDate,          // "31.12.2022"
-    eTimeDate,      // "15:30:59 31.12.2022"
-    eSortedDateTime // "20221231_153059"
-};
-// clang-format on
+std::string toString(std::tm value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(std::time_t value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(std::timespec value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(timeval value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
 
-OsalError osalTmToString(struct tm value, char* str, size_t size, OsalTimeStringFormat format);
-OsalError osalTimeToString(time_t value, char* str, size_t size, OsalTimeStringFormat format);
-OsalError osalTimespecToString(struct timespec value, char* str, size_t size, OsalTimeStringFormat format);
-OsalError osalTimevalToString(struct timeval value, char* str, size_t size, OsalTimeStringFormat format);
-
-#ifdef __cplusplus
-}
-#endif
+} // namespace osal
