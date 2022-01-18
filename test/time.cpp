@@ -36,6 +36,4 @@
 #include <catch2/catch.hpp>
 
 TEST_CASE("Time test", "[unit][c][time]")
-{
-
-}
+{}
