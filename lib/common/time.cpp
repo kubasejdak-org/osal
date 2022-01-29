@@ -39,7 +39,7 @@
 struct tm osalTimeToTm(time_t value)
 {
     tm result{};
-    if (localtime_r(&value, &result) == nullptr)
+    if (gmtime_r(&value, &result) == nullptr)
         return {};
 
     return result;
