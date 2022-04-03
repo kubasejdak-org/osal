@@ -57,7 +57,7 @@ struct tm osalTimevalToTm(struct timeval value)
 
 time_t osalTmToTime(struct tm value)
 {
-    return int(mktime(&value));
+    return int(timegm(&value));
 }
 
 time_t osalTimespecToTime(struct timespec value)

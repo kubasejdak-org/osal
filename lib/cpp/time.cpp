@@ -39,7 +39,7 @@ std::tm toTm(std::time_t value)
     return osalTimeToTm(value);
 }
 
-std::tm toTm(std::timespec value)
+std::tm toTm(timespec value)
 {
     return osalTimespecToTm(value);
 }
@@ -54,7 +54,7 @@ std::time_t toTime(std::tm value)
     return osalTmToTime(value);
 }
 
-std::time_t toTime(std::timespec value)
+std::time_t toTime(timespec value)
 {
     return osalTimespecToTime(value);
 }
@@ -64,17 +64,17 @@ std::time_t toTime(timeval value)
     return osalTimevalToTime(value);
 }
 
-std::timespec toTimespec(std::time_t value)
+timespec toTimespec(std::time_t value)
 {
     return osalTimeToTimespec(value);
 }
 
-std::timespec toTimespec(std::tm value)
+timespec toTimespec(std::tm value)
 {
     return osalTmToTimespec(value);
 }
 
-std::timespec toTimespec(timeval value)
+timespec toTimespec(timeval value)
 {
     return osalTimevalToTimespec(value);
 }
@@ -89,7 +89,7 @@ timeval toTimeval(std::tm value)
     return osalTmToTimeval(value);
 }
 
-timeval toTimeval(std::timespec value)
+timeval toTimeval(timespec value)
 {
     return osalTimespecToTimeval(value);
 }
@@ -110,7 +110,7 @@ std::string toString(std::time_t value, OsalTimeStringFormat format)
     return str;
 }
 
-std::string toString(std::timespec value, OsalTimeStringFormat format)
+std::string toString(timespec value, OsalTimeStringFormat format)
 {
     std::string str(cMaxStringSize, 0);
     osalTimespecToString(value, str.data(), cMaxStringSize, format);

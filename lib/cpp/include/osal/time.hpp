@@ -40,24 +40,24 @@
 namespace osal {
 
 std::tm toTm(std::time_t value);
-std::tm toTm(std::timespec value);
+std::tm toTm(timespec value);
 std::tm toTm(timeval value);
 
 std::time_t toTime(std::tm value);
-std::time_t toTime(std::timespec value);
+std::time_t toTime(timespec value);
 std::time_t toTime(timeval value);
 
-std::timespec toTimespec(std::time_t value);
-std::timespec toTimespec(std::tm value);
-std::timespec toTimespec(timeval value);
+timespec toTimespec(std::time_t value);
+timespec toTimespec(std::tm value);
+timespec toTimespec(timeval value);
 
 timeval toTimeval(std::time_t value);
 timeval toTimeval(std::tm value);
-timeval toTimeval(std::timespec value);
+timeval toTimeval(timespec value);
 
 std::string toString(std::tm value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
 std::string toString(std::time_t value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
-std::string toString(std::timespec value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(timespec value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
 std::string toString(timeval value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
 
 } // namespace osal

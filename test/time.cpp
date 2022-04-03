@@ -58,7 +58,7 @@ TEST_CASE("Convert to std::tm", "[unit][c][time]")
 
     SECTION("std::timespec to std::tm")
     {
-        std::array<std::timespec, cDatesCount> timespecs
+        std::array<timespec, cDatesCount> timespecs
             = {{{cDate1, 0}, {cDate2, 0}, {cDate3, 0}, {cDate4, 0}, {cDate5, 0}}};
 
         std::transform(timespecs.begin(), timespecs.end(), tms.begin(), osalTimespecToTm);
@@ -121,16 +121,60 @@ TEST_CASE("Convert to std::time_t", "[unit][c][time]")
 {
     std::array<std::time_t, cDatesCount> times{};
 
-//    SECTION("std::tm to std::time_t")
-//    {
-//        std::array<std::tm, cDatesCount> tms = {cDate1, cDate2, cDate3, cDate4, cDate5};
-//
-//        std::transform(tms.begin(), tms.end(), times.begin(), osalTmToTime);
-//    }
+    SECTION("std::tm to std::time_t")
+    {
+        std::array<std::tm, cDatesCount> tms{};
+        tms[0].tm_mday = 28;  // NOLINT
+        tms[0].tm_mon = 0;    // NOLINT
+        tms[0].tm_year = 122; // NOLINT
+        tms[0].tm_hour = 22;  // NOLINT
+        tms[0].tm_min = 13;   // NOLINT
+        tms[0].tm_sec = 2;    // NOLINT
+        tms[0].tm_wday = 5;   // NOLINT
+        tms[0].tm_yday = 27;  // NOLINT
+
+        tms[1].tm_mday = 14;  // NOLINT
+        tms[1].tm_mon = 7;    // NOLINT
+        tms[1].tm_year = 97;  // NOLINT
+        tms[1].tm_hour = 15;  // NOLINT
+        tms[1].tm_min = 5;    // NOLINT
+        tms[1].tm_sec = 45;   // NOLINT
+        tms[1].tm_wday = 4;   // NOLINT
+        tms[1].tm_yday = 225; // NOLINT
+
+        tms[2].tm_mday = 31;  // NOLINT
+        tms[2].tm_mon = 11;   // NOLINT
+        tms[2].tm_year = 101; // NOLINT
+        tms[2].tm_hour = 21;  // NOLINT
+        tms[2].tm_min = 6;    // NOLINT
+        tms[2].tm_sec = 17;   // NOLINT
+        tms[2].tm_wday = 1;   // NOLINT
+        tms[2].tm_yday = 364; // NOLINT
+
+        tms[3].tm_mday = 11;  // NOLINT
+        tms[3].tm_mon = 8;    // NOLINT
+        tms[3].tm_year = 70;  // NOLINT
+        tms[3].tm_hour = 12;  // NOLINT
+        tms[3].tm_min = 0;    // NOLINT
+        tms[3].tm_sec = 0;    // NOLINT
+        tms[3].tm_wday = 5;   // NOLINT
+        tms[3].tm_yday = 253; // NOLINT
+
+        tms[4].tm_mday = 8;   // NOLINT
+        tms[4].tm_mon = 7;    // NOLINT
+        tms[4].tm_year = 90;  // NOLINT
+        tms[4].tm_hour = 20;  // NOLINT
+        tms[4].tm_min = 20;   // NOLINT
+        tms[4].tm_sec = 0;    // NOLINT
+        tms[4].tm_wday = 3;   // NOLINT
+        tms[4].tm_yday = 219; // NOLINT
+
+        std::transform(tms.begin(), tms.end(), times.begin(), osalTmToTime);
+    }
 
     SECTION("std::timespec to std::time_t")
     {
-        std::array<std::timespec, cDatesCount> timespecs
+        std::array<timespec, cDatesCount> timespecs
             = {{{cDate1, 0}, {cDate2, 0}, {cDate3, 0}, {cDate4, 0}, {cDate5, 0}}};
 
         std::transform(timespecs.begin(), timespecs.end(), times.begin(), osalTimespecToTime);
