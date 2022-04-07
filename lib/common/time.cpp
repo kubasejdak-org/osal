@@ -32,9 +32,12 @@
 
 #include "osal/time.h" // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
-#include <array>
 #include <ctime>
 #include <string>
+
+// This declaration is needed, because embedded platforms do not define timegm() function. Platform fills this gap
+// by providing its own implementation, but still <ctime> header doesn't provide this prototype.
+extern "C" time_t timegm(struct tm* tm); // NOLINT
 
 struct tm osalTimeToTm(time_t value)
 {
