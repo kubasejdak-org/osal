@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(platform
     GIT_REPOSITORY  https://gitlab.com/embeddedlinux/libs/platform.git
-    GIT_TAG         feature/add-timegm-syscall
+    GIT_TAG         origin/master
 )
 
 FetchContent_GetProperties(platform)
