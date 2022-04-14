@@ -37,6 +37,7 @@
 
 #include <algorithm>
 #include <array>
+#include <string>
 
 static constexpr int cDatesCount = 5;     // NOLINT
 static constexpr int cDate1 = 1643407982; // NOLINT
@@ -198,13 +199,6 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
 {
     std::array<timespec, cDatesCount> timespecs{};
 
-    SECTION("time_t to struct timespec")
-    {
-        std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
-
-        std::transform(times.begin(), times.end(), timespecs.begin(), osalTimeToTimespec);
-    }
-
     SECTION("struct tm to struct timespec")
     {
         std::array<std::tm, cDatesCount> tms{};
@@ -256,6 +250,13 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
         std::transform(tms.begin(), tms.end(), timespecs.begin(), osalTmToTimespec);
     }
 
+    SECTION("time_t to struct timespec")
+    {
+        std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
+
+        std::transform(times.begin(), times.end(), timespecs.begin(), osalTimeToTimespec);
+    }
+
     SECTION("struct timeval to time_t")
     {
         std::array<timeval, cDatesCount> timevals = {{{cDate1, 0}, {cDate2, 0}, {cDate3, 0}, {cDate4, 0}, {cDate5, 0}}};
@@ -278,13 +279,6 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
 TEST_CASE("Convert to struct timeval", "[unit][c][time]")
 {
     std::array<timeval, cDatesCount> timevals{};
-
-    SECTION("time_t to struct timeval")
-    {
-        std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
-
-        std::transform(times.begin(), times.end(), timevals.begin(), osalTimeToTimeval);
-    }
 
     SECTION("struct tm to struct timeval")
     {
@@ -337,6 +331,13 @@ TEST_CASE("Convert to struct timeval", "[unit][c][time]")
         std::transform(tms.begin(), tms.end(), timevals.begin(), osalTmToTimeval);
     }
 
+    SECTION("time_t to struct timeval")
+    {
+        std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
+
+        std::transform(times.begin(), times.end(), timevals.begin(), osalTimeToTimeval);
+    }
+
     SECTION("struct timespec to struct timeval")
     {
         std::array<timespec, cDatesCount> timespecs
@@ -355,4 +356,167 @@ TEST_CASE("Convert to struct timeval", "[unit][c][time]")
     REQUIRE(timevals[3].tv_usec == 0);
     REQUIRE(timevals[4].tv_sec == cDate5);
     REQUIRE(timevals[4].tv_usec == 0);
+}
+
+///////////////////////////////////////////////
+
+TEST_CASE("Convert to string", "[unit][c][time]")
+{
+    constexpr std::size_t cSize = 20;
+    std::array<std::array<char, cSize>, cDatesCount> time{};
+    std::array<std::array<char, cSize>, cDatesCount> date{};
+    std::array<std::array<char, cSize>, cDatesCount> timeDate{};
+    std::array<std::array<char, cSize>, cDatesCount> sortedDateTime{};
+
+    SECTION("struct tm to string")
+    {
+        std::array<std::tm, cDatesCount> tms{};
+        tms[0].tm_mday = 28;  // NOLINT
+        tms[0].tm_mon = 0;    // NOLINT
+        tms[0].tm_year = 122; // NOLINT
+        tms[0].tm_hour = 22;  // NOLINT
+        tms[0].tm_min = 13;   // NOLINT
+        tms[0].tm_sec = 2;    // NOLINT
+        tms[0].tm_wday = 5;   // NOLINT
+        tms[0].tm_yday = 27;  // NOLINT
+
+        tms[1].tm_mday = 14;  // NOLINT
+        tms[1].tm_mon = 7;    // NOLINT
+        tms[1].tm_year = 97;  // NOLINT
+        tms[1].tm_hour = 15;  // NOLINT
+        tms[1].tm_min = 5;    // NOLINT
+        tms[1].tm_sec = 45;   // NOLINT
+        tms[1].tm_wday = 4;   // NOLINT
+        tms[1].tm_yday = 225; // NOLINT
+
+        tms[2].tm_mday = 31;  // NOLINT
+        tms[2].tm_mon = 11;   // NOLINT
+        tms[2].tm_year = 101; // NOLINT
+        tms[2].tm_hour = 21;  // NOLINT
+        tms[2].tm_min = 6;    // NOLINT
+        tms[2].tm_sec = 17;   // NOLINT
+        tms[2].tm_wday = 1;   // NOLINT
+        tms[2].tm_yday = 364; // NOLINT
+
+        tms[3].tm_mday = 11;  // NOLINT
+        tms[3].tm_mon = 8;    // NOLINT
+        tms[3].tm_year = 70;  // NOLINT
+        tms[3].tm_hour = 12;  // NOLINT
+        tms[3].tm_min = 0;    // NOLINT
+        tms[3].tm_sec = 0;    // NOLINT
+        tms[3].tm_wday = 5;   // NOLINT
+        tms[3].tm_yday = 253; // NOLINT
+
+        tms[4].tm_mday = 8;   // NOLINT
+        tms[4].tm_mon = 7;    // NOLINT
+        tms[4].tm_year = 90;  // NOLINT
+        tms[4].tm_hour = 20;  // NOLINT
+        tms[4].tm_min = 20;   // NOLINT
+        tms[4].tm_sec = 0;    // NOLINT
+        tms[4].tm_wday = 3;   // NOLINT
+        tms[4].tm_yday = 219; // NOLINT
+
+        for (std::size_t i = 0; i < tms.size(); ++i) {
+            auto error = osalTmToString(tms[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTmToString(tms[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTmToString(tms[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTmToString(tms[i], sortedDateTime[i].data(), cSize, OsalTimeStringFormat::eSortedDateTime);
+            REQUIRE(error == OsalError::eOk);
+        }
+    }
+
+    SECTION("time_t to string")
+    {
+        std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
+
+        for (std::size_t i = 0; i < times.size(); ++i) {
+            auto error = osalTimeToString(times[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimeToString(times[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimeToString(times[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimeToString(times[i], sortedDateTime[i].data(), cSize, OsalTimeStringFormat::eSortedDateTime);
+            REQUIRE(error == OsalError::eOk);
+        }
+    }
+
+    SECTION("struct timespec to string")
+    {
+        std::array<timespec, cDatesCount> timespecs
+            = {{{cDate1, 0}, {cDate2, 0}, {cDate3, 0}, {cDate4, 0}, {cDate5, 0}}};
+
+        for (std::size_t i = 0; i < timespecs.size(); ++i) {
+            auto error = osalTimespecToString(timespecs[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimespecToString(timespecs[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimespecToString(timespecs[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimespecToString(timespecs[i],
+                                         sortedDateTime[i].data(),
+                                         cSize,
+                                         OsalTimeStringFormat::eSortedDateTime);
+            REQUIRE(error == OsalError::eOk);
+        }
+    }
+
+    SECTION("struct timeval to string")
+    {
+        std::array<timeval, cDatesCount> timevals = {{{cDate1, 0}, {cDate2, 0}, {cDate3, 0}, {cDate4, 0}, {cDate5, 0}}};
+
+        for (std::size_t i = 0; i < timevals.size(); ++i) {
+            auto error = osalTimevalToString(timevals[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimevalToString(timevals[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimevalToString(timevals[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
+            REQUIRE(error == OsalError::eOk);
+
+            error = osalTimevalToString(timevals[i],
+                                        sortedDateTime[i].data(),
+                                        cSize,
+                                        OsalTimeStringFormat::eSortedDateTime);
+            REQUIRE(error == OsalError::eOk);
+        }
+    }
+
+    REQUIRE(std::string_view{time[0].data()} == "22:13:02");
+    REQUIRE(std::string_view{date[0].data()} == "28.01.2022");
+    REQUIRE(std::string_view{timeDate[0].data()} == "22:13:02 28.01.2022");
+    REQUIRE(std::string_view{sortedDateTime[0].data()} == "20220128_221302");
+
+    REQUIRE(std::string_view{time[1].data()} == "15:05:45");
+    REQUIRE(std::string_view{date[1].data()} == "14.08.1997");
+    REQUIRE(std::string_view{timeDate[1].data()} == "15:05:45 14.08.1997");
+    REQUIRE(std::string_view{sortedDateTime[1].data()} == "19970814_150545");
+
+    REQUIRE(std::string_view{time[2].data()} == "21:06:17");
+    REQUIRE(std::string_view{date[2].data()} == "31.12.2001");
+    REQUIRE(std::string_view{timeDate[2].data()} == "21:06:17 31.12.2001");
+    REQUIRE(std::string_view{sortedDateTime[2].data()} == "20011231_210617");
+
+    REQUIRE(std::string_view{time[3].data()} == "12:00:00");
+    REQUIRE(std::string_view{date[3].data()} == "11.09.1970");
+    REQUIRE(std::string_view{timeDate[3].data()} == "12:00:00 11.09.1970");
+    REQUIRE(std::string_view{sortedDateTime[3].data()} == "19700911_120000");
+
+    REQUIRE(std::string_view{time[4].data()} == "20:20:00");
+    REQUIRE(std::string_view{date[4].data()} == "08.08.1990");
+    REQUIRE(std::string_view{timeDate[4].data()} == "20:20:00 08.08.1990");
+    REQUIRE(std::string_view{sortedDateTime[4].data()} == "19900808_202000");
 }

@@ -32,6 +32,8 @@
 
 #include "osal/time.hpp"
 
+#include <array>
+
 namespace osal {
 
 std::tm toTm(std::time_t value)
@@ -98,30 +100,30 @@ static constexpr std::size_t cMaxStringSize = 20;
 
 std::string toString(std::tm value, OsalTimeStringFormat format)
 {
-    std::string str(cMaxStringSize, 0);
+    std::array<char, cMaxStringSize> str{};
     osalTmToString(value, str.data(), cMaxStringSize, format);
-    return str;
+    return str.data();
 }
 
 std::string toString(std::time_t value, OsalTimeStringFormat format)
 {
-    std::string str(cMaxStringSize, 0);
+    std::array<char, cMaxStringSize> str{};
     osalTimeToString(value, str.data(), cMaxStringSize, format);
-    return str;
+    return str.data();
 }
 
 std::string toString(timespec value, OsalTimeStringFormat format)
 {
-    std::string str(cMaxStringSize, 0);
+    std::array<char, cMaxStringSize> str{};
     osalTimespecToString(value, str.data(), cMaxStringSize, format);
-    return str;
+    return str.data();
 }
 
 std::string toString(timeval value, OsalTimeStringFormat format)
 {
-    std::string str(cMaxStringSize, 0);
+    std::array<char, cMaxStringSize> str{};
     osalTimevalToString(value, str.data(), cMaxStringSize, format);
-    return str;
+    return str.data();
 }
 
 } // namespace osal
