@@ -42,34 +42,104 @@ extern "C" {
 #include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 #include <time.h>     // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
+/// Converts time_t value to struct tm.
+/// @param value            Value to be converted.
+/// @return struct tm created from time_t.
 struct tm osalTimeToTm(time_t value);
+
+/// Converts struct timespec value to struct tm.
+/// @param value            Value to be converted.
+/// @return struct tm created from struct timespec.
 struct tm osalTimespecToTm(struct timespec value);
+
+/// Converts struct timeval value to struct tm.
+/// @param value            Value to be converted.
+/// @return struct tm created from struct timeval.
 struct tm osalTimevalToTm(struct timeval value);
 
+/// Converts struct tm value to time_t.
+/// @param value            Value to be converted.
+/// @return time_t created from struct tm.
 time_t osalTmToTime(struct tm value);
+
+/// Converts struct timespec value to time_t.
+/// @param value            Value to be converted.
+/// @return time_t created from struct timespec.
 time_t osalTimespecToTime(struct timespec value);
+
+/// Converts struct timeval value to time_t.
+/// @param value            Value to be converted.
+/// @return time_t created from struct timeval.
 time_t osalTimevalToTime(struct timeval value);
 
+/// Converts time_t value to struct timespec.
+/// @param value            Value to be converted.
+/// @return struct timespec created from time_t.
 struct timespec osalTimeToTimespec(time_t value);
+
+/// Converts struct tm value to struct timespec.
+/// @param value            Value to be converted.
+/// @return struct timespec created from struct tm.
 struct timespec osalTmToTimespec(struct tm value);
+
+/// Converts struct timeval value to struct timespec.
+/// @param value            Value to be converted.
+/// @return struct timespec created from struct timeval.
 struct timespec osalTimevalToTimespec(struct timeval value);
 
+/// Converts time_t value to struct timeval.
+/// @param value            Value to be converted.
+/// @return struct timeval created from time_t.
 struct timeval osalTimeToTimeval(time_t value);
+
+/// Converts struct tm value to struct timeval.
+/// @param value            Value to be converted.
+/// @return struct timeval created from struct tm.
 struct timeval osalTmToTimeval(struct tm value);
+
+/// Converts struct timespec value to struct timeval.
+/// @param value            Value to be converted.
+/// @return struct timeval created from struct timespec.
 struct timeval osalTimespecToTimeval(struct timespec value);
 
-// clang-format off
+/// Represents possible string representations of date/time objects.
 enum OsalTimeStringFormat {
     eTime,          // "15:30:59"
     eDate,          // "31.12.2022"
     eTimeDate,      // "15:30:59 31.12.2022"
     eSortedDateTime // "20221231_153059"
 };
-// clang-format on
 
+/// Converts struct tm to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param str              Output buffer where formatted string should be stored.
+/// @param size             Size of the output buffer.
+/// @param format           Date/time format to be used.
+/// @return Error code of the operation.
 OsalError osalTmToString(struct tm value, char* str, size_t size, OsalTimeStringFormat format);
+
+/// Converts time_t to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param str              Output buffer where formatted string should be stored.
+/// @param size             Size of the output buffer.
+/// @param format           Date/time format to be used.
+/// @return Error code of the operation.
 OsalError osalTimeToString(time_t value, char* str, size_t size, OsalTimeStringFormat format);
+
+/// Converts struct timespec to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param str              Output buffer where formatted string should be stored.
+/// @param size             Size of the output buffer.
+/// @param format           Date/time format to be used.
+/// @return Error code of the operation.
 OsalError osalTimespecToString(struct timespec value, char* str, size_t size, OsalTimeStringFormat format);
+
+/// Converts struct timeval to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param str              Output buffer where formatted string should be stored.
+/// @param size             Size of the output buffer.
+/// @param format           Date/time format to be used.
+/// @return Error code of the operation.
 OsalError osalTimevalToString(struct timeval value, char* str, size_t size, OsalTimeStringFormat format);
 
 #ifdef __cplusplus

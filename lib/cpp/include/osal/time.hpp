@@ -39,25 +39,88 @@
 
 namespace osal {
 
+/// Converts std::time_t value to std::tm.
+/// @param value            Value to be converted.
+/// @return std::tm created from std::time_t.
 std::tm toTm(std::time_t value);
+
+/// Converts std::timespec value to std::tm.
+/// @param value            Value to be converted.
+/// @return std::tm created from std::timespec.
 std::tm toTm(timespec value);
+
+/// Converts std::timeval value to std::tm.
+/// @param value            Value to be converted.
+/// @return std::tm created from std::timeval.
 std::tm toTm(timeval value);
 
+/// Converts std::tm value to std::time_t.
+/// @param value            Value to be converted.
+/// @return std::time_t created from std::tm.
 std::time_t toTime(std::tm value);
+
+/// Converts std::timespec value to std::time_t.
+/// @param value            Value to be converted.
+/// @return std::time_t created from std::timespec.
 std::time_t toTime(timespec value);
+
+/// Converts std::timeval value to std::time_t.
+/// @param value            Value to be converted.
+/// @return std::time_t created from std::timeval.
 std::time_t toTime(timeval value);
 
+/// Converts std::time_t value to std::timespec.
+/// @param value            Value to be converted.
+/// @return std::timespec created from std::time_t.
 timespec toTimespec(std::time_t value);
+
+/// Converts std::tm value to std::timespec.
+/// @param value            Value to be converted.
+/// @return std::timespec created from std::tm.
 timespec toTimespec(std::tm value);
+
+/// Converts std::timeval value to std::timespec.
+/// @param value            Value to be converted.
+/// @return std::timespec created from std::timeval.
 timespec toTimespec(timeval value);
 
+/// Converts std::time_t value to std::timeval.
+/// @param value            Value to be converted.
+/// @return std::timeval created from std::time_t.
 timeval toTimeval(std::time_t value);
+
+/// Converts std::tm value to std::timeval.
+/// @param value            Value to be converted.
+/// @return std::timeval created from std::tm.
 timeval toTimeval(std::tm value);
+
+/// Converts std::timespec value to std::timeval.
+/// @param value            Value to be converted.
+/// @return std::timeval created from std::timespec.
 timeval toTimeval(timespec value);
 
+/// Converts std::tm to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param format           Date/time format to be used.
+/// @return String representation of std::tm.
 std::string toString(std::tm value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+
+/// Converts std::time_t to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param format           Date/time format to be used.
+/// @return String representation of std::time_t.
 std::string toString(std::time_t value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+
+/// Converts std::timespec to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param format           Date/time format to be used.
+/// @return String representation of std::timespec.
 std::string toString(timespec value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+
+/// Converts std::timeval to a string representation using given string format.
+/// @param value            Value to be converted to string.
+/// @param format           Date/time format to be used.
+/// @return String representation of std::timeval.
 std::string toString(timeval value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
 
 } // namespace osal
