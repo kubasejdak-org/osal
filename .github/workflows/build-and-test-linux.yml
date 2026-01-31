@@ -77,7 +77,8 @@ jobs:
         include:
           - APP: osal-tests
     env:
-      PRESET: linux-native-gcc-debug
+      PRESET: linux-gcc-debug
+      # PRESET: linux-native-gcc-debug
     steps:
       - uses: kubasejdak-org/binary-run-action@main
         with:
