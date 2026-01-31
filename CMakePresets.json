@@ -1,139 +1,129 @@
 {
-  "version": 3,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 24,
-    "patch": 2
+    "minor": 28,
+    "patch": 0
   },
+  "include": [
+    "cmake/presets/app.json",
+    "cmake/presets/baremetal.json",
+    "cmake/presets/dependencies.json",
+    "cmake/presets/linux.json",
+    "cmake/presets/type.json"
+  ],
   "configurePresets": [
     {
-      "name": "linux",
-      "hidden": true,
-      "cacheVariables": {
-        "PLATFORM": "linux",
-        "USE_CONAN": "ON"
-      }
+      "name": "linux-native-gcc-debug",
+      "inherits": ["linux-native-gcc", "debug"]
     },
     {
-      "name": "linux-gcc",
-      "hidden": true,
-      "inherits": "linux"
+      "name": "linux-native-gcc-release",
+      "inherits": ["linux-native-gcc", "release"]
     },
     {
-      "name": "linux-clang",
-      "hidden": true,
-      "inherits": "linux",
-      "cacheVariables": {
-        "TOOLCHAIN": "clang"
-      }
+      "name": "linux-native-clang-debug",
+      "inherits": ["linux-native-clang", "debug"]
     },
     {
-      "name": "linux-arm-gcc",
-      "hidden": true,
-      "inherits": "linux",
-      "cacheVariables": {
-        "TOOLCHAIN": "arm-none-linux-gnueabihf-gcc"
-      }
+      "name": "linux-native-clang-release",
+      "inherits": ["linux-native-clang", "release"]
     },
     {
-      "name": "linux-arm-clang",
-      "hidden": true,
-      "inherits": "linux",
-      "cacheVariables": {
-        "TOOLCHAIN": "arm-none-linux-gnueabihf-clang"
-      }
+      "name": "linux-native-clang-debug-asan",
+      "inherits": ["linux-native-clang-debug", "asan"]
     },
     {
-      "name": "freertos-arm",
-      "hidden": true,
-      "cacheVariables": {
-        "PLATFORM": "freertos-arm",
-        "USE_CONAN": "ON"
-      }
+      "name": "linux-native-clang-debug-lsan",
+      "inherits": ["linux-native-clang-debug", "lsan"]
     },
     {
-      "name": "debug",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
+      "name": "linux-native-clang-debug-tsan",
+      "inherits": ["linux-native-clang-debug", "tsan"]
     },
     {
-      "name": "release",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
+      "name": "linux-native-clang-debug-ubsan",
+      "inherits": ["linux-native-clang-debug", "ubsan"]
     },
     {
-      "name": "linux-gcc-debug",
-      "inherits": [
-        "linux-gcc",
-        "debug"
-      ]
+      "name": "linux-native-conan-gcc-debug",
+      "inherits": ["linux-native-gcc-debug", "conan"]
     },
     {
-      "name": "linux-gcc-release",
-      "inherits": [
-        "linux-gcc",
-        "release"
-      ]
+      "name": "linux-native-conan-gcc-release",
+      "inherits": ["linux-native-gcc-release", "conan"]
     },
     {
-      "name": "linux-clang-debug",
-      "inherits": [
-        "linux-clang",
-        "debug"
-      ]
+      "name": "linux-native-conan-clang-debug",
+      "inherits": ["linux-native-clang-debug", "conan"]
     },
     {
-      "name": "linux-clang-release",
-      "inherits": [
-        "linux-clang",
-        "release"
-      ]
+      "name": "linux-native-conan-clang-release",
+      "inherits": ["linux-native-clang-release", "conan"]
     },
     {
-      "name": "linux-arm-gcc-debug",
-      "inherits": [
-        "linux-arm-gcc",
-        "debug"
-      ]
+      "name": "linux-native-conan-gcc-debug-asan",
+      "inherits": ["linux-native-conan-gcc-debug", "asan"]
     },
     {
-      "name": "linux-arm-gcc-release",
-      "inherits": [
-        "linux-arm-gcc",
-        "release"
-      ]
+      "name": "linux-native-conan-gcc-debug-lsan",
+      "inherits": ["linux-native-conan-gcc-debug", "lsan"]
     },
     {
-      "name": "linux-arm-clang-debug",
-      "inherits": [
-        "linux-arm-clang",
-        "debug"
-      ]
+      "name": "linux-native-conan-gcc-debug-tsan",
+      "inherits": ["linux-native-conan-gcc-debug", "tsan"]
     },
     {
-      "name": "linux-arm-clang-release",
-      "inherits": [
-        "linux-arm-clang",
-        "release"
-      ]
+      "name": "linux-native-conan-gcc-debug-ubsan",
+      "inherits": ["linux-native-conan-gcc-debug", "ubsan"]
     },
     {
-      "name": "freertos-arm-debug",
-      "inherits": [
-        "freertos-arm",
-        "debug"
-      ]
+      "name": "linux-arm64-conan-gcc-debug",
+      "inherits": ["linux-arm64-gcc", "debug", "conan"]
     },
     {
-      "name": "freertos-arm-release",
-      "inherits": [
-        "freertos-arm",
-        "release"
-      ]
+      "name": "linux-arm64-conan-gcc-release",
+      "inherits": ["linux-arm64-gcc", "release", "conan"]
+    },
+    {
+      "name": "linux-arm64-conan-clang-debug",
+      "inherits": ["linux-arm64-clang", "debug", "conan"]
+    },
+    {
+      "name": "linux-arm64-conan-clang-release",
+      "inherits": ["linux-arm64-clang", "release", "conan"]
+    },
+    {
+      "name": "yocto-sdk-gcc-debug",
+      "inherits": ["yocto-sdk-gcc", "debug"]
+    },
+    {
+      "name": "yocto-sdk-gcc-release",
+      "inherits": ["yocto-sdk-gcc", "release"]
+    },
+    {
+      "name": "yocto-sdk-clang-debug",
+      "inherits": ["yocto-sdk-clang", "debug"]
+    },
+    {
+      "name": "yocto-sdk-clang-release",
+      "inherits": ["yocto-sdk-clang", "release"]
+    },
+    {
+      "name": "baremetal-arm-conan-gcc-debug",
+      "inherits": ["baremetal-arm", "conan", "debug"]
+    },
+    {
+      "name": "baremetal-arm-conan-gcc-release",
+      "inherits": ["baremetal-arm", "conan", "release"]
+    },
+    {
+      "name": "freertos-arm-conan-gcc-debug",
+      "inherits": ["freertos-arm", "conan", "debug"]
+    },
+    {
+      "name": "freertos-arm-conan-gcc-release",
+      "inherits": ["freertos-arm", "conan", "release"]
     }
   ]
 }

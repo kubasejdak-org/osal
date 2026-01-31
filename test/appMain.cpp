@@ -35,7 +35,7 @@
 
 // #include <osal/init.hpp>
 
-// #include <catch2/catch_session.hpp>
+#include <catch2/catch_session.hpp>
 
 #include <cstdlib>
 

@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - PRESET: linux-gcc-debug
+          - PRESET: linux-native-conan-gcc-debug
             DOCKER_IMAGE: kubasejdak/gcc:13-24.04
           # - PRESET: linux-native-gcc-release
           #   DOCKER_IMAGE: kubasejdak/gcc:13-24.04
@@ -77,8 +77,7 @@ jobs:
         include:
           - APP: osal-tests
     env:
-      PRESET: linux-gcc-debug
-      # PRESET: linux-native-gcc-debug
+      PRESET: linux-native-conan-gcc-debug
     steps:
       - uses: kubasejdak-org/binary-run-action@main
         with:

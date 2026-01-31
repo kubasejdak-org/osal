@@ -17,10 +17,12 @@ add_executable(osal-tests
     # timestamp.cpp
 )
 
+find_package(Catch2)
 find_package(platform COMPONENTS main)
 
 target_link_libraries(osal-tests
     PRIVATE
+        Catch2::Catch2
         platform::main
 )
 
