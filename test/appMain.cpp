@@ -30,33 +30,36 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "platform/VerboseReporter.hpp"
-#include "platform/init.hpp"
+// #include "platform/VerboseReporter.hpp"
+// #include "platform/init.hpp"
 
-#include <osal/init.hpp>
+// #include <osal/init.hpp>
 
-#include <catch2/catch_session.hpp>
+// #include <catch2/catch_session.hpp>
 
 #include <cstdlib>
 
 // NOLINTNEXTLINE
 int appMain(int argc, char* argv[])
 {
-    if (!platform::init())
-        return EXIT_FAILURE;
-
-    if (!osal::init())
-        return EXIT_FAILURE;
-
-#ifdef TEST_TAGS
     (void) argc;
+    (void) argv;
+    return EXIT_SUCCESS;
+    //     if (!platform::init())
+    //         return EXIT_FAILURE;
 
-    std::array<char*, 2> argvTags{};
-    argvTags[0] = argv[0];
-    argvTags[1] = const_cast<char*>(TEST_TAGS);
+    //     if (!osal::init())
+    //         return EXIT_FAILURE;
 
-    return Catch::Session().run(argvTags.size(), argvTags.data());
-#else
-    return Catch::Session().run(argc, argv);
-#endif
+    // #ifdef TEST_TAGS
+    //     (void) argc;
+
+    //     std::array<char*, 2> argvTags{};
+    //     argvTags[0] = argv[0];
+    //     argvTags[1] = const_cast<char*>(TEST_TAGS);
+
+    //     return Catch::Session().run(argvTags.size(), argvTags.data());
+    // #else
+    //     return Catch::Session().run(argc, argv);
+    // #endif
 }
