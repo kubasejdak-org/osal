@@ -34,12 +34,11 @@
 
 #include "osal/Mutex.h"
 
-#include <fmt/core.h>
-
+#include <format>
 #include <string_view>
 
 template <>
-struct fmt::formatter<OsalMutexType> : fmt::formatter<std::string_view> {
+struct std::formatter<OsalMutexType> : std::formatter<std::string_view> {
     template <typename FormatContext>
     auto format(OsalMutexType value, FormatContext& ctx)
     {
@@ -49,6 +48,6 @@ struct fmt::formatter<OsalMutexType> : fmt::formatter<std::string_view> {
             case OsalMutexType::eNonRecursive: name = "non-recursive"; break;
         }
 
-        return fmt::formatter<std::string_view>::format(name, ctx);
+        return std::formatter<std::string_view>::format(name, ctx);
     }
 };

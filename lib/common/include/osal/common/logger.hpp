@@ -32,12 +32,13 @@
 
 #pragma once
 
-#include <utils/logger/Logger.hpp>
+// #include <utils/logger/Logger.hpp>
 
-#ifdef NDEBUG
-constexpr auto cDefaultLogLevel = spdlog::level::off;
-#else
-constexpr auto cDefaultLogLevel = spdlog::level::err;
-#endif
+// #ifdef NDEBUG
+// constexpr auto cDefaultLogLevel = spdlog::level::off;
+// #else
+// constexpr auto cDefaultLogLevel = spdlog::level::err;
+// #endif
 
-REGISTER_LOGGER(MutexLogger, "Mutex", cDefaultLogLevel);
+// REGISTER_LOGGER(MutexLogger, "Mutex", cDefaultLogLevel);
+#define MutexLogger //

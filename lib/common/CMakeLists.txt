@@ -9,6 +9,6 @@ target_include_directories(osal-common
     PRIVATE ../include
 )
 
-target_link_libraries(osal-common
-    PUBLIC utils::logger
-)
+# target_link_libraries(osal-common
+#     PUBLIC utils::logger
+# )
