@@ -7,17 +7,7 @@
   },
   "configurePresets": [
     {
-      "name": "baremetal-arm",
-      "hidden": true,
-      "cacheVariables": {
-        "PLATFORM": "baremetal-arm",
-        "BAREMETAL_ARM_TOOLCHAIN_PATH": "/opt/toolchains/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi",
-        "APP_C_FLAGS": "-mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb",
-        "APP_CXX_FLAGS": "-mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb"
-      }
-    },
-    {
-      "name": "freertos-arm",
+      "name": "freertos-armv7-m4",
       "hidden": true,
       "cacheVariables": {
         "PLATFORM": "freertos-arm",

@@ -1,4 +1,4 @@
-name: Build and run examples for baremetal
+name: Build and run tests for baremetal
 
 on:
   push:
@@ -17,13 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - PRESET: baremetal-arm-debug
+          - PRESET: freertos-armv7-m4-debug
             DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
-          - PRESET: baremetal-arm-release
-            DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
-          - PRESET: freertos-arm-debug
-            DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
-          - PRESET: freertos-arm-release
+          - PRESET: freertos-armv7-m4-release
             DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
     steps:
       - uses: actions/checkout@v6
@@ -40,13 +36,9 @@ jobs:
   #     matrix:
   #       include:
   #         - APP: platform-package-info-example
-  #           PRESET: baremetal-arm-debug
+  #           PRESET: freertos-armv7-m4-debug
   #         - APP: platform-hello-world-example
-  #           PRESET: baremetal-arm-debug
-  #         - APP: platform-package-info-example
-  #           PRESET: freertos-arm-debug
-  #         - APP: platform-hello-world-example
-  #           PRESET: freertos-arm-debug
+  #           PRESET: freertos-armv7-m4-debug
   #   steps:
   #     - uses: kubasejdak-org/openocd-run-action@main
   #       with:
