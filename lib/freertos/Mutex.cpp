@@ -52,7 +52,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
         case OsalMutexType::eRecursive: handle = xSemaphoreCreateRecursiveMutexStatic(&mutex->impl.buffer); break;
     #endif
         case OsalMutexType::eNonRecursive: handle = xSemaphoreCreateMutexStatic(&mutex->impl.buffer); break;
-        default: return OsalError::eInvalidArgument;
+        default:                           return OsalError::eInvalidArgument;
     }
 #elif configSUPPORT_DYNAMIC_ALLOCATION
     switch (type) {
@@ -60,7 +60,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
         case OsalMutexType::eRecursive: handle = xSemaphoreCreateRecursiveMutex(&mutex->impl.buffer); break;
     #endif
         case OsalMutexType::eNonRecursive: handle = xSemaphoreCreateMutex(); break;
-        default: return OsalError::eInvalidArgument;
+        default:                           return OsalError::eInvalidArgument;
     }
 #endif
 

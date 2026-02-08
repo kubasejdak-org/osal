@@ -97,12 +97,12 @@ private:
         m_stream << indentation() << "Failed line    : " << result.getSourceInfo() << "\n";
         m_stream << indentation() << "Type           : ";
         switch (result.getResultType()) {
-            case ResultWas::ExpressionFailed: m_stream << "Expression failed"; break;
-            case ResultWas::ThrewException: m_stream << "Unexpected exception"; break;
+            case ResultWas::ExpressionFailed:    m_stream << "Expression failed"; break;
+            case ResultWas::ThrewException:      m_stream << "Unexpected exception"; break;
             case ResultWas::FatalErrorCondition: m_stream << "Fatal error condition"; break;
             case ResultWas::DidntThrowException: m_stream << "No exception was thrown where one was expected"; break;
-            case ResultWas::ExplicitFailure: m_stream << "Explicit failure"; break;
-            default: return;
+            case ResultWas::ExplicitFailure:     m_stream << "Explicit failure"; break;
+            default:                             return;
         }
         m_stream << "\n";
 

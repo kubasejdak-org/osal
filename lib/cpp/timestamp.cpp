@@ -42,15 +42,12 @@ Timestamp timestamp()
 {
     Duration timeSinceStart;
 
-    if constexpr (std::is_same_v<Duration, std::chrono::nanoseconds>) {
+    if constexpr (std::is_same_v<Duration, std::chrono::nanoseconds>)
         timeSinceStart = Duration(osalTimestampNs());
-    }
-    else if constexpr (std::is_same_v<Duration, std::chrono::microseconds>) {
+    else if constexpr (std::is_same_v<Duration, std::chrono::microseconds>)
         timeSinceStart = Duration(osalTimestampUs());
-    }
-    else if constexpr (std::is_same_v<Duration, std::chrono::milliseconds>) {
+    else if constexpr (std::is_same_v<Duration, std::chrono::milliseconds>)
         timeSinceStart = Duration(osalTimestampMs());
-    }
 
     return Timestamp(timeSinceStart);
 }
