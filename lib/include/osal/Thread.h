@@ -42,6 +42,8 @@ extern "C" {
 #include <stddef.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 #include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
+#include <cstddef>
+
 /// Represents OSAL thread handle.
 /// @note Size of this structure depends on the concrete implementation. In particular, ThreadImpl
 ///       contains objects from the target platform. Thus depending on its size is not recommended.
@@ -67,7 +69,7 @@ enum OsalThreadPriority {
 static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::eNormal;
 
 /// Helper constant with default stack size of new thread.
-static const size_t cOsalThreadDefaultStackSize = 8 * 1024;
+static const size_t cOsalThreadDefaultStackSize = static_cast<const size_t>(8 * 1024);
 
 /// Represents structure used to configuration for created thread.
 /// @note Stack is not used in all configurations (e.g. Linux doesn't support it).

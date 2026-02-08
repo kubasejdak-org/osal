@@ -32,6 +32,8 @@
 
 #include "osal/timestamp.h"
 
+#include <cstdint>
+
 /// @num ConversionsToSec
 /// Represents the time conversion helpers to seconds.
 enum ConversionsToSec {

@@ -34,6 +34,8 @@
 
 #include "timestampPriv.hpp"
 
+#include <chrono>
+
 /// Initializes the internal state of the timestamp module.
 static void initTimestamp()
 {
