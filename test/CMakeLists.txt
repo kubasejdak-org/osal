@@ -1,6 +1,6 @@
 # find_library(Catch2 NAMES Catch2 Catch2d REQUIRED)
 
-# add_subdirectory(init)
+add_subdirectory(init)
 
 add_executable(osal-tests
     appMain.cpp
