@@ -3,8 +3,8 @@
 add_subdirectory(init)
 
 add_executable(osal-tests
-    appMain.cpp
     # Error.cpp
+    main.cpp
     # Mutex.cpp
     # MutexObject.cpp
     # ScopedLock.cpp
