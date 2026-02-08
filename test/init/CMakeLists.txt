@@ -2,11 +2,13 @@ add_library(platform-init EXCLUDE_FROM_ALL)
 add_library(platform::init ALIAS platform-init)
 
 target_include_directories(platform-init
-    PUBLIC include
+    PUBLIC
+        include
 )
 
 add_subdirectory(${PLATFORM})
 
-target_link_libraries(platform-init
-    INTERFACE optimized Catch2 debug Catch2d
-)
+# target_link_libraries(platform-init
+#     INTERFACE
+#         optimized Catch2 debug Catch2d
+# )
