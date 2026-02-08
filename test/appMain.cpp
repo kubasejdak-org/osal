@@ -31,7 +31,7 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 // #include "platform/VerboseReporter.hpp"
-// #include "platform/init.hpp"
+#include "platform/init.hpp"
 
 // #include <osal/init.hpp>
 
@@ -44,10 +44,11 @@ int appMain(int argc, char* argv[])
 {
     (void) argc;
     (void) argv;
-    return EXIT_SUCCESS;
-    //     if (!platform::init())
-    //         return EXIT_FAILURE;
 
+    if (!platform::init())
+        return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
     //     if (!osal::init())
     //         return EXIT_FAILURE;
 
