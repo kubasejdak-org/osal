@@ -45,8 +45,10 @@
 #include <functional>
 #include <memory>
 
+namespace {
+
 /// Maximal size of the thread name.
-static constexpr std::size_t cMaxThreadName = 15;
+constexpr std::size_t cMaxThreadName = 15;
 
 /// Represents helper wrapper around OSAL thread function and its arguments.
 /// @note This type is necessary, because OsalThreadFunction has different signature than pthread.
@@ -62,12 +64,14 @@ struct ThreadWrapperData {
 /// OSAL thread function.
 /// @param arg          Helper thread arguments.
 /// @return Result of this function is never used so it always returns nullptr.
-static void* threadWrapper(void* arg)
+void* threadWrapper(void* arg)
 {
     auto wrapperData = std::unique_ptr<ThreadWrapperData>(static_cast<ThreadWrapperData*>(arg));
     wrapperData->func(wrapperData->param);
     return nullptr;
 }
+
+} // namespace
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
