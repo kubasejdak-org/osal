@@ -60,7 +60,7 @@ struct tm osalTimevalToTm(struct timeval value)
 
 time_t osalTmToTime(struct tm value)
 {
-    return static_cast<time_t>(timegm(&value));
+    return timegm(&value);
 }
 
 time_t osalTimespecToTime(struct timespec value)

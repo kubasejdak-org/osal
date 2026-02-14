@@ -32,11 +32,12 @@
 
 #include "osal/Semaphore.h"
 
-#include "osal/timestamp.h"
+#include "osal/Error.h"
 
 #include <cassert>
 #include <cerrno>
 #include <chrono>
+#include <cstdint>
 #include <cstring>
 #include <ctime>
 

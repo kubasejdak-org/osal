@@ -32,6 +32,11 @@
 
 #include "osal/ScopedLock.hpp"
 
+#include "osal/Mutex.hpp"
+#include "osal/Timeout.hpp"
+
+#include <system_error>
+
 namespace osal {
 
 ScopedLock::ScopedLock(Mutex& mutex)

@@ -32,11 +32,15 @@
 
 #include "osal/Thread.h"
 
+#include "osal/Error.h"
+
 #include <sched.h>
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <memory>

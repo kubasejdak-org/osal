@@ -32,7 +32,12 @@
 
 #include "osal/time.hpp"
 
+#include "osal/time.h"
+
 #include <array>
+#include <cstddef>
+#include <ctime>
+#include <string>
 
 namespace osal {
 

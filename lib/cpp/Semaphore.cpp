@@ -32,8 +32,13 @@
 
 #include "osal/Semaphore.hpp"
 
+#include "osal/Semaphore.h"
+#include "osal/Timeout.hpp"
+
 #include <chrono>
 #include <cstdint>
+#include <system_error>
+#include <utility>
 
 namespace osal {
 

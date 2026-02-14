@@ -32,7 +32,10 @@
 
 #include "osal/Error.hpp"
 
+#include "osal/Error.h"
+
 #include <string>
+#include <system_error>
 
 namespace osal {
 

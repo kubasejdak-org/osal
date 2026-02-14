@@ -34,22 +34,21 @@
 
 #include "osal/timestamp.h"
 
+#include <chrono>
 #include <type_traits>
 
 namespace osal {
 
 Timestamp timestamp()
 {
-    Duration timeSinceStart;
-
     if constexpr (std::is_same_v<Duration, std::chrono::nanoseconds>)
-        timeSinceStart = Duration(osalTimestampNs());
+        return Timestamp(Duration(osalTimestampNs()));
     else if constexpr (std::is_same_v<Duration, std::chrono::microseconds>)
-        timeSinceStart = Duration(osalTimestampUs());
+        return Timestamp(Duration(osalTimestampUs()));
     else if constexpr (std::is_same_v<Duration, std::chrono::milliseconds>)
-        timeSinceStart = Duration(osalTimestampMs());
-
-    return Timestamp(timeSinceStart);
+        return Timestamp(Duration(osalTimestampMs()));
+    else
+        static_assert(false);
 }
 
 } // namespace osal
