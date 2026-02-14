@@ -36,11 +36,15 @@
 
 #include <chrono>
 
+namespace {
+
 /// Initializes the internal state of the timestamp module.
-static void initTimestamp()
+void initTimestamp()
 {
     initTime = std::chrono::steady_clock::now();
 }
+
+} // namespace
 
 bool osalInit()
 {
