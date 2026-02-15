@@ -1,0 +1,6 @@
+---
+InheritParentConfig: true
+Checks: '
+  -*braces-around-statements
+'
+...
