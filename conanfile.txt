@@ -1,12 +1,8 @@
-[requires]
-catch2/3.3.0
-fmt/9.1.0
-spdlog/1.11.0
+[test_requires]
+catch2/3.12.0
 
 [generators]
-cmake
+CMakeDeps
 
-[options]
-fmt:header_only=True
-spdlog:no_exceptions=True
-spdlog:header_only=True
+# [options]
+# catch2/*:default_reporter=verbose

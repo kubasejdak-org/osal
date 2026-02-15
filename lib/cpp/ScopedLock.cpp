@@ -32,23 +32,28 @@
 
 #include "osal/ScopedLock.hpp"
 
+#include "osal/Mutex.hpp"
+#include "osal/Timeout.hpp"
+
+#include <system_error>
+
 namespace osal {
 
 ScopedLock::ScopedLock(Mutex& mutex)
     : m_mutex(mutex)
 {
-    lock();
+    [[maybe_unused]] auto _ = lock();
 }
 
 ScopedLock::ScopedLock(Mutex& mutex, Timeout timeout)
     : m_mutex(mutex)
 {
-    timedLock(timeout);
+    [[maybe_unused]] auto _ = timedLock(timeout);
 }
 
 ScopedLock::~ScopedLock()
 {
-    unlock();
+    [[maybe_unused]] auto _ = unlock();
 }
 
 std::error_code ScopedLock::lock()

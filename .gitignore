@@ -1,6 +1,7 @@
 # Object and executable files
 cmake-build-*/
 out/
+build/
 
 # Build systems
 CMakeLists.txt.user
@@ -8,4 +9,3 @@ CMakeUserPresets.json
 
 # IDE
 .idea/
-.vscode/

@@ -32,8 +32,13 @@
 
 #include "osal/Mutex.hpp"
 
+#include "osal/Mutex.h"
+#include "osal/Timeout.hpp"
+
 #include <chrono>
 #include <cstdint>
+#include <system_error>
+#include <utility>
 
 namespace osal {
 

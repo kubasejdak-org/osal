@@ -32,13 +32,12 @@
 
 #include "osal/Mutex.h"
 
-#include "osal/common/format.hpp"
-#include "osal/common/logger.hpp"
-#include "osal/timestamp.h"
+#include "osal/Error.h"
 
 #include <cassert>
 #include <cerrno>
 #include <chrono>
+#include <cstdint>
 #include <cstring>
 #include <ctime>
 

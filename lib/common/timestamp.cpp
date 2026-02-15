@@ -32,6 +32,8 @@
 
 #include "osal/timestamp.h"
 
+#include <cstdint>
+
 /// @num ConversionsToSec
 /// Represents the time conversion helpers to seconds.
 enum ConversionsToSec {
@@ -55,60 +57,60 @@ enum ConversionsToUs {
 
 uint64_t osalMsToSec(uint64_t milliseconds)
 {
-    return (milliseconds / eOsalMsInSec);
+    return milliseconds / eOsalMsInSec;
 }
 
 uint64_t osalUsToSec(uint64_t microseconds)
 {
-    return (microseconds / eOsalUsInSec);
+    return microseconds / eOsalUsInSec;
 }
 
 uint64_t osalNsToSec(uint64_t nanoseconds)
 {
-    return (nanoseconds / eOsalNsInSec);
+    return nanoseconds / eOsalNsInSec;
 }
 
 uint64_t osalSecToMs(uint64_t seconds)
 {
-    return (seconds * eOsalMsInSec);
+    return seconds * eOsalMsInSec;
 }
 
 uint64_t osalUsToMs(uint64_t microseconds)
 {
-    return (microseconds / eOsalUsInMs);
+    return microseconds / eOsalUsInMs;
 }
 
 uint64_t osalNsToMs(uint64_t nanoseconds)
 {
-    return (nanoseconds / eOsalNsInMs);
+    return nanoseconds / eOsalNsInMs;
 }
 
 uint64_t osalSecToUs(uint64_t seconds)
 {
-    return (seconds * eOsalUsInSec);
+    return seconds * eOsalUsInSec;
 }
 
 uint64_t osalMsToUs(uint64_t milliseconds)
 {
-    return (milliseconds * eOsalUsInMs);
+    return milliseconds * eOsalUsInMs;
 }
 
 uint64_t osalNsToUs(uint64_t nanoseconds)
 {
-    return (nanoseconds / eOsalNsInUs);
+    return nanoseconds / eOsalNsInUs;
 }
 
 uint64_t osalSecToNs(uint64_t seconds)
 {
-    return (seconds * eOsalNsInSec);
+    return seconds * eOsalNsInSec;
 }
 
 uint64_t osalMsToNs(uint64_t milliseconds)
 {
-    return (milliseconds * eOsalNsInMs);
+    return milliseconds * eOsalNsInMs;
 }
 
 uint64_t osalUsToNs(uint64_t microseconds)
 {
-    return (microseconds * eOsalNsInUs);
+    return microseconds * eOsalNsInUs;
 }

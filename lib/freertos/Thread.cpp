@@ -73,12 +73,12 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
 
     int priority{};
     switch (config.priority) {
-        case OsalThreadPriority::eLowest: priority = cPriorityMin; break;
-        case OsalThreadPriority::eLow: priority = cPriorityMin + (cPriorityStep * 1); break;
-        case OsalThreadPriority::eNormal: priority = cPriorityMin + (cPriorityStep * 2); break;
-        case OsalThreadPriority::eHigh: priority = cPriorityMin + (cPriorityStep * 3); break;
+        case OsalThreadPriority::eLowest:  priority = cPriorityMin; break;
+        case OsalThreadPriority::eLow:     priority = cPriorityMin + (cPriorityStep * 1); break;
+        case OsalThreadPriority::eNormal:  priority = cPriorityMin + (cPriorityStep * 2); break;
+        case OsalThreadPriority::eHigh:    priority = cPriorityMin + (cPriorityStep * 3); break;
         case OsalThreadPriority::eHighest: priority = cPriorityMax; break;
-        default: return OsalError::eInvalidArgument;
+        default:                           return OsalError::eInvalidArgument;
     }
 
     thread->impl.params.func = func;

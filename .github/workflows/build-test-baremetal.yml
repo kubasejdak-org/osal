@@ -1,0 +1,56 @@
+name: Build and run tests for baremetal
+
+on:
+  push:
+  schedule:
+    - cron: "0 12 * * SAT"
+  workflow_dispatch:
+
+jobs:
+  build-stm32f4:
+    runs-on: [self-hosted, X64, build, docker]
+    needs: []
+    container:
+      image: ${{ matrix.DOCKER_IMAGE }}
+      options: --user root
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - PRESET: freertos-armv7-m4-debug
+            DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
+          - PRESET: freertos-armv7-m4-release
+            DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: kubasejdak-org/cmake-build-preset-action@main
+        with:
+          preset: ${{ matrix.PRESET }}
+
+  # examples-stm32f4:
+  #   runs-on: [self-hosted, ARM64, stm32f4]
+  #   needs: build-stm32f4
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - APP: platform-package-info-example
+  #           PRESET: freertos-armv7-m4-debug
+  #         - APP: platform-hello-world-example
+  #           PRESET: freertos-armv7-m4-debug
+  #   steps:
+  #     - uses: kubasejdak-org/openocd-run-action@main
+  #       with:
+  #         binary: ${{ matrix.APP }}
+  #         artifact: ${{ matrix.PRESET }}
+  #         board: stm32f4discovery
+  #         serial: /dev/ttyUSB0
+
+  check-all-baremetal:
+    runs-on: [self-hosted, build]
+    needs:
+      - build-stm32f4
+      # - examples-stm32f4
+    steps:
+      - run: echo "Success"

@@ -41,4 +41,4 @@
 // #endif
 
 // REGISTER_LOGGER(MutexLogger, "Mutex", cDefaultLogLevel);
-#define MutexLogger //
+#define MUTEX_LOGGER //

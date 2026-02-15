@@ -32,6 +32,8 @@
 
 #include "osal/time.h" // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
+#include "osal/Error.h"
+
 #include <ctime>
 #include <string>
 
@@ -58,7 +60,7 @@ struct tm osalTimevalToTm(struct timeval value)
 
 time_t osalTmToTime(struct tm value)
 {
-    return int(timegm(&value));
+    return timegm(&value);
 }
 
 time_t osalTimespecToTime(struct timespec value)

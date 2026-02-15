@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2022-2023, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2019-2023, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -30,24 +30,37 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+// #include "platform/VerboseReporter.hpp"
+#include "platform/init.hpp"
 
-#include "osal/Mutex.h"
+// #include <osal/init.hpp>
 
-#include <format>
-#include <string_view>
+// #include <catch2/catch_session.hpp>
 
-template <>
-struct std::formatter<OsalMutexType> : std::formatter<std::string_view> {
-    template <typename FormatContext>
-    auto format(OsalMutexType value, FormatContext& ctx)
-    {
-        std::string_view name;
-        switch (value) {
-            case OsalMutexType::eRecursive:    name = "recursive"; break;
-            case OsalMutexType::eNonRecursive: name = "non-recursive"; break;
-        }
+#include <cstdlib>
 
-        return std::formatter<std::string_view>::format(name, ctx);
-    }
-};
+// NOLINTNEXTLINE
+int appMain(int argc, char* argv[])
+{
+    (void) argc;
+    (void) argv;
+
+    if (!platform::init())
+        return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
+    //     if (!osal::init())
+    //         return EXIT_FAILURE;
+
+    // #ifdef TEST_TAGS
+    //     (void) argc;
+
+    //     std::array<char*, 2> argvTags{};
+    //     argvTags[0] = argv[0];
+    //     argvTags[1] = const_cast<char*>(TEST_TAGS);
+
+    //     return Catch::Session().run(argvTags.size(), argvTags.data());
+    // #else
+    //     return Catch::Session().run(argc, argv);
+    // #endif
+}

@@ -33,6 +33,7 @@
 #include "osal/sleep.h"
 
 #include <chrono>
+#include <cstdint>
 #include <thread>
 
 void osalSleepMs(uint64_t cDurationMs)

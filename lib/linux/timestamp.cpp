@@ -41,15 +41,19 @@
 // NOLINTNEXTLINE(cert-err58-cpp,cppcoreguidelines-avoid-non-const-global-variables)
 std::chrono::steady_clock::time_point initTime;
 
+namespace {
+
 /// Returns the time since the osalInit() function was called.
 /// @tparam Unit        Unit in which time should be represented (converted to).
 /// @return Returns the time since the osalInit() function was called.
 template <typename Unit>
-static std::uint64_t timeSinceStart()
+std::uint64_t timeSinceStart()
 {
     auto now = std::chrono::steady_clock::now();
     return std::chrono::duration_cast<Unit>(now - initTime).count();
 }
+
+} // namespace
 
 uint64_t osalTimestampMs()
 {

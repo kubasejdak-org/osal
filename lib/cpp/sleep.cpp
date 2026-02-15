@@ -34,6 +34,8 @@
 
 #include "osal/sleep.h"
 
+#include <cstdint>
+
 namespace osal::detail {
 
 void sleepMs(std::uint64_t durationMs)
