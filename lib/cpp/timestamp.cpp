@@ -36,7 +36,6 @@
 
 #include <chrono>
 #include <type_traits>
-#include <utility>
 
 namespace osal {
 
@@ -49,8 +48,7 @@ Timestamp timestamp()
     else if constexpr (std::is_same_v<Duration, std::chrono::milliseconds>)
         return Timestamp(Duration(osalTimestampMs()));
     else
-        // __builtin_unreachable();
-        std::unreachable();
+        __builtin_unreachable();
 }
 
 } // namespace osal
