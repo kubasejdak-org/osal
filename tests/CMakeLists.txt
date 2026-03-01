@@ -2,7 +2,7 @@ add_subdirectory(helpers)
 add_subdirectory(init)
 
 add_executable(osal-tests
-    # Error.cpp
+    Error.cpp
     main.cpp
     # Mutex.cpp
     # MutexObject.cpp
@@ -17,11 +17,13 @@ add_executable(osal-tests
 )
 
 find_package(Catch2)
+find_package(osal)
 find_package(platform COMPONENTS main)
 
 target_link_libraries(osal-tests
     PRIVATE
         Catch2::Catch2
+        osal::cpp
         platform::init
         platform::main
         tests::helpers
