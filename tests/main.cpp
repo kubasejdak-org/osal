@@ -26,36 +26,22 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-// #include "platform/VerboseReporter.hpp"
 #include "platform/init.hpp"
+#include "tests/helpers/VerboseReporter.hpp"
 
 // #include <osal/init.hpp>
 
-// #include <catch2/catch_session.hpp>
+#include <catch2/catch_session.hpp>
 
 #include <cstdlib>
 
 int appMain(int argc, char** argv)
 {
-    (void) argc;
-    (void) argv;
-
     if (!platform::init())
         return EXIT_FAILURE;
 
-    return EXIT_SUCCESS;
     //     if (!osal::init())
     //         return EXIT_FAILURE;
 
-    // #ifdef TEST_TAGS
-    //     (void) argc;
-
-    //     std::array<char*, 2> argvTags{};
-    //     argvTags[0] = argv[0];
-    //     argvTags[1] = const_cast<char*>(TEST_TAGS);
-
-    //     return Catch::Session().run(argvTags.size(), argvTags.data());
-    // #else
-    //     return Catch::Session().run(argc, argv);
-    // #endif
+    return Catch::Session().run(argc, argv);
 }

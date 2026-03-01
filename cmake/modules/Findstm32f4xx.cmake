@@ -50,3 +50,5 @@ target_compile_options(stm32f4xx
     PRIVATE
         -w
 )
+
+set(stm32f4xx_FOUND TRUE)
