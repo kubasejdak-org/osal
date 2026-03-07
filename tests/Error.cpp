@@ -20,9 +20,11 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
+#include <osal/Error.h>
+#include <osal/Error.hpp> // NOLINT(misc-include-cleaner)
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <string>

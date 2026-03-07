@@ -1,9 +1,8 @@
-# find_library(Catch2 NAMES Catch2 Catch2d REQUIRED)
-
+add_subdirectory(helpers)
 add_subdirectory(init)
 
 add_executable(osal-tests
-    # Error.cpp
+    Error.cpp
     main.cpp
     # Mutex.cpp
     # MutexObject.cpp
@@ -17,25 +16,23 @@ add_executable(osal-tests
     # timestamp.cpp
 )
 
-# find_package(Catch2)
+find_package(Catch2)
+find_package(osal)
 find_package(platform COMPONENTS main)
 
 target_link_libraries(osal-tests
     PRIVATE
-        # Catch2::Catch2
+        Catch2::Catch2
+        osal::cpp
         platform::init
         platform::main
+        tests::helpers
 )
 
-# target_compile_definitions(osal-tests
-#     # This is required to selectively run Catch2 tests using tags on platforms, where cmd line arguments are not available.
-#     PRIVATE $<$<BOOL:${TEST_TAGS}>:TEST_TAGS="${TEST_TAGS}">
-# )
-
 # target_link_libraries(osal-tests
-#     PRIVATE optimized Catch2 debug Catch2d osal::c osal::cpp platform::init platform::main
+#     PRIVATE osal::c osal::cpp
 # )
 
-# if (PLATFORM STREQUAL freertos-arm)
-#     objcopy_generate_bin(osal-tests)
-# endif ()
+if (NOT UNIX)
+    objcopy_generate_bin(osal-tests)
+endif ()

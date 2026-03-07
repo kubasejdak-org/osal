@@ -17,9 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - PRESET: freertos-armv7-m4-debug
+          - PRESET: freertos-armv7-m4-conan-gcc-debug
             DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
-          - PRESET: freertos-armv7-m4-release
+          - PRESET: freertos-armv7-m4-conan-gcc-release
             DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
     steps:
       - uses: actions/checkout@v6

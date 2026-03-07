@@ -110,12 +110,12 @@
       "inherits": ["yocto-sdk-clang", "release"]
     },
     {
-      "name": "freertos-armv7-m4-debug",
-      "inherits": ["freertos-armv7-m4", "debug"]
+      "name": "freertos-armv7-m4-conan-gcc-debug",
+      "inherits": ["freertos-armv7-m4", "debug", "conan"]
     },
     {
-      "name": "freertos-armv7-m4-release",
-      "inherits": ["freertos-armv7-m4", "release"]
+      "name": "freertos-armv7-m4-conan-gcc-release",
+      "inherits": ["freertos-armv7-m4", "release", "conan"]
     }
   ]
 }
