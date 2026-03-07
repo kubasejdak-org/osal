@@ -69,7 +69,7 @@ enum OsalThreadPriority {
 static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::eNormal;
 
 /// Helper constant with default stack size of new thread.
-static const size_t cOsalThreadDefaultStackSize = static_cast<size_t>(8) * static_cast<size_t>(1024);
+static const size_t cOsalThreadDefaultStackSize = static_cast<size_t>(8 * 1024);
 
 /// Represents structure used to configuration for created thread.
 /// @note Stack is not used in all configurations (e.g. Linux doesn't support it).
