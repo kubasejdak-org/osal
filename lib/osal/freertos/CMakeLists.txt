@@ -8,5 +8,6 @@ target_sources(osal-c PRIVATE
 )
 
 target_link_libraries(osal-c
-    PUBLIC freertos
+    PUBLIC
+        freertos
 )
