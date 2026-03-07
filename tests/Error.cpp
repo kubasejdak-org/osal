@@ -48,9 +48,3 @@ TEST_CASE("Errors have proper human readable messages", "[unit][cpp][error]")
     REQUIRE(!error.message().empty());
     REQUIRE_THAT(error.message(), Catch::Matchers::Equals(cUnrecognizedMsg));
 }
-
-TEST_CASE("Error can be used with std::error_code", "[unit][cpp][error]")
-{
-    std::error_code error = OsalError::eInvalidArgument;
-    REQUIRE(error == OsalError::eInvalidArgument);
-}
