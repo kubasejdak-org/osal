@@ -23,15 +23,12 @@ find_package(platform COMPONENTS main)
 target_link_libraries(osal-tests
     PRIVATE
         Catch2::Catch2
+        osal::c
         osal::cpp
         platform::init
         platform::main
         tests::helpers
 )
-
-# target_link_libraries(osal-tests
-#     PRIVATE osal::c osal::cpp
-# )
 
 if (NOT UNIX)
     objcopy_generate_bin(osal-tests)
