@@ -25,14 +25,14 @@ jobs:
             DOCKER_IMAGE: kubasejdak/clang:18-24.04
           - PRESET: linux-native-conan-clang-release
             DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          - PRESET: linux-native-conan-clang-debug-asan
-            DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          - PRESET: linux-native-conan-clang-debug-lsan
-            DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          - PRESET: linux-native-conan-clang-debug-tsan
-            DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          - PRESET: linux-native-conan-clang-debug-ubsan
-            DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-gcc-debug-asan
+            DOCKER_IMAGE: kubasejdak/gcc:13-24.04
+          - PRESET: linux-native-conan-gcc-debug-lsan
+            DOCKER_IMAGE: kubasejdak/gcc:13-24.04
+          - PRESET: linux-native-conan-gcc-debug-tsan
+            DOCKER_IMAGE: kubasejdak/gcc:13-24.04
+          - PRESET: linux-native-conan-gcc-debug-ubsan
+            DOCKER_IMAGE: kubasejdak/gcc:13-24.04
     steps:
       - uses: actions/checkout@v6
 
