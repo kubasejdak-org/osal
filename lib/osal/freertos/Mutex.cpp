@@ -86,7 +86,7 @@ OsalError osalMutexDestroy(OsalMutex* mutex)
 OsalError osalMutexLock(OsalMutex* mutex)
 {
     auto error = osalMutexTimedLock(mutex, portMAX_DELAY);
-    configASSERT(error == OsalError::eOk);
+    configASSERT(error == OsalError{});
     return error;
 }
 

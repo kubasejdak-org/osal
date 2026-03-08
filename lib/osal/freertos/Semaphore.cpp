@@ -74,7 +74,7 @@ OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
 OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 {
     auto error = osalSemaphoreTimedWait(semaphore, portMAX_DELAY);
-    configASSERT(error == OsalError::eOk);
+    configASSERT(error == OsalError{});
     return error;
 }
 
