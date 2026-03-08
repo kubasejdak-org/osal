@@ -65,7 +65,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
     mutex->initialized = true;
 
     // MutexLogger::trace("Created mutex: type={}", type);
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexDestroy(OsalMutex* mutex)
@@ -80,7 +80,7 @@ OsalError osalMutexDestroy(OsalMutex* mutex)
 
     std::memset(mutex, 0, sizeof(OsalMutex));
     // MutexLogger::trace("Destroyed mutex");
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexLock(OsalMutex* mutex)
@@ -94,7 +94,7 @@ OsalError osalMutexLock(OsalMutex* mutex)
     assert(result == 0);
 
     // MutexLogger::trace("Locked mutex");
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexTryLock(OsalMutex* mutex)
@@ -116,7 +116,7 @@ OsalError osalMutexTryLock(OsalMutex* mutex)
     assert(result == 0);
 
     // MutexLogger::trace("Locked mutex");
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexTryLockIsr(OsalMutex* mutex)
@@ -158,7 +158,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
 
     assert(result == 0);
     // MutexLogger::trace("Locked mutex");
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexUnlock(OsalMutex* mutex)
@@ -171,7 +171,7 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
     [[maybe_unused]] auto result = pthread_mutex_unlock(&mutex->impl.handle);
     assert(result == 0);
     // MutexLogger::trace("Unlocked mutex");
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexUnlockIsr(OsalMutex* mutex)

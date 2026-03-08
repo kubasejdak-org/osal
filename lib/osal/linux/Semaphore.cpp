@@ -48,7 +48,7 @@ OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValu
 
     semaphore->impl.handle = handle;
     semaphore->initialized = true;
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
@@ -60,7 +60,7 @@ OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
     assert(result == 0);
 
     std::memset(semaphore, 0, sizeof(OsalSemaphore));
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
@@ -70,7 +70,7 @@ OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 
     [[maybe_unused]] auto result = sem_wait(&semaphore->impl.handle);
     assert(result == 0);
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
@@ -83,7 +83,7 @@ OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
         return OsalError::eLocked;
 
     assert(result == 0);
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore)
@@ -110,7 +110,7 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
         return OsalError::eTimeout;
 
     assert(result == 0);
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalSemaphoreSignal(OsalSemaphore* semaphore)
@@ -120,7 +120,7 @@ OsalError osalSemaphoreSignal(OsalSemaphore* semaphore)
 
     [[maybe_unused]] auto result = sem_post(&semaphore->impl.handle);
     assert(result == 0);
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalSemaphoreSignalIsr(OsalSemaphore* semaphore)
