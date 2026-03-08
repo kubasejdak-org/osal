@@ -190,7 +190,7 @@ jobs:
     runs-on: [self-hosted, build]
     needs:
       - build-x64
-      # - build-arm64
+      - build-arm64
       - tests-x64
       # - examples-x64
       # - examples-arm64
