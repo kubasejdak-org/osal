@@ -1,0 +1,67 @@
+name: Check code coverage
+
+on:
+  push:
+  schedule:
+    - cron: "0 12 * * SAT"
+  workflow_dispatch:
+
+env:
+  PRESET: linux-native-conan-gcc-debug
+
+jobs:
+  build-coverage:
+    runs-on: [self-hosted, X64, build, docker]
+    container:
+      image: kubasejdak/gcc:13-24.04
+      options: --user root
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: kubasejdak-org/cpp-coverage-check-action/build@main
+        with:
+          preset: ${{ env.PRESET }}
+
+  test-coverage:
+    runs-on: [self-hosted, X64, docker]
+    needs: build-coverage
+    container:
+      image: kubasejdak/gcc:13-24.04
+      options: --user root
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - APP: osal-tests
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Collect coverage for ${{ matrix.APP }}
+        uses: kubasejdak-org/cpp-coverage-check-action/collect@main
+        with:
+          preset: ${{ env.PRESET }}
+          binary: ${{ matrix.APP }}
+
+  generate-coverage-report:
+    runs-on: [self-hosted, X64, build, docker]
+    needs: test-coverage
+    container:
+      image: kubasejdak/gcc:13-24.04
+      options: --user root
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Generate and validate coverage report
+        uses: kubasejdak-org/cpp-coverage-check-action/report@main
+        with:
+          line-coverage: 1.0
+          function-coverage: 1.0
+
+  check-all-coverage:
+    runs-on: [self-hosted, build]
+    needs:
+      - build-coverage
+      - test-coverage
+      - generate-coverage-report
+    steps:
+      - run: echo "Success"
