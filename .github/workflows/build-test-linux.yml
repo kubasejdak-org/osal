@@ -125,66 +125,48 @@ jobs:
   #         binary: ${{ matrix.APP }}
   #         artifact: build-${{ env.PRESET }}
 
-  # valgrind-x64:
-  #   runs-on: [self-hosted, X64, docker]
-  #   needs: build-x64
-  #   container:
-  #     image: kubasejdak/valgrind:24.04
-  #     options: --user root
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - APP: platform-package-info-example
-  #         - APP: platform-hello-world-example
-  #         - APP: platform-paths-example
-  #   env:
-  #     PRESET: linux-native-gcc-debug
-  #   steps:
-  #     - uses: kubasejdak-org/valgrind-run-action@main
-  #       with:
-  #         binary: ${{ matrix.APP }}
-  #         artifact: build-${{ env.PRESET }}
+  valgrind-x64:
+    runs-on: [self-hosted, X64, docker]
+    needs: build-x64
+    container:
+      image: kubasejdak/valgrind:24.04
+      options: --user root
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - APP: osal-tests
+    env:
+      PRESET: linux-native-conan-gcc-debug
+    steps:
+      - uses: kubasejdak-org/valgrind-run-action@main
+        with:
+          binary: ${{ matrix.APP }}
+          artifact: build-${{ env.PRESET }}
 
-  # sanitizers-x64:
-  #   runs-on: [self-hosted, X64, docker]
-  #   needs: build-x64
-  #   container:
-  #     image: kubasejdak/gcc:13-24.04
-  #     options: --user root --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - APP: platform-package-info-example
-  #           PRESET: linux-native-gcc-debug-asan
-  #         - APP: platform-package-info-example
-  #           PRESET: linux-native-gcc-debug-lsan
-  #         - APP: platform-package-info-example
-  #           PRESET: linux-native-gcc-debug-tsan
-  #         - APP: platform-package-info-example
-  #           PRESET: linux-native-gcc-debug-ubsan
-  #         - APP: platform-hello-world-example
-  #           PRESET: linux-native-gcc-debug-asan
-  #         - APP: platform-hello-world-example
-  #           PRESET: linux-native-gcc-debug-lsan
-  #         - APP: platform-hello-world-example
-  #           PRESET: linux-native-gcc-debug-tsan
-  #         - APP: platform-hello-world-example
-  #           PRESET: linux-native-gcc-debug-ubsan
-  #         - APP: platform-paths-example
-  #           PRESET: linux-native-gcc-debug-asan
-  #         - APP: platform-paths-example
-  #           PRESET: linux-native-gcc-debug-lsan
-  #         - APP: platform-paths-example
-  #           PRESET: linux-native-gcc-debug-tsan
-  #         - APP: platform-paths-example
-  #           PRESET: linux-native-gcc-debug-ubsan
-  #   steps:
-  #     - uses: kubasejdak-org/binary-run-action@main
-  #       with:
-  #         binary: ${{ matrix.APP }}
-  #         artifact: build-${{ matrix.PRESET }}
+  sanitizers-x64:
+    runs-on: [self-hosted, X64, docker]
+    needs: build-x64
+    container:
+      image: kubasejdak/gcc:13-24.04
+      options: --user root --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - APP: osal-tests
+            PRESET: linux-native-conan-gcc-debug-asan
+          - APP: osal-tests
+            PRESET: linux-native-conan-gcc-debug-lsan
+          - APP: osal-tests
+            PRESET: linux-native-conan-gcc-debug-tsan
+          - APP: osal-tests
+            PRESET: linux-native-conan-gcc-debug-ubsan
+    steps:
+      - uses: kubasejdak-org/binary-run-action@main
+        with:
+          binary: ${{ matrix.APP }}
+          artifact: build-${{ matrix.PRESET }}
 
   check-all-linux:
     runs-on: [self-hosted, build]
@@ -194,7 +176,7 @@ jobs:
       - tests-x64
       # - examples-x64
       # - examples-arm64
-      # - valgrind-x64
-      # - sanitizers-x64
+      - valgrind-x64
+      - sanitizers-x64
     steps:
       - run: echo "Success"
