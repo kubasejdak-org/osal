@@ -38,19 +38,19 @@
 
 TEST_CASE("Errors have proper human readable messages", "[unit][cpp][error]")
 {
-    const std::string cUnrecognizedMsg = "(unrecognized error)";
-    constexpr int cErrorsCount = 9;
+    const std::string cUnrecognizedMsg = "osal: unrecognized error";
+    constexpr int cErrorsCount = 8;
 
-    for (int i = 0; i < cErrorsCount; ++i) {
+    for (int i = 1; i <= cErrorsCount; ++i) {
         std::error_code error = static_cast<OsalError>(i);
-        REQUIRE_THAT(error.category().name(), Catch::Matchers::Equals("osal"));
-        REQUIRE(!error.message().empty());
-        REQUIRE_THAT(error.message(), !Catch::Matchers::Equals(cUnrecognizedMsg));
+        CHECK_THAT(error.category().name(), Catch::Matchers::Equals("osal"));
+        CHECK(!error.message().empty());
+        CHECK(error.message() != cUnrecognizedMsg);
     }
 
-    constexpr int cInvalidError = cErrorsCount;
+    constexpr int cInvalidError = cErrorsCount + 1;
     std::error_code error = static_cast<OsalError>(cInvalidError);
-    REQUIRE_THAT(error.category().name(), Catch::Matchers::Equals("osal"));
-    REQUIRE(!error.message().empty());
-    REQUIRE_THAT(error.message(), Catch::Matchers::Equals(cUnrecognizedMsg));
+    CHECK_THAT(error.category().name(), Catch::Matchers::Equals("osal"));
+    CHECK(!error.message().empty());
+    CHECK_THAT(error.message(), Catch::Matchers::Equals(cUnrecognizedMsg));
 }

@@ -132,7 +132,7 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
 
     thread->impl.handle = handle;
     thread->initialized = true;
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalThreadDestroy(OsalThread* thread)
@@ -141,7 +141,7 @@ OsalError osalThreadDestroy(OsalThread* thread)
         return OsalError::eInvalidArgument;
 
     std::memset(thread, 0, sizeof(OsalThread));
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalThreadJoin(OsalThread* thread)
@@ -152,7 +152,7 @@ OsalError osalThreadJoin(OsalThread* thread)
     if (pthread_join(thread->impl.handle, nullptr) != 0)
         return OsalError::eOsError;
 
-    return OsalError::eOk;
+    return {};
 }
 
 void osalThreadYield()
@@ -173,5 +173,5 @@ OsalError osalThreadName(char* name, size_t size)
 
     std::strncpy(name, buffer.data(), size);
     name[size - 1] = '\0';
-    return OsalError::eOk;
+    return {};
 }

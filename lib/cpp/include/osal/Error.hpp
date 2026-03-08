@@ -30,12 +30,41 @@
 
 #include "osal/Error.h"
 
+#include <string>
 #include <system_error>
 #include <type_traits>
 
+namespace osal {
+
+/// Error category required by std::error_code.
+struct ErrorCategory : std::error_category {
+    [[nodiscard]] const char* name() const noexcept override { return "osal"; }
+
+    [[nodiscard]] std::string message(int value) const override
+    {
+        switch (static_cast<OsalError>(value)) {
+            case OsalError::eInvalidArgument:      return "invalid argument";
+            case OsalError::eOsError:              return "OS error";
+            case OsalError::eThreadNotJoined:      return "thread not joined";
+            case OsalError::eThreadAlreadyStarted: return "thread already started";
+            case OsalError::eNotOwner:             return "not owner";
+            case OsalError::eNotLocked:            return "not locked";
+            case OsalError::eLocked:               return "locked";
+            case OsalError::eTimeout:              return "timeout";
+            default:                               return std::string(name()) + ": unrecognized error";
+        }
+    }
+};
+
+} // namespace osal
+
 /// Creates error code value for OsalError enum.
 /// @return std::error_code value created from OsalError enum.
-std::error_code make_error_code(OsalError error); // NOLINT(readability-identifier-naming)
+inline std::error_code make_error_code(OsalError error) // NOLINT(readability-identifier-naming)
+{
+    static const osal::ErrorCategory cCategory{};
+    return {static_cast<int>(error), cCategory};
+}
 
 namespace std {
 

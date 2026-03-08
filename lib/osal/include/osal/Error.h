@@ -32,10 +32,9 @@
 extern "C" {
 #endif
 
-/// Represents possible error codes returned from OSAL.
+/// Errors definition.
 enum OsalError {
-    eOk,
-    eInvalidArgument,
+    eInvalidArgument = 1,
     eOsError,
     eThreadNotJoined,
     eThreadAlreadyStarted,
