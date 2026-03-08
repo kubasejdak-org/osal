@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: kubasejdak-org/cpp-coverage-check-action/build@main
+      - uses: kubasejdak-org/cpp-coverage-check-action/build@maintenance/fix-build2
         with:
           preset: ${{ env.PRESET }}
 
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Collect coverage for ${{ matrix.APP }}
-        uses: kubasejdak-org/cpp-coverage-check-action/collect@main
+        uses: kubasejdak-org/cpp-coverage-check-action/collect@maintenance/fix-build2
         with:
           preset: ${{ env.PRESET }}
           binary: ${{ matrix.APP }}
@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Generate and validate coverage report
-        uses: kubasejdak-org/cpp-coverage-check-action/report@main
+        uses: kubasejdak-org/cpp-coverage-check-action/report@maintenance/fix-build2
         with:
           line-coverage: 50.0
           function-coverage: 50.0
