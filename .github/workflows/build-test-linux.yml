@@ -19,20 +19,20 @@ jobs:
         include:
           - PRESET: linux-native-conan-gcc-debug
             DOCKER_IMAGE: kubasejdak/gcc:13-24.04
-          # - PRESET: linux-native-gcc-release
-          #   DOCKER_IMAGE: kubasejdak/gcc:13-24.04
-          # - PRESET: linux-native-clang-debug
-          #   DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          # - PRESET: linux-native-clang-release
-          #   DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          # - PRESET: linux-native-clang-debug-asan
-          #   DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          # - PRESET: linux-native-clang-debug-lsan
-          #   DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          # - PRESET: linux-native-clang-debug-tsan
-          #   DOCKER_IMAGE: kubasejdak/clang:18-24.04
-          # - PRESET: linux-native-clang-debug-ubsan
-          #   DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-gcc-release
+            DOCKER_IMAGE: kubasejdak/gcc:13-24.04
+          - PRESET: linux-native-conan-clang-debug
+            DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-clang-release
+            DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-clang-debug-asan
+            DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-clang-debug-lsan
+            DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-clang-debug-tsan
+            DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: linux-native-conan-clang-debug-ubsan
+            DOCKER_IMAGE: kubasejdak/clang:18-24.04
     steps:
       - uses: actions/checkout@v6
 
@@ -40,30 +40,30 @@ jobs:
         with:
           preset: ${{ matrix.PRESET }}
 
-  # build-arm64:
-  #   runs-on: [self-hosted, X64, build, docker]
-  #   needs: []
-  #   container:
-  #     image: ${{ matrix.DOCKER_IMAGE }}
-  #     options: --user root
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - PRESET: linux-arm64-gcc-debug
-  #           DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-gcc:13-24.04
-  #         - PRESET: linux-arm64-gcc-release
-  #           DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-gcc:13-24.04
-  #         - PRESET: linux-arm64-clang-debug
-  #           DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-clang:18-24.04
-  #         - PRESET: linux-arm64-clang-release
-  #           DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-clang:18-24.04
-  #   steps:
-  #     - uses: actions/checkout@v6
+  build-arm64:
+    runs-on: [self-hosted, X64, build, docker]
+    needs: []
+    container:
+      image: ${{ matrix.DOCKER_IMAGE }}
+      options: --user root
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - PRESET: linux-arm64-conan-gcc-debug
+            DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-gcc:13-24.04
+          - PRESET: linux-arm64-conan-gcc-release
+            DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-gcc:13-24.04
+          - PRESET: linux-arm64-conan-clang-debug
+            DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-clang:18-24.04
+          - PRESET: linux-arm64-conan-clang-release
+            DOCKER_IMAGE: kubasejdak/aarch64-none-linux-gnu-clang:18-24.04
+    steps:
+      - uses: actions/checkout@v6
 
-  #     - uses: kubasejdak-org/cmake-build-preset-action@main
-  #       with:
-  #         preset: ${{ matrix.PRESET }}
+      - uses: kubasejdak-org/cmake-build-preset-action@main
+        with:
+          preset: ${{ matrix.PRESET }}
 
   tests-x64:
     runs-on: [self-hosted, X64, docker]
