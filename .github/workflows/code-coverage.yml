@@ -54,8 +54,8 @@ jobs:
       - name: Generate and validate coverage report
         uses: kubasejdak-org/cpp-coverage-check-action/report@main
         with:
-          line-coverage: 1.0
-          function-coverage: 1.0
+          line-coverage: 50.0
+          function-coverage: 50.0
 
   check-all-coverage:
     runs-on: [self-hosted, build]
