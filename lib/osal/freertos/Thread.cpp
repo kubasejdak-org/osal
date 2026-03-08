@@ -105,7 +105,7 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
 #endif
 
     thread->initialized = true;
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalThreadDestroy(OsalThread* thread)
@@ -118,7 +118,7 @@ OsalError osalThreadDestroy(OsalThread* thread)
     osalSemaphoreDestroy(&thread->impl.params.semaphore);
 
     std::memset(thread, 0, sizeof(OsalThread));
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalThreadJoin(OsalThread* thread)
@@ -144,5 +144,5 @@ OsalError osalThreadName(char* name, size_t size)
     auto* namePtr = pcTaskGetName(nullptr);
     std::strncpy(name, namePtr, size);
     name[size - 1] = '\0';
-    return OsalError::eOk;
+    return {};
 }

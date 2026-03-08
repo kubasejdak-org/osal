@@ -70,7 +70,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
     mutex->impl.handle = handle;
     mutex->initialized = true;
     mutex->type = type;
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexDestroy(OsalMutex* mutex)
@@ -80,13 +80,13 @@ OsalError osalMutexDestroy(OsalMutex* mutex)
 
     vSemaphoreDelete(mutex->impl.handle);
     std::memset(mutex, 0, sizeof(OsalMutex));
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexLock(OsalMutex* mutex)
 {
     auto error = osalMutexTimedLock(mutex, portMAX_DELAY);
-    configASSERT(error == OsalError::eOk);
+    configASSERT(error == OsalError{});
     return error;
 }
 
@@ -107,7 +107,7 @@ OsalError osalMutexTryLockIsr(OsalMutex* mutex)
     if (xSemaphoreTakeFromISR(mutex->impl.handle, nullptr) == pdFALSE)
         return OsalError::eLocked;
 
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
@@ -129,7 +129,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
     if (result == pdFALSE)
         return OsalError::eTimeout;
 
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexUnlock(OsalMutex* mutex)
@@ -150,7 +150,7 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
     if (result == pdFALSE)
         return OsalError::eOsError;
 
-    return OsalError::eOk;
+    return {};
 }
 
 OsalError osalMutexUnlockIsr(OsalMutex* mutex)
@@ -164,5 +164,5 @@ OsalError osalMutexUnlockIsr(OsalMutex* mutex)
     if (xSemaphoreGiveFromISR(mutex->impl.handle, nullptr) == pdFALSE)
         return OsalError::eOsError;
 
-    return OsalError::eOk;
+    return {};
 }

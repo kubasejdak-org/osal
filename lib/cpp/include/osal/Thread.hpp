@@ -123,7 +123,7 @@ public:
             return OsalError::eInvalidArgument;
 
         m_stack = stack;
-        return OsalError::eOk;
+        return {};
     }
 
     /// Starts the thread.
