@@ -37,17 +37,20 @@
 
 #include <cstdint>
 
+namespace {
+
 /// Internal value of the CPU ticks latched during timestamp module initialization.
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-static auto initTime = xTaskGetTickCount();
+const auto cInitTime = xTaskGetTickCount();
 
 /// Returns the time in ms since the timestamp module was initialized.
 /// @return Time in ms since the timestamp module was initialized.
-static std::uint64_t timeSinceStartMs()
+std::uint64_t timeSinceStartMs()
 {
     auto now = xTaskGetTickCount() / configTICK_RATE_HZ;
-    return static_cast<std::uint64_t>(now - initTime);
+    return static_cast<std::uint64_t>(now - cInitTime);
 }
+
+} // namespace
 
 uint64_t osalTimestampMs()
 {
