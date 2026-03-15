@@ -31,11 +31,11 @@
 #include <chrono>
 #include <cstdint>
 
+namespace {
+
 /// Internal value of system time latched during timestamp module initialization.
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-static auto initTime = std::chrono::steady_clock::now();
-
-namespace {
+const auto cInitTime = std::chrono::steady_clock::now();
 
 /// Returns the time since the timestamp module was initialized.
 /// @tparam Unit        Unit in which time should be represented (converted to).
@@ -44,7 +44,7 @@ template <typename Unit>
 std::uint64_t timeSinceStart()
 {
     auto now = std::chrono::steady_clock::now();
-    return std::chrono::duration_cast<Unit>(now - initTime).count();
+    return std::chrono::duration_cast<Unit>(now - cInitTime).count();
 }
 
 } // namespace
