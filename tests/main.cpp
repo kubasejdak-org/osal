@@ -29,8 +29,6 @@
 #include "platform/init.hpp"
 #include "tests/helpers/VerboseReporter.hpp"
 
-// #include <osal/init.hpp>
-
 #include <catch2/catch_session.hpp>
 
 #include <cstdlib>
@@ -39,9 +37,6 @@ int appMain(int argc, char** argv)
 {
     if (!platform::init())
         return EXIT_FAILURE;
-
-    //     if (!osal::init())
-    //         return EXIT_FAILURE;
 
     return Catch::Session().run(argc, argv);
 }

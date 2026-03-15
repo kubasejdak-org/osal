@@ -1,5 +1,4 @@
 target_sources(osal-c PRIVATE
-    init.cpp
     Mutex.cpp
     Semaphore.cpp
     sleep.cpp

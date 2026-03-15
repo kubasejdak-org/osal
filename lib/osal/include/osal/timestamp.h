@@ -34,19 +34,16 @@ extern "C" {
 
 #include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
-/// Returns the timestamp relative to the call to osalInit() function in ms.
-/// @return Timestamp relative to the call to osalInit() function in ms.
-/// @note osalInit() has to be called in order to have correct values returned by this function.
+/// Returns the timestamp relative to library initialization in ms.
+/// @return Timestamp relative to library initialization in ms.
 uint64_t osalTimestampMs();
 
-/// Returns the timestamp relative to the call to osalInit() function in us.
-/// @return Timestamp relative to the call to osalInit() function in us.
-/// @note osalInit() has to be called in order to have correct values returned by this function.
+/// Returns the timestamp relative to library initialization in us.
+/// @return Timestamp relative to library initialization in us.
 uint64_t osalTimestampUs();
 
-/// Returns the timestamp relative to the call to osalInit() function in ns.
-/// @return Timestamp relative to the call to osalInit() function in ns.
-/// @note osalInit() has to be called in order to have correct values returned by this function.
+/// Returns the timestamp relative to library initialization in ns.
+/// @return Timestamp relative to library initialization in ns.
 uint64_t osalTimestampNs();
 
 /// Converts milliseconds to seconds.

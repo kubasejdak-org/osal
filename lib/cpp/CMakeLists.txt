@@ -1,5 +1,4 @@
 add_library(osal-cpp EXCLUDE_FROM_ALL
-    init.cpp
     Mutex.cpp
     ScopedLock.cpp
     Semaphore.cpp
