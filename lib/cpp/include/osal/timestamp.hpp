@@ -41,9 +41,8 @@ using Duration = std::chrono::milliseconds;
 /// Default timestamp type used by OSAL.
 using Timestamp = std::chrono::time_point<Clock, Duration>;
 
-/// Returns the timestamp relative to the call to osal::init() function in ns.
-/// @return Timestamp relative to the osal::init() function in ns.
-/// @note osal::init() has to be called in order to have correct values returned by this function.
+/// Returns the timestamp relative to library initialization in ns.
+/// @return Timestamp relative to library initialization in ns.
 /// @note Timestamp can be easily converted to any unit with std::chrono::duration_cast().
 Timestamp timestamp();
 
