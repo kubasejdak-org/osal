@@ -43,15 +43,15 @@ struct ErrorCategory : std::error_category {
     [[nodiscard]] std::string message(int value) const override
     {
         switch (static_cast<OsalError>(value)) {
-            case OsalError::eInvalidArgument:      return "invalid argument";
-            case OsalError::eOsError:              return "OS error";
-            case OsalError::eThreadNotJoined:      return "thread not joined";
-            case OsalError::eThreadAlreadyStarted: return "thread already started";
-            case OsalError::eNotOwner:             return "not owner";
-            case OsalError::eNotLocked:            return "not locked";
-            case OsalError::eLocked:               return "locked";
-            case OsalError::eTimeout:              return "timeout";
-            default:                               return std::string(name()) + ": unrecognized error";
+            case OsalError::InvalidArgument:      return "invalid argument";
+            case OsalError::OsError:              return "OS error";
+            case OsalError::ThreadNotJoined:      return "thread not joined";
+            case OsalError::ThreadAlreadyStarted: return "thread already started";
+            case OsalError::NotOwner:             return "not owner";
+            case OsalError::NotLocked:            return "not locked";
+            case OsalError::Locked:               return "locked";
+            case OsalError::Timeout:              return "timeout";
+            default:                              return std::string(name()) + ": unrecognized error";
         }
     }
 };

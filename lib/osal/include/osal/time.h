@@ -100,10 +100,10 @@ struct timeval osalTimespecToTimeval(struct timespec value);
 
 /// Represents possible string representations of date/time objects.
 enum OsalTimeStringFormat {
-    eTime,          // "15:30:59"
-    eDate,          // "31.12.2022"
-    eTimeDate,      // "15:30:59 31.12.2022"
-    eSortedDateTime // "20221231_153059"
+    Time,          // "15:30:59"
+    Date,          // "31.12.2022"
+    TimeDate,      // "15:30:59 31.12.2022"
+    SortedDateTime // "20221231_153059"
 };
 
 /// Converts struct tm to a string representation using given string format.

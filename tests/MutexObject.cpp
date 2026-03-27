@@ -255,8 +255,8 @@ TEST_CASE("TimedLock called from second thread, timeout in C++", "[unit][cpp][mu
         auto start = osal::timestamp();
 
         auto error = mutex.timedLock(100ms);
-        if (error != OsalError::eTimeout)
-            REQUIRE(error == OsalError::eTimeout);
+        if (error != OsalError::Timeout)
+            REQUIRE(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
         if ((end - start) < 100ms)

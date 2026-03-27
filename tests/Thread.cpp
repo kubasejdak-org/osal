@@ -105,7 +105,7 @@ TEST_CASE("Named thread creation and destruction", "[unit][c][thread]")
     REQUIRE(error == OsalError::eOk);
 
     error = osalThreadDestroy(&thread);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    REQUIRE(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Thread creation with invalid arguments", "[unit][c][thread]")
@@ -135,7 +135,7 @@ TEST_CASE("Thread creation with invalid arguments", "[unit][c][thread]")
                              {static_cast<OsalThreadPriority>(cInvalidPriority), cOsalThreadDefaultStackSize, nullptr},
                              func,
                              nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    REQUIRE(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Multiple thread joins", "[unit][c][thread]")
@@ -151,7 +151,7 @@ TEST_CASE("Multiple thread joins", "[unit][c][thread]")
     REQUIRE(error == OsalError::eOk);
 
     error = osalThreadJoin(&thread);
-    REQUIRE(error == OsalError::eOsError);
+    REQUIRE(error == OsalError::OsError);
 
     error = osalThreadDestroy(&thread);
     REQUIRE(error == OsalError::eOk);
