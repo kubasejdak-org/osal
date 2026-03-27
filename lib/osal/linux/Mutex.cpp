@@ -39,10 +39,8 @@
 
 OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 {
-    if (mutex == nullptr) {
-        // MutexLogger::error("Failed to create mutex: mutex=nullptr");
+    if (mutex == nullptr)
         return OsalError::InvalidArgument;
-    }
 
     mutex->initialized = false;
 
@@ -63,83 +61,62 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
     mutex->impl.handle = handle;
     mutex->type = type;
     mutex->initialized = true;
-
-    // MutexLogger::trace("Created mutex: type={}", type);
     return {};
 }
 
 OsalError osalMutexDestroy(OsalMutex* mutex)
 {
-    if (mutex == nullptr || !mutex->initialized) {
-        // MutexLogger::error("Failed to destroy mutex: invalid argument");
+    if (mutex == nullptr || !mutex->initialized)
         return OsalError::InvalidArgument;
-    }
 
     [[maybe_unused]] auto result = pthread_mutex_destroy(&mutex->impl.handle);
     assert(result == 0);
 
     std::memset(mutex, 0, sizeof(OsalMutex));
-    // MutexLogger::trace("Destroyed mutex");
     return {};
 }
 
 OsalError osalMutexLock(OsalMutex* mutex)
 {
-    if (mutex == nullptr || !mutex->initialized) {
-        // MutexLogger::error("Failed to lock mutex: invalid argument");
+    if (mutex == nullptr || !mutex->initialized)
         return OsalError::InvalidArgument;
-    }
 
     [[maybe_unused]] auto result = pthread_mutex_lock(&mutex->impl.handle);
     assert(result == 0);
-
-    // MutexLogger::trace("Locked mutex");
     return {};
 }
 
 OsalError osalMutexTryLock(OsalMutex* mutex)
 {
-    if (mutex == nullptr || !mutex->initialized) {
-        // MutexLogger::error("Failed to tryLock mutex: invalid argument");
+    if (mutex == nullptr || !mutex->initialized)
         return OsalError::InvalidArgument;
-    }
 
     auto result = pthread_mutex_trylock(&mutex->impl.handle);
     switch (result) {
         case EAGAIN: [[fallthrough]];
-        case EBUSY:
-            // MutexLogger::debug("Failed to lock mutex: mutex locked by another client");
-            return OsalError::Locked;
-        default: break;
+        case EBUSY:  return OsalError::Locked;
+        default:     break;
     }
 
     assert(result == 0);
-
-    // MutexLogger::trace("Locked mutex");
     return {};
 }
 
 OsalError osalMutexTryLockIsr(OsalMutex* mutex)
 {
-    if (mutex == nullptr || !mutex->initialized) {
-        // MutexLogger::error("Failed to tryLock mutex in ISR: invalid argument");
+    if (mutex == nullptr || !mutex->initialized)
         return OsalError::InvalidArgument;
-    }
 
-    if (mutex->type == OsalMutexType::Recursive) {
-        // MutexLogger::error("Failed to tryLock mutex in ISR: mutex is recursive");
+    if (mutex->type == OsalMutexType::Recursive)
         return OsalError::InvalidArgument;
-    }
 
     return osalMutexTryLock(mutex);
 }
 
 OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
 {
-    if (mutex == nullptr || !mutex->initialized) {
-        // MutexLogger::error("Failed to timedLock mutex: invalid argument");
+    if (mutex == nullptr || !mutex->initialized)
         return OsalError::InvalidArgument;
-    }
 
     auto toTimespec = [](const auto& timePoint) {
         auto secs = std::chrono::time_point_cast<std::chrono::seconds>(timePoint);
@@ -151,35 +128,27 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
 
     auto ts = toTimespec(std::chrono::system_clock::now() + std::chrono::milliseconds{timeoutMs});
     auto result = pthread_mutex_timedlock(&mutex->impl.handle, &ts);
-    if (result == ETIMEDOUT) {
-        // MutexLogger::debug("Failed to timedLock mutex: timeout, timeoutMs={}", timeoutMs);
+    if (result == ETIMEDOUT)
         return OsalError::Timeout;
-    }
 
     assert(result == 0);
-    // MutexLogger::trace("Locked mutex");
     return {};
 }
 
 OsalError osalMutexUnlock(OsalMutex* mutex)
 {
-    if (mutex == nullptr || !mutex->initialized) {
-        // MutexLogger::error("Failed to unlock mutex: invalid argument");
+    if (mutex == nullptr || !mutex->initialized)
         return OsalError::InvalidArgument;
-    }
 
     [[maybe_unused]] auto result = pthread_mutex_unlock(&mutex->impl.handle);
     assert(result == 0);
-    // MutexLogger::trace("Unlocked mutex");
     return {};
 }
 
 OsalError osalMutexUnlockIsr(OsalMutex* mutex)
 {
-    if (mutex == nullptr || mutex->type == OsalMutexType::Recursive) {
-        // MutexLogger::error("Failed to unlock mutex in ISR: invalid argument");
+    if (mutex == nullptr || mutex->type == OsalMutexType::Recursive)
         return OsalError::InvalidArgument;
-    }
 
     return osalMutexUnlock(mutex);
 }
