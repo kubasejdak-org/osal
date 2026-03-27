@@ -42,7 +42,7 @@
 OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initValue)
 {
     if (semaphore == nullptr)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     semaphore->initialized = false;
 
@@ -54,7 +54,7 @@ OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initValue)
 #endif
 
     if (handle == nullptr)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     semaphore->impl.handle = handle;
     semaphore->initialized = true;
@@ -64,7 +64,7 @@ OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initValue)
 OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     vSemaphoreDelete(semaphore->impl.handle);
     std::memset(semaphore, 0, sizeof(OsalSemaphore));
@@ -81,16 +81,16 @@ OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
 {
     auto error = osalSemaphoreTimedWait(semaphore, 0);
-    return (error == OsalError::eTimeout) ? OsalError::eLocked : error;
+    return (error == OsalError::Timeout) ? OsalError::Locked : error;
 }
 
 OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     if (xSemaphoreTakeFromISR(semaphore->impl.handle, nullptr) == pdFALSE)
-        return OsalError::eLocked;
+        return OsalError::Locked;
 
     return {};
 }
@@ -98,11 +98,11 @@ OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore)
 OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     TickType_t tickTimeout = (timeoutMs == portMAX_DELAY) ? portMAX_DELAY : (timeoutMs / portTICK_PERIOD_MS);
     if (xSemaphoreTake(semaphore->impl.handle, tickTimeout) == pdFALSE)
-        return OsalError::eTimeout;
+        return OsalError::Timeout;
 
     return {};
 }
@@ -110,10 +110,10 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 OsalError osalSemaphoreSignal(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     if (xSemaphoreGive(semaphore->impl.handle) == pdFALSE)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     return {};
 }
@@ -121,10 +121,10 @@ OsalError osalSemaphoreSignal(OsalSemaphore* semaphore)
 OsalError osalSemaphoreSignalIsr(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     if (xSemaphoreGiveFromISR(semaphore->impl.handle, nullptr) == pdFALSE)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     return {};
 }

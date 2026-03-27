@@ -105,26 +105,26 @@ OsalError osalTmToString(struct tm value, char* str, size_t size, OsalTimeString
     std::size_t requiredSize{};
 
     switch (format) {
-        case OsalTimeStringFormat::eTime:
+        case OsalTimeStringFormat::Time:
             formatStr = "%T";
             requiredSize = 9; // NOLINT
             break;
-        case OsalTimeStringFormat::eDate:
+        case OsalTimeStringFormat::Date:
             formatStr = "%d.%m.%Y";
             requiredSize = 11; // NOLINT
             break;
-        case OsalTimeStringFormat::eTimeDate:
+        case OsalTimeStringFormat::TimeDate:
             formatStr = "%T %d.%m.%Y";
             requiredSize = 20; // NOLINT
             break;
-        case OsalTimeStringFormat::eSortedDateTime:
+        case OsalTimeStringFormat::SortedDateTime:
             formatStr = "%Y%m%d_%H%M%S";
             requiredSize = 16; // NOLINT
             break;
     }
 
     if (size < requiredSize)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     (void) std::strftime(str, requiredSize, formatStr.c_str(), &value);
     return {};

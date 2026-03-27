@@ -120,7 +120,7 @@ public:
     std::error_code setStack(void* stack)
     {
         if (stack == nullptr)
-            return OsalError::eInvalidArgument;
+            return OsalError::InvalidArgument;
 
         m_stack = stack;
         return {};
@@ -149,7 +149,7 @@ public:
     std::error_code start(std::string_view name, ThreadFunction function, Args&&... args)
     {
         if (m_started)
-            return OsalError::eThreadAlreadyStarted;
+            return OsalError::ThreadAlreadyStarted;
 
         m_userFunction = std::make_unique<FunctionWrapper>(
             // NOLINTNEXTLINE(modernize-avoid-bind)
@@ -197,27 +197,27 @@ private:
 /// Helper type alias representing OSAL thread with OsalThreadPriority::eLowest priority.
 /// @tparam cStackSize          Stack size to be used in thread construction.
 template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using LowestPrioThread = Thread<OsalThreadPriority::eLowest, cStackSize>;
+using LowestPrioThread = Thread<OsalThreadPriority::Lowest, cStackSize>;
 
 /// Helper type alias representing OSAL thread with OsalThreadPriority::eLow priority.
 /// @tparam cStackSize          Stack size to be used in thread construction.
 template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using LowPrioThread = Thread<OsalThreadPriority::eLow, cStackSize>;
+using LowPrioThread = Thread<OsalThreadPriority::Low, cStackSize>;
 
 /// Helper type alias representing OSAL thread with OsalThreadPriority::eNormal priority.
 /// @tparam cStackSize          Stack size to be used in thread construction.
 template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using NormalPrioThread = Thread<OsalThreadPriority::eNormal, cStackSize>;
+using NormalPrioThread = Thread<OsalThreadPriority::Normal, cStackSize>;
 
 /// Helper type alias representing OSAL thread with OsalThreadPriority::eHigh priority.
 /// @tparam cStackSize          Stack size to be used in thread construction.
 template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using HighPrioThread = Thread<OsalThreadPriority::eHigh, cStackSize>;
+using HighPrioThread = Thread<OsalThreadPriority::High, cStackSize>;
 
 /// Helper type alias representing OSAL thread with OsalThreadPriority::eHighest priority.
 /// @tparam cStackSize          Stack size to be used in thread construction.
 template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using HighestPrioThread = Thread<OsalThreadPriority::eHighest, cStackSize>;
+using HighestPrioThread = Thread<OsalThreadPriority::Highest, cStackSize>;
 
 namespace thread {
 

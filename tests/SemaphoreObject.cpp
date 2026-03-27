@@ -283,7 +283,7 @@ TEST_CASE("Multiple wait called one thread in C++", "[unit][cpp][semaphore]")
     }
 
     auto error = semaphore.tryWait();
-    REQUIRE(error == OsalError::eLocked);
+    REQUIRE(error == OsalError::Locked);
 }
 
 TEST_CASE("Multiple tryWait called one thread in C++", "[unit][cpp][semaphore]")
@@ -315,7 +315,7 @@ TEST_CASE("Multiple tryWait called one thread in C++", "[unit][cpp][semaphore]")
     }
 
     auto error = semaphore.tryWait();
-    REQUIRE(error == OsalError::eLocked);
+    REQUIRE(error == OsalError::Locked);
 }
 
 TEST_CASE("Multiple tryWait called from ISR in C++", "[unit][cpp][semaphore]")
@@ -347,7 +347,7 @@ TEST_CASE("Multiple tryWait called from ISR in C++", "[unit][cpp][semaphore]")
     }
 
     auto error = semaphore.tryWaitIsr();
-    REQUIRE(error == OsalError::eLocked);
+    REQUIRE(error == OsalError::Locked);
 }
 
 TEST_CASE("TimedWait called from second thread in C++, timeout", "[unit][cpp][semaphore]")

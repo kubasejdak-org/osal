@@ -61,7 +61,7 @@ TEST_CASE("Mutex creation and destruction", "[unit][c][mutex]")
     REQUIRE(error == OsalError::eOk);
 
     error = osalMutexDestroy(&mutex);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    REQUIRE(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Invalid parameters to mutex creation and destruction functions", "[unit][c][mutex]")
@@ -87,7 +87,7 @@ TEST_CASE("Invalid parameters to mutex creation and destruction functions", "[un
     REQUIRE(error == OsalError::eInvalidArgument);
 
     error = osalMutexDestroy(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    REQUIRE(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Lock and unlock from one thread", "[unit][c][mutex]")
@@ -343,8 +343,8 @@ TEST_CASE("TimedLock called from second thread, timeout", "[unit][c][mutex]")
 
         constexpr std::uint32_t cTimeoutMs = 100;
         auto error = osalMutexTimedLock(&mutex, cTimeoutMs);
-        if (error != OsalError::eTimeout)
-            REQUIRE(error == OsalError::eTimeout);
+        if (error != OsalError::Timeout)
+            REQUIRE(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
         if ((end - start) < 100ms)

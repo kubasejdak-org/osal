@@ -40,8 +40,8 @@ extern "C" {
 /// Represents possible types of the OSAL mutex. These types define how mutex will react to multiple recursive
 /// locks made by the same thread.
 enum OsalMutexType {
-    eRecursive,
-    eNonRecursive
+    Recursive,
+    NonRecursive
 };
 
 /// Represents OSAL mutex handle.
@@ -54,7 +54,7 @@ struct OsalMutex {
 };
 
 /// Helper constant with default mutex type.
-static const OsalMutexType cOsalMutexDefaultType = OsalMutexType::eNonRecursive;
+static const OsalMutexType cOsalMutexDefaultType = OsalMutexType::NonRecursive;
 
 /// Creates new mutex with the given type.
 /// @param mutex            Mutex handle to be initialized.

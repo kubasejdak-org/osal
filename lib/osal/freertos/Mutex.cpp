@@ -41,7 +41,7 @@
 OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 {
     if (mutex == nullptr)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     mutex->initialized = false;
 
@@ -49,23 +49,23 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 #if configSUPPORT_STATIC_ALLOCATION
     switch (type) {
     #if configUSE_RECURSIVE_MUTEXES
-        case OsalMutexType::eRecursive: handle = xSemaphoreCreateRecursiveMutexStatic(&mutex->impl.buffer); break;
+        case OsalMutexType::Recursive: handle = xSemaphoreCreateRecursiveMutexStatic(&mutex->impl.buffer); break;
     #endif
-        case OsalMutexType::eNonRecursive: handle = xSemaphoreCreateMutexStatic(&mutex->impl.buffer); break;
-        default:                           return OsalError::eInvalidArgument;
+        case OsalMutexType::NonRecursive: handle = xSemaphoreCreateMutexStatic(&mutex->impl.buffer); break;
+        default:                          return OsalError::InvalidArgument;
     }
 #elif configSUPPORT_DYNAMIC_ALLOCATION
     switch (type) {
     #if configUSE_RECURSIVE_MUTEXES
-        case OsalMutexType::eRecursive: handle = xSemaphoreCreateRecursiveMutex(&mutex->impl.buffer); break;
+        case OsalMutexType::Recursive: handle = xSemaphoreCreateRecursiveMutex(&mutex->impl.buffer); break;
     #endif
-        case OsalMutexType::eNonRecursive: handle = xSemaphoreCreateMutex(); break;
-        default:                           return OsalError::eInvalidArgument;
+        case OsalMutexType::NonRecursive: handle = xSemaphoreCreateMutex(); break;
+        default:                          return OsalError::InvalidArgument;
     }
 #endif
 
     if (handle == nullptr)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     mutex->impl.handle = handle;
     mutex->initialized = true;
@@ -76,7 +76,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 OsalError osalMutexDestroy(OsalMutex* mutex)
 {
     if (mutex == nullptr || !mutex->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     vSemaphoreDelete(mutex->impl.handle);
     std::memset(mutex, 0, sizeof(OsalMutex));
@@ -93,19 +93,19 @@ OsalError osalMutexLock(OsalMutex* mutex)
 OsalError osalMutexTryLock(OsalMutex* mutex)
 {
     auto error = osalMutexTimedLock(mutex, 0);
-    return (error == OsalError::eTimeout) ? OsalError::eLocked : error;
+    return (error == OsalError::Timeout) ? OsalError::Locked : error;
 }
 
 OsalError osalMutexTryLockIsr(OsalMutex* mutex)
 {
     if (mutex == nullptr || !mutex->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
-    if (mutex->type == OsalMutexType::eRecursive)
-        return OsalError::eInvalidArgument;
+    if (mutex->type == OsalMutexType::Recursive)
+        return OsalError::InvalidArgument;
 
     if (xSemaphoreTakeFromISR(mutex->impl.handle, nullptr) == pdFALSE)
-        return OsalError::eLocked;
+        return OsalError::Locked;
 
     return {};
 }
@@ -113,12 +113,12 @@ OsalError osalMutexTryLockIsr(OsalMutex* mutex)
 OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
 {
     if (mutex == nullptr || !mutex->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     BaseType_t result{};
     TickType_t tickTimeout = (timeoutMs == portMAX_DELAY) ? portMAX_DELAY : (timeoutMs / portTICK_PERIOD_MS);
 
-    if (mutex->type == OsalMutexType::eRecursive) {
+    if (mutex->type == OsalMutexType::Recursive) {
 #if configUSE_RECURSIVE_MUTEXES
         result = xSemaphoreTakeRecursive(mutex->impl.handle, tickTimeout);
 #endif
@@ -127,7 +127,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
         result = xSemaphoreTake(mutex->impl.handle, tickTimeout);
 
     if (result == pdFALSE)
-        return OsalError::eTimeout;
+        return OsalError::Timeout;
 
     return {};
 }
@@ -135,11 +135,11 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
 OsalError osalMutexUnlock(OsalMutex* mutex)
 {
     if (mutex == nullptr || !mutex->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     BaseType_t result{};
 
-    if (mutex->type == OsalMutexType::eRecursive) {
+    if (mutex->type == OsalMutexType::Recursive) {
 #if configUSE_RECURSIVE_MUTEXES
         result = xSemaphoreGiveRecursive(mutex->impl.handle);
 #endif
@@ -148,7 +148,7 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
         result = xSemaphoreGive(mutex->impl.handle);
 
     if (result == pdFALSE)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     return {};
 }
@@ -156,13 +156,13 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
 OsalError osalMutexUnlockIsr(OsalMutex* mutex)
 {
     if (mutex == nullptr || !mutex->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
-    if (mutex->type == OsalMutexType::eRecursive)
-        return OsalError::eInvalidArgument;
+    if (mutex->type == OsalMutexType::Recursive)
+        return OsalError::InvalidArgument;
 
     if (xSemaphoreGiveFromISR(mutex->impl.handle, nullptr) == pdFALSE)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     return {};
 }

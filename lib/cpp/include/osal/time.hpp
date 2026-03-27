@@ -101,24 +101,24 @@ timeval toTimeval(timespec value);
 /// @param value            Value to be converted to string.
 /// @param format           Date/time format to be used.
 /// @return String representation of std::tm.
-std::string toString(std::tm value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(std::tm value, OsalTimeStringFormat format = OsalTimeStringFormat::TimeDate);
 
 /// Converts std::time_t to a string representation using given string format.
 /// @param value            Value to be converted to string.
 /// @param format           Date/time format to be used.
 /// @return String representation of std::time_t.
-std::string toString(std::time_t value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(std::time_t value, OsalTimeStringFormat format = OsalTimeStringFormat::TimeDate);
 
 /// Converts std::timespec to a string representation using given string format.
 /// @param value            Value to be converted to string.
 /// @param format           Date/time format to be used.
 /// @return String representation of std::timespec.
-std::string toString(timespec value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(timespec value, OsalTimeStringFormat format = OsalTimeStringFormat::TimeDate);
 
 /// Converts std::timeval to a string representation using given string format.
 /// @param value            Value to be converted to string.
 /// @param format           Date/time format to be used.
 /// @return String representation of std::timeval.
-std::string toString(timeval value, OsalTimeStringFormat format = OsalTimeStringFormat::eTimeDate);
+std::string toString(timeval value, OsalTimeStringFormat format = OsalTimeStringFormat::TimeDate);
 
 } // namespace osal

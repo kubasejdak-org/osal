@@ -40,7 +40,7 @@
 OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValue)
 {
     if (semaphore == nullptr)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     sem_t handle{};
     [[maybe_unused]] auto result = sem_init(&handle, 0, initialValue);
@@ -54,7 +54,7 @@ OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValu
 OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     [[maybe_unused]] auto result = sem_destroy(&semaphore->impl.handle);
     assert(result == 0);
@@ -66,7 +66,7 @@ OsalError osalSemaphoreDestroy(OsalSemaphore* semaphore)
 OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     [[maybe_unused]] auto result = sem_wait(&semaphore->impl.handle);
     assert(result == 0);
@@ -76,11 +76,11 @@ OsalError osalSemaphoreWait(OsalSemaphore* semaphore)
 OsalError osalSemaphoreTryWait(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     auto result = sem_trywait(&semaphore->impl.handle);
     if (result == -1)
-        return OsalError::eLocked;
+        return OsalError::Locked;
 
     assert(result == 0);
     return {};
@@ -94,7 +94,7 @@ OsalError osalSemaphoreTryWaitIsr(OsalSemaphore* semaphore)
 OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     auto toTimespec = [](const auto& timePoint) {
         auto secs = std::chrono::time_point_cast<std::chrono::seconds>(timePoint);
@@ -107,7 +107,7 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
     auto ts = toTimespec(std::chrono::system_clock::now() + std::chrono::milliseconds{timeoutMs});
     auto result = sem_timedwait(&semaphore->impl.handle, &ts);
     if ((result == -1) && (errno == ETIMEDOUT))
-        return OsalError::eTimeout;
+        return OsalError::Timeout;
 
     assert(result == 0);
     return {};
@@ -116,7 +116,7 @@ OsalError osalSemaphoreTimedWait(OsalSemaphore* semaphore, uint32_t timeoutMs)
 OsalError osalSemaphoreSignal(OsalSemaphore* semaphore)
 {
     if (semaphore == nullptr || !semaphore->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     [[maybe_unused]] auto result = sem_post(&semaphore->impl.handle);
     assert(result == 0);

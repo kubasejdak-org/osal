@@ -62,7 +62,7 @@ TEST_CASE("Semaphore creation and destruction", "[unit][c][semaphore]")
     REQUIRE(error == OsalError::eOk);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    REQUIRE(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Invalid parameters to semaphore creation and destruction functions", "[unit][c][semaphore]")
@@ -340,7 +340,7 @@ TEST_CASE("Multiple wait called one thread", "[unit][c][semaphore]")
     }
 
     error = osalSemaphoreTryWait(&semaphore);
-    REQUIRE(error == OsalError::eLocked);
+    REQUIRE(error == OsalError::Locked);
 
     error = osalSemaphoreDestroy(&semaphore);
     REQUIRE(error == OsalError::eOk);
@@ -377,7 +377,7 @@ TEST_CASE("Multiple tryWait called one thread", "[unit][c][semaphore]")
     }
 
     error = osalSemaphoreTryWait(&semaphore);
-    REQUIRE(error == OsalError::eLocked);
+    REQUIRE(error == OsalError::Locked);
 
     error = osalSemaphoreDestroy(&semaphore);
     REQUIRE(error == OsalError::eOk);
@@ -414,7 +414,7 @@ TEST_CASE("Multiple tryWait called from ISR", "[unit][c][semaphore]")
     }
 
     error = osalSemaphoreTryWaitIsr(&semaphore);
-    REQUIRE(error == OsalError::eLocked);
+    REQUIRE(error == OsalError::Locked);
 
     error = osalSemaphoreDestroy(&semaphore);
     REQUIRE(error == OsalError::eOk);

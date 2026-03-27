@@ -54,15 +54,15 @@ struct OsalThread {
 //        possible priority in the system and eHighest will set the highest possible priority in the system.
 ///       All implementations will also try to set eNormal to the default priority on the target system.
 enum OsalThreadPriority {
-    eLowest,
-    eLow,
-    eNormal,
-    eHigh,
-    eHighest
+    Lowest,
+    Low,
+    Normal,
+    High,
+    Highest
 };
 
 /// Helper constant with default thread priority of new thread.
-static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::eNormal;
+static const OsalThreadPriority cOsalThreadDefaultPriority = OsalThreadPriority::Normal;
 
 /// Helper constant with default stack size of new thread.
 static const size_t cOsalThreadDefaultStackSize = static_cast<size_t>(8 * 1024);

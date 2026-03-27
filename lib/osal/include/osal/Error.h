@@ -34,14 +34,14 @@ extern "C" {
 
 /// Errors definition.
 enum OsalError {
-    eInvalidArgument = 1,
-    eOsError,
-    eThreadNotJoined,
-    eThreadAlreadyStarted,
-    eNotOwner,
-    eNotLocked,
-    eLocked,
-    eTimeout
+    InvalidArgument = 1,
+    OsError,
+    ThreadNotJoined,
+    ThreadAlreadyStarted,
+    NotOwner,
+    NotLocked,
+    Locked,
+    Timeout
 };
 
 #ifdef __cplusplus

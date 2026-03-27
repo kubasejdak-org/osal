@@ -78,10 +78,10 @@ OsalError
 osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg, const char* name)
 {
     if (thread == nullptr || func == nullptr)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     if (name != nullptr && std::strlen(name) > cMaxThreadName)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     thread->initialized = false;
 
@@ -91,12 +91,12 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
 
     int priority{};
     switch (config.priority) {
-        case OsalThreadPriority::eLowest:  priority = cPriorityMin; break;
-        case OsalThreadPriority::eLow:     priority = cPriorityMin + (cPriorityStep * 1); break;
-        case OsalThreadPriority::eNormal:  priority = cPriorityMin + (cPriorityStep * 2); break;
-        case OsalThreadPriority::eHigh:    priority = cPriorityMin + (cPriorityStep * 3); break;
-        case OsalThreadPriority::eHighest: priority = cPriorityMax; break;
-        default:                           return OsalError::eInvalidArgument;
+        case OsalThreadPriority::Lowest:  priority = cPriorityMin; break;
+        case OsalThreadPriority::Low:     priority = cPriorityMin + (cPriorityStep * 1); break;
+        case OsalThreadPriority::Normal:  priority = cPriorityMin + (cPriorityStep * 2); break;
+        case OsalThreadPriority::High:    priority = cPriorityMin + (cPriorityStep * 3); break;
+        case OsalThreadPriority::Highest: priority = cPriorityMax; break;
+        default:                          return OsalError::InvalidArgument;
     }
 
     pthread_attr_t attr{};
@@ -138,7 +138,7 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
 OsalError osalThreadDestroy(OsalThread* thread)
 {
     if (thread == nullptr || !thread->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     std::memset(thread, 0, sizeof(OsalThread));
     return {};
@@ -147,10 +147,10 @@ OsalError osalThreadDestroy(OsalThread* thread)
 OsalError osalThreadJoin(OsalThread* thread)
 {
     if (thread == nullptr || !thread->initialized)
-        return OsalError::eInvalidArgument;
+        return OsalError::InvalidArgument;
 
     if (pthread_join(thread->impl.handle, nullptr) != 0)
-        return OsalError::eOsError;
+        return OsalError::OsError;
 
     return {};
 }
