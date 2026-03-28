@@ -4,8 +4,8 @@ add_subdirectory(init)
 add_executable(osal-tests
     Error.cpp
     main.cpp
-    # Mutex.cpp
-    # MutexObject.cpp
+    Mutex.cpp
+    MutexObject.cpp
     # ScopedLock.cpp
     # Semaphore.cpp
     # SemaphoreObject.cpp

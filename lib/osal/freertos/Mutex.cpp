@@ -32,6 +32,8 @@
 
 #include "osal/Mutex.h"
 
+#include "osal/Error.h"
+
 #include <FreeRTOSConfig.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>

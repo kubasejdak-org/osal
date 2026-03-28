@@ -30,6 +30,8 @@
 
 #include "osal/Error.h"
 
+#include <pthread.h>
+
 #include <cassert>
 #include <cerrno>
 #include <chrono>

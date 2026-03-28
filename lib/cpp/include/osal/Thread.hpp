@@ -161,7 +161,7 @@ public:
             userFunction();
         };
 
-        OsalError error{};
+        std::error_code error{};
         if (name.empty()) {
             error
                 = osalThreadCreate(&m_thread, {cPriority, cStackSize, m_stack}, m_workerFunction, m_userFunction.get());
@@ -174,7 +174,7 @@ public:
                                        name.data());
         }
 
-        m_started = (error == OsalError::eOk);
+        m_started = !error;
         return error;
     }
 
