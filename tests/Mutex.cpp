@@ -36,6 +36,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <system_error>
 
 TEST_CASE("Mutex creation and destruction", "[unit][c][mutex]")
 {
@@ -192,7 +193,7 @@ TEST_CASE("Lock called from two threads", "[unit][c][mutex]")
     error = osalMutexUnlock(&mutex);
     CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalMutexDestroy(&mutex);
     CHECK_FALSE(error);
@@ -227,7 +228,7 @@ TEST_CASE("TryLock called from second thread", "[unit][c][mutex]")
     auto func = [&mutex] {
         auto start = osal::timestamp();
 
-        while (osalMutexTryLock(&mutex))
+        while (std::error_code error = osalMutexTryLock(&mutex))
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
@@ -243,7 +244,7 @@ TEST_CASE("TryLock called from second thread", "[unit][c][mutex]")
     error = osalMutexUnlock(&mutex);
     CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalMutexDestroy(&mutex);
     CHECK_FALSE(error);
@@ -273,7 +274,7 @@ TEST_CASE("TryLock and unlock called from ISR", "[unit][c][mutex]")
     auto func = [&mutex] {
         auto start = osal::timestamp();
 
-        while (osalMutexTryLockIsr(&mutex))
+        while (std::error_code error = osalMutexTryLockIsr(&mutex))
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
@@ -289,7 +290,7 @@ TEST_CASE("TryLock and unlock called from ISR", "[unit][c][mutex]")
     error = osalMutexUnlockIsr(&mutex);
     CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalMutexDestroy(&mutex);
     CHECK_FALSE(error);
@@ -346,7 +347,7 @@ TEST_CASE("TimedLock called from second thread, timeout", "[unit][c][mutex]")
     };
 
     osal::Thread thread(func);
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalMutexUnlock(&mutex);
     CHECK_FALSE(error);
@@ -399,7 +400,7 @@ TEST_CASE("TimedLock called from second thread, success", "[unit][c][mutex]")
     error = osalMutexUnlock(&mutex);
     CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalMutexDestroy(&mutex);
     CHECK_FALSE(error);
