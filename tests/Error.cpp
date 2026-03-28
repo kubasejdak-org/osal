@@ -44,13 +44,13 @@ TEST_CASE("Errors have proper human readable messages", "[unit][cpp][error]")
     for (int i = 1; i <= cErrorsCount; ++i) {
         std::error_code error = static_cast<OsalError>(i);
         CHECK_THAT(error.category().name(), Catch::Matchers::Equals("osal"));
-        CHECK(!error.message().empty());
+        CHECK_FALSE(error.message().empty());
         CHECK(error.message() != cUnrecognizedMsg);
     }
 
     constexpr int cInvalidError = cErrorsCount + 1;
     std::error_code error = static_cast<OsalError>(cInvalidError);
     CHECK_THAT(error.category().name(), Catch::Matchers::Equals("osal"));
-    CHECK(!error.message().empty());
+    CHECK_FALSE(error.message().empty());
     CHECK_THAT(error.message(), Catch::Matchers::Equals(cUnrecognizedMsg));
 }
