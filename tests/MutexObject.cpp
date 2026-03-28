@@ -26,7 +26,8 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
+#include <osal/Error.h>
+#include <osal/Mutex.h>
 #include <osal/Mutex.hpp>
 #include <osal/Thread.hpp>
 #include <osal/sleep.hpp>
@@ -170,7 +171,7 @@ TEST_CASE("TryLock called from second threads in C++", "[unit][cpp][mutex]")
     error = mutex.unlock();
     CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 }
 
 TEST_CASE("TryLock and unlock called from ISR in C++", "[unit][cpp][mutex]")
@@ -210,7 +211,7 @@ TEST_CASE("TryLock and unlock called from ISR in C++", "[unit][cpp][mutex]")
     error = mutex.unlock();
     CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 }
 
 TEST_CASE("Recursive tryLock called from ISR in C++", "[unit][cpp][mutex]")
@@ -256,7 +257,7 @@ TEST_CASE("TimedLock called from second thread, timeout in C++", "[unit][cpp][mu
     };
 
     osal::Thread thread(func);
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = mutex.unlock();
     CHECK_FALSE(error);
