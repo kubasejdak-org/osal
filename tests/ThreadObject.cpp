@@ -26,8 +26,9 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
+#include <osal/Error.h>
 #include <osal/Semaphore.hpp>
+#include <osal/Thread.h>
 #include <osal/Thread.hpp>
 #include <osal/sleep.hpp>
 
@@ -41,6 +42,8 @@
 #include <cstdint>
 #include <functional>
 #include <set>
+#include <string>
+#include <string_view>
 #include <utility>
 
 TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
@@ -120,17 +123,17 @@ TEST_CASE("Named thread creation and destruction", "[unit][cpp][thread]")
     osal::Semaphore stopSemaphore{0};
 
     auto func = [&] {
-        startSemaphore.wait();
+        CHECK_FALSE(startSemaphore.wait());
         getThreadName = osal::thread::name();
-        stopSemaphore.signal();
+        CHECK_FALSE(stopSemaphore.signal());
     };
 
     std::string_view setThreadName = "0123456789ABCDE";
 
     osal::Thread thread(setThreadName, func);
 
-    startSemaphore.signal();
-    stopSemaphore.wait();
+    CHECK_FALSE(startSemaphore.signal());
+    CHECK_FALSE(stopSemaphore.wait());
     CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName.data()));
 
     auto error = thread.join();
@@ -416,7 +419,8 @@ TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thr
         constexpr int cIterationsCount = 1000;
         for (int i = 0; i < cIterationsCount; ++i) {
             auto tmpId = osal::thread::id();
-            REQUIRE(tmpId == id);
+            if (tmpId != id)
+                REQUIRE(tmpId == id);
 
             osal::thread::yield();
         }

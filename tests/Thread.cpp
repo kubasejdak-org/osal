@@ -79,9 +79,9 @@ TEST_CASE("Named thread creation and destruction", "[unit][c][thread]")
     auto func = [](void* arg) {
         auto* threadData = static_cast<ThreadData*>(arg);
 
-        threadData->startSemaphore.wait();
+        CHECK_FALSE(threadData->startSemaphore.wait());
         osalThreadName(threadData->getThreadName.data(), threadData->getThreadName.size());
-        threadData->stopSemaphore.signal();
+        CHECK_FALSE(threadData->stopSemaphore.signal());
     };
 
     std::string_view setThreadName = "0123456789ABCDE";
@@ -94,8 +94,8 @@ TEST_CASE("Named thread creation and destruction", "[unit][c][thread]")
                                     setThreadName.data());
     REQUIRE_FALSE(error);
 
-    threadData.startSemaphore.signal();
-    threadData.stopSemaphore.wait();
+    CHECK_FALSE(threadData.startSemaphore.signal());
+    CHECK_FALSE(threadData.stopSemaphore.wait());
     std::string_view getThreadName{threadData.getThreadName.data(), std::strlen(threadData.getThreadName.data())};
     CHECK_THAT(getThreadName.data(), Catch::Matchers::Equals(setThreadName.data()));
 
@@ -295,8 +295,8 @@ TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
         constexpr int cIterationsCount = 1000;
         for (int i = 0; i < cIterationsCount; ++i) {
             auto tmpId = osalThreadId();
-            REQUIRE(tmpId == id);
-
+            if (tmpId != id)
+                REQUIRE(tmpId == id);
             osalThreadYield();
         }
     };

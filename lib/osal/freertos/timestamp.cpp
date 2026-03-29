@@ -46,8 +46,8 @@ const auto cInitTime = xTaskGetTickCount();
 /// @return Time in ms since the timestamp module was initialized.
 std::uint64_t timeSinceStartMs()
 {
-    auto now = xTaskGetTickCount() / configTICK_RATE_HZ;
-    return static_cast<std::uint64_t>(now - cInitTime);
+    auto now = xTaskGetTickCount();
+    return static_cast<std::uint64_t>(now - cInitTime) * portTICK_PERIOD_MS;
 }
 
 } // namespace

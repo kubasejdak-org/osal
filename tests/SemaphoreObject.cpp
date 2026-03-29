@@ -26,7 +26,7 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
+#include <osal/Error.h>
 #include <osal/Semaphore.hpp>
 #include <osal/Thread.hpp>
 #include <osal/sleep.hpp>
