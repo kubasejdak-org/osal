@@ -165,7 +165,7 @@ TEST_CASE("Combination of wait and signal calls from one thread", "[unit][c][sem
     CHECK_FALSE(error);
 
     int count{};
-    while (!osalSemaphoreTryWait(&semaphore))
+    while (osalSemaphoreTryWait(&semaphore) == OsalError{})
         ++count;
 
     CHECK(count == 3);
@@ -181,7 +181,7 @@ TEST_CASE("Increment semaphore to value bigger than the initial one", "[unit][c]
     CHECK_FALSE(error);
 
     int firstCount{};
-    while (!osalSemaphoreTryWait(&semaphore))
+    while (osalSemaphoreTryWait(&semaphore) == OsalError{})
         ++firstCount;
 
     constexpr int cFirstExpectedCount = 4;
@@ -194,7 +194,7 @@ TEST_CASE("Increment semaphore to value bigger than the initial one", "[unit][c]
     }
 
     int secondCount{};
-    while (!osalSemaphoreTryWait(&semaphore))
+    while (osalSemaphoreTryWait(&semaphore) == OsalError{})
         ++secondCount;
 
     CHECK(secondCount == cSecondExpectedCount);
@@ -247,7 +247,7 @@ TEST_CASE("TryWait called from second thread", "[unit][c][semaphore]")
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        while (osalSemaphoreTryWait(&semaphore))
+        while (osalSemaphoreTryWait(&semaphore) != OsalError{})
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
@@ -280,7 +280,7 @@ TEST_CASE("TryWait and signal called from ISR", "[unit][c][semaphore]")
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        while (osalSemaphoreTryWaitIsr(&semaphore))
+        while (osalSemaphoreTryWaitIsr(&semaphore) != OsalError{})
             osal::sleep(10ms);
 
         auto end = osal::timestamp();

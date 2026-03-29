@@ -26,7 +26,7 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
+#include <osal/Error.h>
 #include <osal/Mutex.hpp>
 #include <osal/ScopedLock.hpp>
 #include <osal/Thread.hpp>
@@ -107,7 +107,7 @@ TEST_CASE("Non-recursive success waitLock() thread with ScopedLock in C++", "[un
         bool locked = lock;
         REQUIRE(locked);
 
-        thread.start(func);
+        CHECK_FALSE(thread.start(func));
         osal::sleep(100ms);
     }
 

@@ -26,7 +26,6 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
 #include <osal/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 #include <osal/time.hpp>
 #include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)

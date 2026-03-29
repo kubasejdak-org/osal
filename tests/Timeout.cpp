@@ -26,7 +26,6 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/Error.hpp>
 #include <osal/Timeout.hpp>
 #include <osal/sleep.hpp>
 #include <osal/timestamp.hpp>
@@ -35,6 +34,9 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdint>
+#include <iterator>
+#include <vector>
 
 TEST_CASE("Creation of timeout", "[unit][cpp][timeout]")
 {
