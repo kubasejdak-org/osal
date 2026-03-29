@@ -416,7 +416,8 @@ TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thr
         constexpr int cIterationsCount = 1000;
         for (int i = 0; i < cIterationsCount; ++i) {
             auto tmpId = osal::thread::id();
-            REQUIRE(tmpId == id);
+            if (tmpId != id)
+                REQUIRE(tmpId == id);
 
             osal::thread::yield();
         }

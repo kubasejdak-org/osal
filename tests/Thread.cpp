@@ -295,8 +295,8 @@ TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
         constexpr int cIterationsCount = 1000;
         for (int i = 0; i < cIterationsCount; ++i) {
             auto tmpId = osalThreadId();
-            REQUIRE(tmpId == id);
-
+            if (tmpId != id)
+                REQUIRE(tmpId == id);
             osalThreadYield();
         }
     };
