@@ -32,13 +32,13 @@
 
 #include "osal/Thread.h"
 
+#include "osal/Error.h"
 #include "osal/Semaphore.h"
 
 #include <FreeRTOSConfig.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-#include <algorithm>
 #include <cstring>
 
 /// Helper thread function which is used as a wrapper for OSAL thread function.

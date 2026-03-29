@@ -34,6 +34,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <chrono>
+#include <cstdint>
+
 TEST_CASE("Semaphore creation and destruction", "[unit][c][semaphore]")
 {
     unsigned int initialValue{};
@@ -56,257 +59,246 @@ TEST_CASE("Semaphore creation and destruction", "[unit][c][semaphore]")
 
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, initialValue);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::InvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Invalid parameters to semaphore creation and destruction functions", "[unit][c][semaphore]")
 {
     auto error = osalSemaphoreCreate(nullptr, 3);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalSemaphoreDestroy(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Wait and signal from one thread, start with 1", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 1);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Wait and signal from one thread, start with 0", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 0);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Invalid arguments passed to semaphore functions in one thread", "[unit][c][semaphore]")
 {
     auto error = osalSemaphoreWait(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalSemaphoreTryWait(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalSemaphoreTryWaitIsr(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalSemaphoreTimedWait(nullptr, 3);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalSemaphoreSignal(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalSemaphoreSignalIsr(nullptr);
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Combination of wait and signal calls from one thread", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 4);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 3.
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 2.
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 1.
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 2.
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 1.
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 2.
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     // 3.
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     int count{};
-    while (osalSemaphoreTryWait(&semaphore) == OsalError::eOk)
+    while (!osalSemaphoreTryWait(&semaphore))
         ++count;
 
-    REQUIRE(count == 3);
+    CHECK(count == 3);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Increment semaphore to value bigger than the initial one", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 4);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     int firstCount{};
-    while (osalSemaphoreTryWait(&semaphore) == OsalError::eOk)
+    while (!osalSemaphoreTryWait(&semaphore))
         ++firstCount;
 
     constexpr int cFirstExpectedCount = 4;
-    REQUIRE(firstCount == cFirstExpectedCount);
+    CHECK(firstCount == cFirstExpectedCount);
 
     constexpr int cSecondExpectedCount = 16;
     for (int i = 0; i < cSecondExpectedCount; ++i) {
         error = osalSemaphoreSignal(&semaphore);
-        REQUIRE(error == OsalError::eOk);
+        CHECK_FALSE(error);
     }
 
     int secondCount{};
-    while (osalSemaphoreTryWait(&semaphore) == OsalError::eOk)
+    while (!osalSemaphoreTryWait(&semaphore))
         ++secondCount;
 
-    REQUIRE(secondCount == cSecondExpectedCount);
+    CHECK(secondCount == cSecondExpectedCount);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Wait called from two threads", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 1);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        auto error = osalSemaphoreWait(&semaphore);
-        if (error != OsalError::eOk)
-            REQUIRE(error == OsalError::eOk);
+        REQUIRE_FALSE(osalSemaphoreWait(&semaphore));
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
 
-        error = osalSemaphoreSignal(&semaphore);
-        if (error != OsalError::eOk)
-            REQUIRE(error == OsalError::eOk);
+        REQUIRE_FALSE(osalSemaphoreSignal(&semaphore));
     };
 
     osal::Thread thread(func);
 
     osal::sleep(120ms);
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TryWait called from second thread", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 1);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        while (osalSemaphoreTryWait(&semaphore) != OsalError::eOk)
+        while (osalSemaphoreTryWait(&semaphore))
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
 
-        auto error = osalSemaphoreSignal(&semaphore);
-        if (error != OsalError::eOk)
-            REQUIRE(error == OsalError::eOk);
+        REQUIRE_FALSE(osalSemaphoreSignal(&semaphore));
     };
 
     osal::Thread thread(func);
 
     osal::sleep(120ms);
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TryWait and signal called from ISR", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 1);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     error = osalSemaphoreTryWaitIsr(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        while (osalSemaphoreTryWaitIsr(&semaphore) != OsalError::eOk)
+        while (osalSemaphoreTryWaitIsr(&semaphore))
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
 
-        auto error = osalSemaphoreSignal(&semaphore);
-        if (error != OsalError::eOk)
-            REQUIRE(error == OsalError::eOk);
+        REQUIRE_FALSE(osalSemaphoreSignal(&semaphore));
     };
 
     osal::Thread thread(func);
 
     osal::sleep(120ms);
     error = osalSemaphoreSignalIsr(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Multiple wait called one thread", "[unit][c][semaphore]")
@@ -332,18 +324,18 @@ TEST_CASE("Multiple wait called one thread", "[unit][c][semaphore]")
 
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, initialValue);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     for (unsigned int i = 0; i < initialValue; ++i) {
         error = osalSemaphoreWait(&semaphore);
-        REQUIRE(error == OsalError::eOk);
+        CHECK_FALSE(error);
     }
 
     error = osalSemaphoreTryWait(&semaphore);
-    REQUIRE(error == OsalError::Locked);
+    CHECK(error == OsalError::Locked);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Multiple tryWait called one thread", "[unit][c][semaphore]")
@@ -369,18 +361,18 @@ TEST_CASE("Multiple tryWait called one thread", "[unit][c][semaphore]")
 
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, initialValue);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     for (unsigned int i = 0; i < initialValue; ++i) {
         error = osalSemaphoreTryWait(&semaphore);
-        REQUIRE(error == OsalError::eOk);
+        CHECK_FALSE(error);
     }
 
     error = osalSemaphoreTryWait(&semaphore);
-    REQUIRE(error == OsalError::Locked);
+    CHECK(error == OsalError::Locked);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Multiple tryWait called from ISR", "[unit][c][semaphore]")
@@ -406,84 +398,79 @@ TEST_CASE("Multiple tryWait called from ISR", "[unit][c][semaphore]")
 
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, initialValue);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     for (unsigned int i = 0; i < initialValue; ++i) {
         error = osalSemaphoreTryWaitIsr(&semaphore);
-        REQUIRE(error == OsalError::eOk);
+        CHECK_FALSE(error);
     }
 
     error = osalSemaphoreTryWaitIsr(&semaphore);
-    REQUIRE(error == OsalError::Locked);
+    CHECK(error == OsalError::Locked);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TimedWait called from second thread, timeout", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 1);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
         constexpr std::uint32_t cTimeoutMs = 100;
         auto error = osalSemaphoreTimedWait(&semaphore, cTimeoutMs);
-        if (error != OsalError::eTimeout)
-            REQUIRE(error == OsalError::eTimeout);
+        REQUIRE(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
     };
 
     osal::Thread thread(func);
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TimedWait called from second thread, success", "[unit][c][semaphore]")
 {
     OsalSemaphore semaphore{};
     auto error = osalSemaphoreCreate(&semaphore, 1);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     error = osalSemaphoreWait(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
         constexpr std::uint32_t cTimeoutMs = 100;
-        if (auto error = osalSemaphoreTimedWait(&semaphore, cTimeoutMs))
-            REQUIRE(!error);
+        REQUIRE_FALSE(osalSemaphoreTimedWait(&semaphore, cTimeoutMs));
 
         auto end = osal::timestamp();
-        if ((end - start) > 100ms)
-            REQUIRE((end - start) <= 100ms);
+        REQUIRE((end - start) <= 100ms);
 
-        if (auto error = osalSemaphoreSignal(&semaphore))
-            REQUIRE(!error);
+        REQUIRE_FALSE(osalSemaphoreSignal(&semaphore));
     };
 
     osal::Thread thread(func);
     osal::sleep(50ms);
 
     error = osalSemaphoreSignal(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = osalSemaphoreDestroy(&semaphore);
-    REQUIRE(error == OsalError::eOk);
+    CHECK_FALSE(error);
 }

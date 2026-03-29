@@ -77,50 +77,50 @@ TEST_CASE("Convert to struct tm", "[unit][c][time]")
         std::transform(timevals.begin(), timevals.end(), tms.begin(), osalTimevalToTm);
     }
 
-    REQUIRE(tms[0].tm_mday == 28);
-    REQUIRE(tms[0].tm_mon == 0);
-    REQUIRE(tms[0].tm_year == 122);
-    REQUIRE(tms[0].tm_hour == 22);
-    REQUIRE(tms[0].tm_min == 13);
-    REQUIRE(tms[0].tm_sec == 2);
-    REQUIRE(tms[0].tm_wday == 5);
-    REQUIRE(tms[0].tm_yday == 27);
+    CHECK(tms[0].tm_mday == 28);
+    CHECK(tms[0].tm_mon == 0);
+    CHECK(tms[0].tm_year == 122);
+    CHECK(tms[0].tm_hour == 22);
+    CHECK(tms[0].tm_min == 13);
+    CHECK(tms[0].tm_sec == 2);
+    CHECK(tms[0].tm_wday == 5);
+    CHECK(tms[0].tm_yday == 27);
 
-    REQUIRE(tms[1].tm_mday == 14);
-    REQUIRE(tms[1].tm_mon == 7);
-    REQUIRE(tms[1].tm_year == 97);
-    REQUIRE(tms[1].tm_hour == 15);
-    REQUIRE(tms[1].tm_min == 5);
-    REQUIRE(tms[1].tm_sec == 45);
-    REQUIRE(tms[1].tm_wday == 4);
-    REQUIRE(tms[1].tm_yday == 225);
+    CHECK(tms[1].tm_mday == 14);
+    CHECK(tms[1].tm_mon == 7);
+    CHECK(tms[1].tm_year == 97);
+    CHECK(tms[1].tm_hour == 15);
+    CHECK(tms[1].tm_min == 5);
+    CHECK(tms[1].tm_sec == 45);
+    CHECK(tms[1].tm_wday == 4);
+    CHECK(tms[1].tm_yday == 225);
 
-    REQUIRE(tms[2].tm_mday == 31);
-    REQUIRE(tms[2].tm_mon == 11);
-    REQUIRE(tms[2].tm_year == 101);
-    REQUIRE(tms[2].tm_hour == 21);
-    REQUIRE(tms[2].tm_min == 6);
-    REQUIRE(tms[2].tm_sec == 17);
-    REQUIRE(tms[2].tm_wday == 1);
-    REQUIRE(tms[2].tm_yday == 364);
+    CHECK(tms[2].tm_mday == 31);
+    CHECK(tms[2].tm_mon == 11);
+    CHECK(tms[2].tm_year == 101);
+    CHECK(tms[2].tm_hour == 21);
+    CHECK(tms[2].tm_min == 6);
+    CHECK(tms[2].tm_sec == 17);
+    CHECK(tms[2].tm_wday == 1);
+    CHECK(tms[2].tm_yday == 364);
 
-    REQUIRE(tms[3].tm_mday == 11);
-    REQUIRE(tms[3].tm_mon == 8);
-    REQUIRE(tms[3].tm_year == 70);
-    REQUIRE(tms[3].tm_hour == 12);
-    REQUIRE(tms[3].tm_min == 0);
-    REQUIRE(tms[3].tm_sec == 0);
-    REQUIRE(tms[3].tm_wday == 5);
-    REQUIRE(tms[3].tm_yday == 253);
+    CHECK(tms[3].tm_mday == 11);
+    CHECK(tms[3].tm_mon == 8);
+    CHECK(tms[3].tm_year == 70);
+    CHECK(tms[3].tm_hour == 12);
+    CHECK(tms[3].tm_min == 0);
+    CHECK(tms[3].tm_sec == 0);
+    CHECK(tms[3].tm_wday == 5);
+    CHECK(tms[3].tm_yday == 253);
 
-    REQUIRE(tms[4].tm_mday == 8);
-    REQUIRE(tms[4].tm_mon == 7);
-    REQUIRE(tms[4].tm_year == 90);
-    REQUIRE(tms[4].tm_hour == 20);
-    REQUIRE(tms[4].tm_min == 20);
-    REQUIRE(tms[4].tm_sec == 0);
-    REQUIRE(tms[4].tm_wday == 3);
-    REQUIRE(tms[4].tm_yday == 219);
+    CHECK(tms[4].tm_mday == 8);
+    CHECK(tms[4].tm_mon == 7);
+    CHECK(tms[4].tm_year == 90);
+    CHECK(tms[4].tm_hour == 20);
+    CHECK(tms[4].tm_min == 20);
+    CHECK(tms[4].tm_sec == 0);
+    CHECK(tms[4].tm_wday == 3);
+    CHECK(tms[4].tm_yday == 219);
 }
 
 TEST_CASE("Convert to time_t", "[unit][c][time]")
@@ -196,11 +196,11 @@ TEST_CASE("Convert to time_t", "[unit][c][time]")
         std::transform(timevals.begin(), timevals.end(), times.begin(), osalTimevalToTime);
     }
 
-    REQUIRE(times[0] == cDate1);
-    REQUIRE(times[1] == cDate2);
-    REQUIRE(times[2] == cDate3);
-    REQUIRE(times[3] == cDate4);
-    REQUIRE(times[4] == cDate5);
+    CHECK(times[0] == cDate1);
+    CHECK(times[1] == cDate2);
+    CHECK(times[2] == cDate3);
+    CHECK(times[3] == cDate4);
+    CHECK(times[4] == cDate5);
 }
 
 TEST_CASE("Convert to struct timespec", "[unit][c][time]")
@@ -274,16 +274,16 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
         std::transform(timevals.begin(), timevals.end(), timespecs.begin(), osalTimevalToTimespec);
     }
 
-    REQUIRE(timespecs[0].tv_sec == cDate1);
-    REQUIRE(timespecs[0].tv_nsec == 0);
-    REQUIRE(timespecs[1].tv_sec == cDate2);
-    REQUIRE(timespecs[1].tv_nsec == 0);
-    REQUIRE(timespecs[2].tv_sec == cDate3);
-    REQUIRE(timespecs[2].tv_nsec == 0);
-    REQUIRE(timespecs[3].tv_sec == cDate4);
-    REQUIRE(timespecs[3].tv_nsec == 0);
-    REQUIRE(timespecs[4].tv_sec == cDate5);
-    REQUIRE(timespecs[4].tv_nsec == 0);
+    CHECK(timespecs[0].tv_sec == cDate1);
+    CHECK(timespecs[0].tv_nsec == 0);
+    CHECK(timespecs[1].tv_sec == cDate2);
+    CHECK(timespecs[1].tv_nsec == 0);
+    CHECK(timespecs[2].tv_sec == cDate3);
+    CHECK(timespecs[2].tv_nsec == 0);
+    CHECK(timespecs[3].tv_sec == cDate4);
+    CHECK(timespecs[3].tv_nsec == 0);
+    CHECK(timespecs[4].tv_sec == cDate5);
+    CHECK(timespecs[4].tv_nsec == 0);
 }
 
 TEST_CASE("Convert to struct timeval", "[unit][c][time]")
@@ -357,16 +357,16 @@ TEST_CASE("Convert to struct timeval", "[unit][c][time]")
         std::transform(timespecs.begin(), timespecs.end(), timevals.begin(), osalTimespecToTimeval);
     }
 
-    REQUIRE(timevals[0].tv_sec == cDate1);
-    REQUIRE(timevals[0].tv_usec == 0);
-    REQUIRE(timevals[1].tv_sec == cDate2);
-    REQUIRE(timevals[1].tv_usec == 0);
-    REQUIRE(timevals[2].tv_sec == cDate3);
-    REQUIRE(timevals[2].tv_usec == 0);
-    REQUIRE(timevals[3].tv_sec == cDate4);
-    REQUIRE(timevals[3].tv_usec == 0);
-    REQUIRE(timevals[4].tv_sec == cDate5);
-    REQUIRE(timevals[4].tv_usec == 0);
+    CHECK(timevals[0].tv_sec == cDate1);
+    CHECK(timevals[0].tv_usec == 0);
+    CHECK(timevals[1].tv_sec == cDate2);
+    CHECK(timevals[1].tv_usec == 0);
+    CHECK(timevals[2].tv_sec == cDate3);
+    CHECK(timevals[2].tv_usec == 0);
+    CHECK(timevals[3].tv_sec == cDate4);
+    CHECK(timevals[3].tv_usec == 0);
+    CHECK(timevals[4].tv_sec == cDate5);
+    CHECK(timevals[4].tv_usec == 0);
 }
 
 TEST_CASE("Convert to string", "[unit][c][time]")
@@ -426,17 +426,17 @@ TEST_CASE("Convert to string", "[unit][c][time]")
         tms[4].tm_yday = 219; // NOLINT
 
         for (std::size_t i = 0; i < tms.size(); ++i) {
-            auto error = osalTmToString(tms[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
-            REQUIRE(error == OsalError::eOk);
+            auto error = osalTmToString(tms[i], time[i].data(), cSize, OsalTimeStringFormat::Time);
+            CHECK_FALSE(error);
 
-            error = osalTmToString(tms[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTmToString(tms[i], date[i].data(), cSize, OsalTimeStringFormat::Date);
+            CHECK_FALSE(error);
 
-            error = osalTmToString(tms[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTmToString(tms[i], timeDate[i].data(), cSize, OsalTimeStringFormat::TimeDate);
+            CHECK_FALSE(error);
 
-            error = osalTmToString(tms[i], sortedDateTime[i].data(), cSize, OsalTimeStringFormat::eSortedDateTime);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTmToString(tms[i], sortedDateTime[i].data(), cSize, OsalTimeStringFormat::SortedDateTime);
+            CHECK_FALSE(error);
         }
     }
 
@@ -445,17 +445,17 @@ TEST_CASE("Convert to string", "[unit][c][time]")
         std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
 
         for (std::size_t i = 0; i < times.size(); ++i) {
-            auto error = osalTimeToString(times[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
-            REQUIRE(error == OsalError::eOk);
+            auto error = osalTimeToString(times[i], time[i].data(), cSize, OsalTimeStringFormat::Time);
+            CHECK_FALSE(error);
 
-            error = osalTimeToString(times[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimeToString(times[i], date[i].data(), cSize, OsalTimeStringFormat::Date);
+            CHECK_FALSE(error);
 
-            error = osalTimeToString(times[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimeToString(times[i], timeDate[i].data(), cSize, OsalTimeStringFormat::TimeDate);
+            CHECK_FALSE(error);
 
-            error = osalTimeToString(times[i], sortedDateTime[i].data(), cSize, OsalTimeStringFormat::eSortedDateTime);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimeToString(times[i], sortedDateTime[i].data(), cSize, OsalTimeStringFormat::SortedDateTime);
+            CHECK_FALSE(error);
         }
     }
 
@@ -466,20 +466,20 @@ TEST_CASE("Convert to string", "[unit][c][time]")
         };
 
         for (std::size_t i = 0; i < timespecs.size(); ++i) {
-            auto error = osalTimespecToString(timespecs[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
-            REQUIRE(error == OsalError::eOk);
+            auto error = osalTimespecToString(timespecs[i], time[i].data(), cSize, OsalTimeStringFormat::Time);
+            CHECK_FALSE(error);
 
-            error = osalTimespecToString(timespecs[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimespecToString(timespecs[i], date[i].data(), cSize, OsalTimeStringFormat::Date);
+            CHECK_FALSE(error);
 
-            error = osalTimespecToString(timespecs[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimespecToString(timespecs[i], timeDate[i].data(), cSize, OsalTimeStringFormat::TimeDate);
+            CHECK_FALSE(error);
 
             error = osalTimespecToString(timespecs[i],
                                          sortedDateTime[i].data(),
                                          cSize,
-                                         OsalTimeStringFormat::eSortedDateTime);
-            REQUIRE(error == OsalError::eOk);
+                                         OsalTimeStringFormat::SortedDateTime);
+            CHECK_FALSE(error);
         }
     }
 
@@ -490,47 +490,47 @@ TEST_CASE("Convert to string", "[unit][c][time]")
         };
 
         for (std::size_t i = 0; i < timevals.size(); ++i) {
-            auto error = osalTimevalToString(timevals[i], time[i].data(), cSize, OsalTimeStringFormat::eTime);
-            REQUIRE(error == OsalError::eOk);
+            auto error = osalTimevalToString(timevals[i], time[i].data(), cSize, OsalTimeStringFormat::Time);
+            CHECK_FALSE(error);
 
-            error = osalTimevalToString(timevals[i], date[i].data(), cSize, OsalTimeStringFormat::eDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimevalToString(timevals[i], date[i].data(), cSize, OsalTimeStringFormat::Date);
+            CHECK_FALSE(error);
 
-            error = osalTimevalToString(timevals[i], timeDate[i].data(), cSize, OsalTimeStringFormat::eTimeDate);
-            REQUIRE(error == OsalError::eOk);
+            error = osalTimevalToString(timevals[i], timeDate[i].data(), cSize, OsalTimeStringFormat::TimeDate);
+            CHECK_FALSE(error);
 
             error = osalTimevalToString(timevals[i],
                                         sortedDateTime[i].data(),
                                         cSize,
-                                        OsalTimeStringFormat::eSortedDateTime);
-            REQUIRE(error == OsalError::eOk);
+                                        OsalTimeStringFormat::SortedDateTime);
+            CHECK_FALSE(error);
         }
     }
 
-    REQUIRE_THAT(time[0].data(), Catch::Matchers::Equals("22:13:02"));
-    REQUIRE_THAT(date[0].data(), Catch::Matchers::Equals("28.01.2022"));
-    REQUIRE_THAT(timeDate[0].data(), Catch::Matchers::Equals("22:13:02 28.01.2022"));
-    REQUIRE_THAT(sortedDateTime[0].data(), Catch::Matchers::Equals("20220128_221302"));
+    CHECK_THAT(time[0].data(), Catch::Matchers::Equals("22:13:02"));
+    CHECK_THAT(date[0].data(), Catch::Matchers::Equals("28.01.2022"));
+    CHECK_THAT(timeDate[0].data(), Catch::Matchers::Equals("22:13:02 28.01.2022"));
+    CHECK_THAT(sortedDateTime[0].data(), Catch::Matchers::Equals("20220128_221302"));
 
-    REQUIRE_THAT(time[1].data(), Catch::Matchers::Equals("15:05:45"));
-    REQUIRE_THAT(date[1].data(), Catch::Matchers::Equals("14.08.1997"));
-    REQUIRE_THAT(timeDate[1].data(), Catch::Matchers::Equals("15:05:45 14.08.1997"));
-    REQUIRE_THAT(sortedDateTime[1].data(), Catch::Matchers::Equals("19970814_150545"));
+    CHECK_THAT(time[1].data(), Catch::Matchers::Equals("15:05:45"));
+    CHECK_THAT(date[1].data(), Catch::Matchers::Equals("14.08.1997"));
+    CHECK_THAT(timeDate[1].data(), Catch::Matchers::Equals("15:05:45 14.08.1997"));
+    CHECK_THAT(sortedDateTime[1].data(), Catch::Matchers::Equals("19970814_150545"));
 
-    REQUIRE_THAT(time[2].data(), Catch::Matchers::Equals("21:06:17"));
-    REQUIRE_THAT(date[2].data(), Catch::Matchers::Equals("31.12.2001"));
-    REQUIRE_THAT(timeDate[2].data(), Catch::Matchers::Equals("21:06:17 31.12.2001"));
-    REQUIRE_THAT(sortedDateTime[2].data(), Catch::Matchers::Equals("20011231_210617"));
+    CHECK_THAT(time[2].data(), Catch::Matchers::Equals("21:06:17"));
+    CHECK_THAT(date[2].data(), Catch::Matchers::Equals("31.12.2001"));
+    CHECK_THAT(timeDate[2].data(), Catch::Matchers::Equals("21:06:17 31.12.2001"));
+    CHECK_THAT(sortedDateTime[2].data(), Catch::Matchers::Equals("20011231_210617"));
 
-    REQUIRE_THAT(time[3].data(), Catch::Matchers::Equals("12:00:00"));
-    REQUIRE_THAT(date[3].data(), Catch::Matchers::Equals("11.09.1970"));
-    REQUIRE_THAT(timeDate[3].data(), Catch::Matchers::Equals("12:00:00 11.09.1970"));
-    REQUIRE_THAT(sortedDateTime[3].data(), Catch::Matchers::Equals("19700911_120000"));
+    CHECK_THAT(time[3].data(), Catch::Matchers::Equals("12:00:00"));
+    CHECK_THAT(date[3].data(), Catch::Matchers::Equals("11.09.1970"));
+    CHECK_THAT(timeDate[3].data(), Catch::Matchers::Equals("12:00:00 11.09.1970"));
+    CHECK_THAT(sortedDateTime[3].data(), Catch::Matchers::Equals("19700911_120000"));
 
-    REQUIRE_THAT(time[4].data(), Catch::Matchers::Equals("20:20:00"));
-    REQUIRE_THAT(date[4].data(), Catch::Matchers::Equals("08.08.1990"));
-    REQUIRE_THAT(timeDate[4].data(), Catch::Matchers::Equals("20:20:00 08.08.1990"));
-    REQUIRE_THAT(sortedDateTime[4].data(), Catch::Matchers::Equals("19900808_202000"));
+    CHECK_THAT(time[4].data(), Catch::Matchers::Equals("20:20:00"));
+    CHECK_THAT(date[4].data(), Catch::Matchers::Equals("08.08.1990"));
+    CHECK_THAT(timeDate[4].data(), Catch::Matchers::Equals("20:20:00 08.08.1990"));
+    CHECK_THAT(sortedDateTime[4].data(), Catch::Matchers::Equals("19900808_202000"));
 }
 
 TEST_CASE("Convert to std::tm in C++", "[unit][cpp][time]")
@@ -565,50 +565,50 @@ TEST_CASE("Convert to std::tm in C++", "[unit][cpp][time]")
             tms[i] = osal::toTm(timevals[i]);
     }
 
-    REQUIRE(tms[0].tm_mday == 28);
-    REQUIRE(tms[0].tm_mon == 0);
-    REQUIRE(tms[0].tm_year == 122);
-    REQUIRE(tms[0].tm_hour == 22);
-    REQUIRE(tms[0].tm_min == 13);
-    REQUIRE(tms[0].tm_sec == 2);
-    REQUIRE(tms[0].tm_wday == 5);
-    REQUIRE(tms[0].tm_yday == 27);
+    CHECK(tms[0].tm_mday == 28);
+    CHECK(tms[0].tm_mon == 0);
+    CHECK(tms[0].tm_year == 122);
+    CHECK(tms[0].tm_hour == 22);
+    CHECK(tms[0].tm_min == 13);
+    CHECK(tms[0].tm_sec == 2);
+    CHECK(tms[0].tm_wday == 5);
+    CHECK(tms[0].tm_yday == 27);
 
-    REQUIRE(tms[1].tm_mday == 14);
-    REQUIRE(tms[1].tm_mon == 7);
-    REQUIRE(tms[1].tm_year == 97);
-    REQUIRE(tms[1].tm_hour == 15);
-    REQUIRE(tms[1].tm_min == 5);
-    REQUIRE(tms[1].tm_sec == 45);
-    REQUIRE(tms[1].tm_wday == 4);
-    REQUIRE(tms[1].tm_yday == 225);
+    CHECK(tms[1].tm_mday == 14);
+    CHECK(tms[1].tm_mon == 7);
+    CHECK(tms[1].tm_year == 97);
+    CHECK(tms[1].tm_hour == 15);
+    CHECK(tms[1].tm_min == 5);
+    CHECK(tms[1].tm_sec == 45);
+    CHECK(tms[1].tm_wday == 4);
+    CHECK(tms[1].tm_yday == 225);
 
-    REQUIRE(tms[2].tm_mday == 31);
-    REQUIRE(tms[2].tm_mon == 11);
-    REQUIRE(tms[2].tm_year == 101);
-    REQUIRE(tms[2].tm_hour == 21);
-    REQUIRE(tms[2].tm_min == 6);
-    REQUIRE(tms[2].tm_sec == 17);
-    REQUIRE(tms[2].tm_wday == 1);
-    REQUIRE(tms[2].tm_yday == 364);
+    CHECK(tms[2].tm_mday == 31);
+    CHECK(tms[2].tm_mon == 11);
+    CHECK(tms[2].tm_year == 101);
+    CHECK(tms[2].tm_hour == 21);
+    CHECK(tms[2].tm_min == 6);
+    CHECK(tms[2].tm_sec == 17);
+    CHECK(tms[2].tm_wday == 1);
+    CHECK(tms[2].tm_yday == 364);
 
-    REQUIRE(tms[3].tm_mday == 11);
-    REQUIRE(tms[3].tm_mon == 8);
-    REQUIRE(tms[3].tm_year == 70);
-    REQUIRE(tms[3].tm_hour == 12);
-    REQUIRE(tms[3].tm_min == 0);
-    REQUIRE(tms[3].tm_sec == 0);
-    REQUIRE(tms[3].tm_wday == 5);
-    REQUIRE(tms[3].tm_yday == 253);
+    CHECK(tms[3].tm_mday == 11);
+    CHECK(tms[3].tm_mon == 8);
+    CHECK(tms[3].tm_year == 70);
+    CHECK(tms[3].tm_hour == 12);
+    CHECK(tms[3].tm_min == 0);
+    CHECK(tms[3].tm_sec == 0);
+    CHECK(tms[3].tm_wday == 5);
+    CHECK(tms[3].tm_yday == 253);
 
-    REQUIRE(tms[4].tm_mday == 8);
-    REQUIRE(tms[4].tm_mon == 7);
-    REQUIRE(tms[4].tm_year == 90);
-    REQUIRE(tms[4].tm_hour == 20);
-    REQUIRE(tms[4].tm_min == 20);
-    REQUIRE(tms[4].tm_sec == 0);
-    REQUIRE(tms[4].tm_wday == 3);
-    REQUIRE(tms[4].tm_yday == 219);
+    CHECK(tms[4].tm_mday == 8);
+    CHECK(tms[4].tm_mon == 7);
+    CHECK(tms[4].tm_year == 90);
+    CHECK(tms[4].tm_hour == 20);
+    CHECK(tms[4].tm_min == 20);
+    CHECK(tms[4].tm_sec == 0);
+    CHECK(tms[4].tm_wday == 3);
+    CHECK(tms[4].tm_yday == 219);
 }
 
 TEST_CASE("Convert to std::time_t in C++", "[unit][cpp][time]")
@@ -687,11 +687,11 @@ TEST_CASE("Convert to std::time_t in C++", "[unit][cpp][time]")
             times[i] = osal::toTime(timevals[i]);
     }
 
-    REQUIRE(times[0] == cDate1);
-    REQUIRE(times[1] == cDate2);
-    REQUIRE(times[2] == cDate3);
-    REQUIRE(times[3] == cDate4);
-    REQUIRE(times[4] == cDate5);
+    CHECK(times[0] == cDate1);
+    CHECK(times[1] == cDate2);
+    CHECK(times[2] == cDate3);
+    CHECK(times[3] == cDate4);
+    CHECK(times[4] == cDate5);
 }
 
 TEST_CASE("Convert to std::timespec in C++", "[unit][cpp][time]")
@@ -768,16 +768,16 @@ TEST_CASE("Convert to std::timespec in C++", "[unit][cpp][time]")
             timespecs[i] = osal::toTimespec(timevals[i]);
     }
 
-    REQUIRE(timespecs[0].tv_sec == cDate1);
-    REQUIRE(timespecs[0].tv_nsec == 0);
-    REQUIRE(timespecs[1].tv_sec == cDate2);
-    REQUIRE(timespecs[1].tv_nsec == 0);
-    REQUIRE(timespecs[2].tv_sec == cDate3);
-    REQUIRE(timespecs[2].tv_nsec == 0);
-    REQUIRE(timespecs[3].tv_sec == cDate4);
-    REQUIRE(timespecs[3].tv_nsec == 0);
-    REQUIRE(timespecs[4].tv_sec == cDate5);
-    REQUIRE(timespecs[4].tv_nsec == 0);
+    CHECK(timespecs[0].tv_sec == cDate1);
+    CHECK(timespecs[0].tv_nsec == 0);
+    CHECK(timespecs[1].tv_sec == cDate2);
+    CHECK(timespecs[1].tv_nsec == 0);
+    CHECK(timespecs[2].tv_sec == cDate3);
+    CHECK(timespecs[2].tv_nsec == 0);
+    CHECK(timespecs[3].tv_sec == cDate4);
+    CHECK(timespecs[3].tv_nsec == 0);
+    CHECK(timespecs[4].tv_sec == cDate5);
+    CHECK(timespecs[4].tv_nsec == 0);
 }
 
 TEST_CASE("Convert to std::timeval in C++", "[unit][cpp][time]")
@@ -854,16 +854,16 @@ TEST_CASE("Convert to std::timeval in C++", "[unit][cpp][time]")
             timevals[i] = osal::toTimeval(timespecs[i]);
     }
 
-    REQUIRE(timevals[0].tv_sec == cDate1);
-    REQUIRE(timevals[0].tv_usec == 0);
-    REQUIRE(timevals[1].tv_sec == cDate2);
-    REQUIRE(timevals[1].tv_usec == 0);
-    REQUIRE(timevals[2].tv_sec == cDate3);
-    REQUIRE(timevals[2].tv_usec == 0);
-    REQUIRE(timevals[3].tv_sec == cDate4);
-    REQUIRE(timevals[3].tv_usec == 0);
-    REQUIRE(timevals[4].tv_sec == cDate5);
-    REQUIRE(timevals[4].tv_usec == 0);
+    CHECK(timevals[0].tv_sec == cDate1);
+    CHECK(timevals[0].tv_usec == 0);
+    CHECK(timevals[1].tv_sec == cDate2);
+    CHECK(timevals[1].tv_usec == 0);
+    CHECK(timevals[2].tv_sec == cDate3);
+    CHECK(timevals[2].tv_usec == 0);
+    CHECK(timevals[3].tv_sec == cDate4);
+    CHECK(timevals[3].tv_usec == 0);
+    CHECK(timevals[4].tv_sec == cDate5);
+    CHECK(timevals[4].tv_usec == 0);
 }
 
 TEST_CASE("Convert to std::string in C++", "[unit][cpp][time]")
@@ -922,10 +922,10 @@ TEST_CASE("Convert to std::string in C++", "[unit][cpp][time]")
         tms[4].tm_yday = 219; // NOLINT
 
         for (std::size_t i = 0; i < tms.size(); ++i) {
-            time[i] = osal::toString(tms[i], OsalTimeStringFormat::eTime);
-            date[i] = osal::toString(tms[i], OsalTimeStringFormat::eDate);
-            timeDate[i] = osal::toString(tms[i], OsalTimeStringFormat::eTimeDate);
-            sortedDateTime[i] = osal::toString(tms[i], OsalTimeStringFormat::eSortedDateTime);
+            time[i] = osal::toString(tms[i], OsalTimeStringFormat::Time);
+            date[i] = osal::toString(tms[i], OsalTimeStringFormat::Date);
+            timeDate[i] = osal::toString(tms[i], OsalTimeStringFormat::TimeDate);
+            sortedDateTime[i] = osal::toString(tms[i], OsalTimeStringFormat::SortedDateTime);
         }
     }
 
@@ -934,10 +934,10 @@ TEST_CASE("Convert to std::string in C++", "[unit][cpp][time]")
         std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
 
         for (std::size_t i = 0; i < times.size(); ++i) {
-            time[i] = osal::toString(times[i], OsalTimeStringFormat::eTime);
-            date[i] = osal::toString(times[i], OsalTimeStringFormat::eDate);
-            timeDate[i] = osal::toString(times[i], OsalTimeStringFormat::eTimeDate);
-            sortedDateTime[i] = osal::toString(times[i], OsalTimeStringFormat::eSortedDateTime);
+            time[i] = osal::toString(times[i], OsalTimeStringFormat::Time);
+            date[i] = osal::toString(times[i], OsalTimeStringFormat::Date);
+            timeDate[i] = osal::toString(times[i], OsalTimeStringFormat::TimeDate);
+            sortedDateTime[i] = osal::toString(times[i], OsalTimeStringFormat::SortedDateTime);
         }
     }
 
@@ -948,10 +948,10 @@ TEST_CASE("Convert to std::string in C++", "[unit][cpp][time]")
         };
 
         for (std::size_t i = 0; i < timespecs.size(); ++i) {
-            time[i] = osal::toString(timespecs[i], OsalTimeStringFormat::eTime);
-            date[i] = osal::toString(timespecs[i], OsalTimeStringFormat::eDate);
-            timeDate[i] = osal::toString(timespecs[i], OsalTimeStringFormat::eTimeDate);
-            sortedDateTime[i] = osal::toString(timespecs[i], OsalTimeStringFormat::eSortedDateTime);
+            time[i] = osal::toString(timespecs[i], OsalTimeStringFormat::Time);
+            date[i] = osal::toString(timespecs[i], OsalTimeStringFormat::Date);
+            timeDate[i] = osal::toString(timespecs[i], OsalTimeStringFormat::TimeDate);
+            sortedDateTime[i] = osal::toString(timespecs[i], OsalTimeStringFormat::SortedDateTime);
         }
     }
 
@@ -962,35 +962,35 @@ TEST_CASE("Convert to std::string in C++", "[unit][cpp][time]")
         };
 
         for (std::size_t i = 0; i < timevals.size(); ++i) {
-            time[i] = osal::toString(timevals[i], OsalTimeStringFormat::eTime);
-            date[i] = osal::toString(timevals[i], OsalTimeStringFormat::eDate);
-            timeDate[i] = osal::toString(timevals[i], OsalTimeStringFormat::eTimeDate);
-            sortedDateTime[i] = osal::toString(timevals[i], OsalTimeStringFormat::eSortedDateTime);
+            time[i] = osal::toString(timevals[i], OsalTimeStringFormat::Time);
+            date[i] = osal::toString(timevals[i], OsalTimeStringFormat::Date);
+            timeDate[i] = osal::toString(timevals[i], OsalTimeStringFormat::TimeDate);
+            sortedDateTime[i] = osal::toString(timevals[i], OsalTimeStringFormat::SortedDateTime);
         }
     }
 
-    REQUIRE(time[0] == "22:13:02");
-    REQUIRE(date[0] == "28.01.2022");
-    REQUIRE(timeDate[0] == "22:13:02 28.01.2022");
-    REQUIRE(sortedDateTime[0] == "20220128_221302");
+    CHECK(time[0] == "22:13:02");
+    CHECK(date[0] == "28.01.2022");
+    CHECK(timeDate[0] == "22:13:02 28.01.2022");
+    CHECK(sortedDateTime[0] == "20220128_221302");
 
-    REQUIRE(time[1] == "15:05:45");
-    REQUIRE(date[1] == "14.08.1997");
-    REQUIRE(timeDate[1] == "15:05:45 14.08.1997");
-    REQUIRE(sortedDateTime[1] == "19970814_150545");
+    CHECK(time[1] == "15:05:45");
+    CHECK(date[1] == "14.08.1997");
+    CHECK(timeDate[1] == "15:05:45 14.08.1997");
+    CHECK(sortedDateTime[1] == "19970814_150545");
 
-    REQUIRE(time[2] == "21:06:17");
-    REQUIRE(date[2] == "31.12.2001");
-    REQUIRE(timeDate[2] == "21:06:17 31.12.2001");
-    REQUIRE(sortedDateTime[2] == "20011231_210617");
+    CHECK(time[2] == "21:06:17");
+    CHECK(date[2] == "31.12.2001");
+    CHECK(timeDate[2] == "21:06:17 31.12.2001");
+    CHECK(sortedDateTime[2] == "20011231_210617");
 
-    REQUIRE(time[3] == "12:00:00");
-    REQUIRE(date[3] == "11.09.1970");
-    REQUIRE(timeDate[3] == "12:00:00 11.09.1970");
-    REQUIRE(sortedDateTime[3] == "19700911_120000");
+    CHECK(time[3] == "12:00:00");
+    CHECK(date[3] == "11.09.1970");
+    CHECK(timeDate[3] == "12:00:00 11.09.1970");
+    CHECK(sortedDateTime[3] == "19700911_120000");
 
-    REQUIRE(time[4] == "20:20:00");
-    REQUIRE(date[4] == "08.08.1990");
-    REQUIRE(timeDate[4] == "20:20:00 08.08.1990");
-    REQUIRE(sortedDateTime[4] == "19900808_202000");
+    CHECK(time[4] == "20:20:00");
+    CHECK(date[4] == "08.08.1990");
+    CHECK(timeDate[4] == "20:20:00 08.08.1990");
+    CHECK(sortedDateTime[4] == "19900808_202000");
 }

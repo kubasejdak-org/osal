@@ -6,14 +6,14 @@ add_executable(osal-tests
     main.cpp
     Mutex.cpp
     MutexObject.cpp
-    # ScopedLock.cpp
-    # Semaphore.cpp
-    # SemaphoreObject.cpp
-    # Thread.cpp
-    # ThreadObject.cpp
-    # time.cpp
-    # Timeout.cpp
-    # timestamp.cpp
+    ScopedLock.cpp
+    Semaphore.cpp
+    SemaphoreObject.cpp
+    Thread.cpp
+    ThreadObject.cpp
+    time.cpp
+    Timeout.cpp
+    timestamp.cpp
 )
 
 find_package(Catch2)

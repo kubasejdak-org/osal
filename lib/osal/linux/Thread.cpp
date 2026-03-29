@@ -30,6 +30,7 @@
 
 #include "osal/Error.h"
 
+#include <pthread.h>
 #include <sched.h>
 
 #include <algorithm>

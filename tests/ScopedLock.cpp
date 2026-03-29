@@ -34,6 +34,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <chrono>
+
 TEST_CASE("Create and destroy lock", "[unit][cpp][mutex]")
 {
     osal::Mutex mutex;
@@ -41,11 +43,11 @@ TEST_CASE("Create and destroy lock", "[unit][cpp][mutex]")
     bool locked = lock;
     bool acquired = lock.isAcquired();
 
-    REQUIRE(locked);
-    REQUIRE(acquired);
+    CHECK(locked);
+    CHECK(acquired);
 
     auto error = mutex.tryLock();
-    REQUIRE(error == OsalError::eLocked);
+    CHECK(error == OsalError::Locked);
 }
 
 TEST_CASE("Create lock with timeout", "[unit][cpp][mutex]")
@@ -55,16 +57,16 @@ TEST_CASE("Create lock with timeout", "[unit][cpp][mutex]")
     {
         osal::ScopedLock lock(mutex, 100ms);
         bool locked = lock;
-        REQUIRE(locked);
+        CHECK(locked);
     }
 
     auto error = mutex.lock();
-    REQUIRE(!error);
+    REQUIRE_FALSE(error);
 
     {
         osal::ScopedLock lock(mutex, 100ms);
         bool locked = lock;
-        REQUIRE(!locked);
+        CHECK_FALSE(locked);
     }
 }
 
@@ -75,17 +77,17 @@ TEST_CASE("Unlock ScopedLock when destroyed", "[unit][cpp][mutex]")
     {
         osal::ScopedLock lock(mutex);
         bool locked = lock;
-        REQUIRE(locked);
+        CHECK(locked);
 
         auto error = mutex.tryLock();
-        REQUIRE(error == OsalError::eLocked);
+        CHECK(error == OsalError::Locked);
     }
 
     auto error = mutex.tryLock();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     error = mutex.unlock();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Non-recursive success waitLock() thread with ScopedLock in C++", "[unit][cpp][mutex]")
@@ -95,7 +97,7 @@ TEST_CASE("Non-recursive success waitLock() thread with ScopedLock in C++", "[un
 
     auto func = [&mutex, &threadError] {
         osal::ScopedLock lock(mutex, 500ms);
-        threadError = lock ? OsalError::eOk : OsalError::eTimeout;
+        threadError = lock ? std::error_code{} : OsalError::Timeout;
     };
 
     osal::Thread thread;
@@ -110,6 +112,6 @@ TEST_CASE("Non-recursive success waitLock() thread with ScopedLock in C++", "[un
     }
 
     auto error = thread.join();
-    REQUIRE(!error);
-    REQUIRE(!threadError);
+    CHECK_FALSE(error);
+    CHECK_FALSE(threadError);
 }

@@ -34,6 +34,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <chrono>
 #include <utility>
 
 TEST_CASE("Semaphore creation and destruction in C++", "[unit][cpp][semaphore]")
@@ -60,26 +61,26 @@ TEST_CASE("Semaphore creation and destruction in C++", "[unit][cpp][semaphore]")
 
     if (initialValue != 0) {
         auto error = semaphore.wait();
-        REQUIRE(!error);
+        CHECK_FALSE(error);
     }
 
     auto error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Moving semaphore around in C++", "[unit][cpp][semaphore]")
 {
     osal::Semaphore semaphore(1);
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     osal::Semaphore semaphore2(std::move(semaphore));
 
     error = semaphore.signal(); // NOLINT
-    REQUIRE(error == OsalError::eInvalidArgument);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = semaphore2.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Wait and signal from one thread in C++, start with 1", "[unit][cpp][semaphore]")
@@ -87,10 +88,10 @@ TEST_CASE("Wait and signal from one thread in C++, start with 1", "[unit][cpp][s
     osal::Semaphore semaphore(1);
 
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Wait and signal from one thread in C++, start with 0", "[unit][cpp][semaphore]")
@@ -98,10 +99,10 @@ TEST_CASE("Wait and signal from one thread in C++, start with 0", "[unit][cpp][s
     osal::Semaphore semaphore(0);
 
     auto error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Combination of wait and signal calls from one thread in C++", "[unit][cpp][semaphore]")
@@ -110,60 +111,60 @@ TEST_CASE("Combination of wait and signal calls from one thread in C++", "[unit]
 
     // 3.
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     // 2.
     error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     // 1.
     error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     // 2.
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     // 1.
     error = semaphore.wait();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     // 2.
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     // 3.
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 
     int count{};
-    while (semaphore.tryWait() == OsalError::eOk)
+    while (!semaphore.tryWait())
         ++count;
 
-    REQUIRE(count == 3);
+    CHECK(count == 3);
 }
 
 TEST_CASE("Increment semaphore to value bigger than the initial one in C++", "[unit][cpp][semaphore]")
 {
     osal::Semaphore semaphore(4);
     int firstCount{};
-    while (semaphore.tryWait() == OsalError::eOk)
+    while (!semaphore.tryWait())
         ++firstCount;
 
     constexpr int cFirstExpectedCount = 4;
-    REQUIRE(firstCount == cFirstExpectedCount);
+    CHECK(firstCount == cFirstExpectedCount);
 
     constexpr int cSecondExpectedCount = 16;
     for (int i = 0; i < cSecondExpectedCount; ++i) {
         auto error = semaphore.signal();
-        REQUIRE(!error);
+        CHECK_FALSE(error);
     }
 
     int secondCount{};
-    while (semaphore.tryWait() == OsalError::eOk)
+    while (!semaphore.tryWait())
         ++secondCount;
 
-    REQUIRE(secondCount == cSecondExpectedCount);
+    CHECK(secondCount == cSecondExpectedCount);
 }
 
 TEST_CASE("Wait called from two threads in C++", "[unit][cpp][semaphore]")
@@ -171,29 +172,24 @@ TEST_CASE("Wait called from two threads in C++", "[unit][cpp][semaphore]")
     osal::Semaphore semaphore(1);
 
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        auto error = semaphore.wait();
-        if (error != OsalError::eOk)
-            REQUIRE(!error);
+        REQUIRE_FALSE(semaphore.wait());
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
 
-        error = semaphore.signal();
-        if (error != OsalError::eOk)
-            REQUIRE(!error);
+        REQUIRE_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
 
     osal::sleep(120ms);
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TryWait called from second thread in C++", "[unit][cpp][semaphore]")
@@ -201,28 +197,25 @@ TEST_CASE("TryWait called from second thread in C++", "[unit][cpp][semaphore]")
     osal::Semaphore semaphore(1);
 
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        while (semaphore.tryWait() != OsalError::eOk)
+        while (semaphore.tryWait())
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
 
-        auto error = semaphore.signal();
-        if (error != OsalError::eOk)
-            REQUIRE(!error);
+        REQUIRE_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
 
     osal::sleep(120ms);
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TryWait and signal called from ISR in C++", "[unit][cpp][semaphore]")
@@ -230,28 +223,25 @@ TEST_CASE("TryWait and signal called from ISR in C++", "[unit][cpp][semaphore]")
     osal::Semaphore semaphore(1);
 
     auto error = semaphore.tryWaitIsr();
-    REQUIRE(!error);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        while (semaphore.tryWaitIsr() != OsalError::eOk)
+        while (semaphore.tryWaitIsr())
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
 
-        auto error = semaphore.signal();
-        if (error != OsalError::eOk)
-            REQUIRE(!error);
+        REQUIRE_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
 
     osal::sleep(120ms);
     error = semaphore.signalIsr();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Multiple wait called one thread in C++", "[unit][cpp][semaphore]")
@@ -279,11 +269,11 @@ TEST_CASE("Multiple wait called one thread in C++", "[unit][cpp][semaphore]")
 
     for (unsigned int i = 0; i < initialValue; ++i) {
         auto error = semaphore.wait();
-        REQUIRE(!error);
+        CHECK_FALSE(error);
     }
 
     auto error = semaphore.tryWait();
-    REQUIRE(error == OsalError::Locked);
+    CHECK(error == OsalError::Locked);
 }
 
 TEST_CASE("Multiple tryWait called one thread in C++", "[unit][cpp][semaphore]")
@@ -311,11 +301,11 @@ TEST_CASE("Multiple tryWait called one thread in C++", "[unit][cpp][semaphore]")
 
     for (unsigned int i = 0; i < initialValue; ++i) {
         auto error = semaphore.tryWait();
-        REQUIRE(!error);
+        CHECK_FALSE(error);
     }
 
     auto error = semaphore.tryWait();
-    REQUIRE(error == OsalError::Locked);
+    CHECK(error == OsalError::Locked);
 }
 
 TEST_CASE("Multiple tryWait called from ISR in C++", "[unit][cpp][semaphore]")
@@ -343,11 +333,11 @@ TEST_CASE("Multiple tryWait called from ISR in C++", "[unit][cpp][semaphore]")
 
     for (unsigned int i = 0; i < initialValue; ++i) {
         auto error = semaphore.tryWaitIsr();
-        REQUIRE(!error);
+        CHECK_FALSE(error);
     }
 
     auto error = semaphore.tryWaitIsr();
-    REQUIRE(error == OsalError::Locked);
+    CHECK(error == OsalError::Locked);
 }
 
 TEST_CASE("TimedWait called from second thread in C++, timeout", "[unit][cpp][semaphore]")
@@ -355,25 +345,23 @@ TEST_CASE("TimedWait called from second thread in C++, timeout", "[unit][cpp][se
     osal::Semaphore semaphore(1);
 
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
         auto error = semaphore.timedWait(100ms);
-        if (error != OsalError::eTimeout)
-            REQUIRE(error == OsalError::eTimeout);
+        REQUIRE(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
-        if ((end - start) < 100ms)
-            REQUIRE((end - start) >= 100ms);
+        REQUIRE((end - start) >= 100ms);
     };
 
     osal::Thread thread(func);
-    thread.join();
+    CHECK_FALSE(thread.join());
 
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("TimedWait called from second thread in C++, success", "[unit][cpp][semaphore]")
@@ -381,27 +369,24 @@ TEST_CASE("TimedWait called from second thread in C++, success", "[unit][cpp][se
     osal::Semaphore semaphore(1);
 
     auto error = semaphore.wait();
-    REQUIRE(!error);
+    REQUIRE_FALSE(error);
 
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        if (auto error = semaphore.timedWait(100ms))
-            REQUIRE(!error);
+        REQUIRE_FALSE(semaphore.timedWait(100ms));
 
         auto end = osal::timestamp();
-        if ((end - start) > 100ms)
-            REQUIRE((end - start) <= 100ms);
+        REQUIRE((end - start) <= 100ms);
 
-        if (auto error = semaphore.signal())
-            REQUIRE(!error);
+        REQUIRE_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
     osal::sleep(50ms);
 
     error = semaphore.signal();
-    REQUIRE(!error);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Timeout used with semaphores", "[unit][cpp][semaphore]")
@@ -410,6 +395,6 @@ TEST_CASE("Timeout used with semaphores", "[unit][cpp][semaphore]")
 
     osal::Timeout timeout = 100ms;
     auto error = semaphore.timedWait(timeout);
-    REQUIRE(error == OsalError::eTimeout);
-    REQUIRE(timeout.isExpired());
+    CHECK(error == OsalError::Timeout);
+    CHECK(timeout.isExpired());
 }
