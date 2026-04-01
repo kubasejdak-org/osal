@@ -1,7 +1,7 @@
 # osal
 
 OS abstraction layer providing unified C and C++ APIs for threads, mutexes, semaphores, sleep, and time utilities.
-Currently supports Linux and FreeRTOS, with architecture designed to accommodate additional platforms over time.
+Architecture is organized around a portable C layer with an optional C++ wrapper for RAII and object-oriented use.
 
 Main features:
 
@@ -11,26 +11,34 @@ Main features:
 - **ISR-safe variants:** dedicated `*Isr()` operations for mutex and semaphore use from interrupt context,
 - **time utilities:** timestamp functions, time unit conversions, and `std::chrono`-based sleep.
 
+## Supported Platforms
+
+| `OSAL_PLATFORM` | Backend details                     |
+| --------------- | ----------------------------------- |
+| `linux`         | Linux backend using POSIX API       |
+| `freertos`      | FreeRTOS backend using FreeRTOS API |
+
+Backend selection is controlled at build time with `OSAL_PLATFORM`. The architecture is designed to accommodate
+additional backends over time.
+
 > [!IMPORTANT]
 >
-> `osal` requires the target project to use CMake (minimum version 3.28).
+> `osal` requires the target project to use CMake.
 
 ## Architecture
 
 ### Components
 
-- **`osal::c`** — C API. Exposes `osalThread*()`, `osalMutex*()`, `osalSemaphore*()`, `osalSleepMs()`, and
-  time/timestamp functions. Headers are platform-independent; the implementation is provided by the selected backend.
-- **`osal::cpp`** — C++ RAII wrappers around `osal::c`. Provides `osal::Thread<>`, `osal::Mutex`, `osal::Semaphore`,
-  `osal::ScopedLock`, `osal::Timeout`, and `std::chrono`-based helpers.
-- **`osal::common`** — shared, platform-independent implementation (time conversions, timestamp arithmetic). Used
-  internally by both API layers.
-- **Platform backends** — platform-specific implementations of the C API, selected at build time via `OSAL_PLATFORM`.
-  Current backends:
-    - **`linux`** — POSIX implementation using `pthread`, `sem_t`, and `clock_gettime`.
-    - **`freertos`** — FreeRTOS implementation using `TaskHandle_t`, `SemaphoreHandle_t`, and the FreeRTOS tick API.
+- **`osal`** — C API layer and platform backends. Exposes primitives for:
+    - threads,
+    - mutexes,
+    - semaphores,
+    - sleep,
+    - time/timestamp utilities.
 
-The diagram below illustrates the layering. The C++ API is a thin wrapper over the C API; the C API delegates all
+- **`cpp`** — C++ wrapper layer built on top of the C API. Adds RAII and object-oriented abstractions.
+
+The diagram below illustrates the layering. The C++ API is a thin wrapper over the C API. The C API delegates all
 platform-specific work to the selected backend:
 
 ```mermaid
@@ -83,13 +91,10 @@ osal/
 │   └── presets/                        # Internal preset helpers
 ├── lib/                                # Library components
 │   ├── osal/                           # C API (osal::c) and platform backends
-│   │   ├── include/osal/               # Public C headers
 │   │   ├── common/                     # Platform-independent implementation (osal::common)
 │   │   ├── linux/                      # Linux backend (pthread)
 │   │   └── freertos/                   # FreeRTOS backend
-│   └── cpp/                            # C++ API (osal::cpp)
-│       ├── include/osal/               # Public C++ headers
-│       └── *.cpp                       # C++ wrapper implementations
+│   └── cpp/                            # C++ wrapper API (osal::cpp)
 ├── tests/                              # Test suite (Catch2)
 ├── tools/                              # Development tools and scripts
 ├── .devcontainer/                      # Dev container configuration
@@ -151,7 +156,7 @@ wrappers are not needed:
 ```cmake
 target_link_libraries(my-app
     PRIVATE
-        osal::cpp   # C++ RAII API; osal::c is linked transitively
+        osal::cpp   # C++ RAII API, osal::c is linked transitively
 )
 ```
 
@@ -164,7 +169,12 @@ target_link_libraries(my-c-app
 
 ### API Overview
 
+`osal::cpp` is an optional convenience layer built on top of `osal::c`. Projects that prefer the plain C interface can
+link `osal::c` directly.
+
 #### Threads
+
+**C++:**
 
 ```cpp
 #include <osal/Thread.hpp>
@@ -176,7 +186,27 @@ osal::NormalPrioThread<> worker("worker-thread", [] {
 worker.join();
 ```
 
+**C:**
+
+```c
+#include <osal/Thread.h>
+
+static void worker(void* arg)
+{
+    // thread body
+}
+
+struct OsalThread thread;
+struct OsalThreadConfig config = {Normal, cOsalThreadDefaultStackSize, NULL};
+
+osalThreadCreateEx(&thread, config, worker, NULL, "worker-thread");
+osalThreadJoin(&thread);
+osalThreadDestroy(&thread);
+```
+
 #### Mutexes and scoped locks
+
+**C++: RAII with `ScopedLock`**
 
 ```cpp
 #include <osal/Mutex.hpp>
@@ -193,7 +223,25 @@ osal::Mutex mutex;
 }   // mutex unlocked automatically on scope exit
 ```
 
+**C (manual lock/unlock):**
+
+```c
+#include <osal/Mutex.h>
+
+struct OsalMutex mutex;
+
+osalMutexCreate(&mutex, cOsalMutexDefaultType);
+osalMutexLock(&mutex);
+
+// critical section
+
+osalMutexUnlock(&mutex);
+osalMutexDestroy(&mutex);
+```
+
 #### Semaphores
+
+**C++:**
 
 ```cpp
 #include <osal/Semaphore.hpp>
@@ -204,13 +252,36 @@ sem.signal();   // producer
 sem.wait();     // consumer (blocks until signalled)
 ```
 
+**C:**
+
+```c
+#include <osal/Semaphore.h>
+
+struct OsalSemaphore sem;
+
+osalSemaphoreCreate(&sem, 0);
+osalSemaphoreSignal(&sem); // producer
+osalSemaphoreWait(&sem);   // consumer (blocks until signalled)
+osalSemaphoreDestroy(&sem);
+```
+
 #### Sleep
+
+**C++:**
 
 ```cpp
 #include <osal/sleep.hpp>
 using namespace std::chrono_literals;
 
 osal::sleep(100ms);
+```
+
+**C:**
+
+```c
+#include <osal/sleep.h>
+
+osalSleepMs(100);
 ```
 
 ## Development
