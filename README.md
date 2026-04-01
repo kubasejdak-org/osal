@@ -89,7 +89,7 @@ osal/
 │   ├── components.cmake                # osal component loader (FetchContent helper)
 │   ├── modules/                        # CMake Find*.cmake modules for dependencies
 │   └── presets/                        # Internal preset helpers
-├── lib/                                # Library components
+├── lib/                                # Core components
 │   ├── osal/                           # C API (osal::c) and platform backends
 │   │   ├── common/                     # Platform-independent implementation (osal::common)
 │   │   ├── linux/                      # Linux backend (pthread)
@@ -106,7 +106,7 @@ osal/
 
 ### CMake Integration
 
-Create a `Findosal.cmake` module in the consuming project's `cmake/modules/` directory:
+Create a `Findosal.cmake` module (typically in cmake/modules directory):
 
 ```cmake
 include(FetchContent)
@@ -119,7 +119,9 @@ FetchContent_MakeAvailable(osal)
 include(${osal_SOURCE_DIR}/cmake/components.cmake)
 ```
 
-`GIT_TAG` accepts any ref recognized by CMake FetchContent: a full commit SHA, a branch name, or a tag.
+> [!NOTE]
+>
+> `GIT_TAG` accepts any ref recognized by CMake FetchContent: a full commit SHA, a branch name, or a tag.
 
 Then add the module directory to the CMake search path and request the library:
 
