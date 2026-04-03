@@ -5,11 +5,11 @@ Architecture is organized around a portable C layer with an optional C++ wrapper
 
 Main features:
 
-- **dual-layer API:** thin C API (`osal::c`) for direct use, and C++ RAII wrappers (`osal::cpp`) built on top of it,
-- **thread management:** create, join, yield, and prioritize threads with a 5-level priority system,
-- **synchronization:** mutexes (recursive and non-recursive), semaphores, and scoped locks — all with optional timeouts,
-- **ISR-safe variants:** dedicated `*Isr()` operations for mutex and semaphore use from interrupt context,
-- **time utilities:** timestamp functions, time unit conversions, and `std::chrono`-based sleep.
+- **dual-layer API**: thin C API (`osal::c`) for direct use, and C++ RAII wrappers (`osal::cpp`) built on top of it,
+- **thread management**: create, join, yield, and prioritize threads with a 5-level priority system,
+- **synchronization**: mutexes (recursive and non-recursive), semaphores, and scoped locks — all with optional timeouts,
+- **ISR-safe variants**: dedicated `*Isr()` operations for mutex and semaphore use from interrupt context,
+- **time utilities**: timestamp functions, time unit conversions, and `std::chrono`-based sleep.
 
 ## Supported Platforms
 
@@ -86,7 +86,7 @@ classDiagram
 osal/
 ├── cmake/                              # CMake build system
 │   ├── compilation-flags.cmake         # Internal compilation flags
-│   ├── components.cmake                # osal component loader (FetchContent helper)
+│   ├── components.cmake                # Helper component loader (FetchContent helper)
 │   ├── modules/                        # CMake Find*.cmake modules for dependencies
 │   └── presets/                        # Internal preset helpers
 ├── lib/                                # Core components
@@ -176,7 +176,7 @@ link `osal::c` directly.
 
 #### Threads
 
-**C++:**
+**C++**:
 
 ```cpp
 #include <osal/Thread.hpp>
@@ -188,7 +188,7 @@ osal::NormalPrioThread<> worker("worker-thread", [] {
 worker.join();
 ```
 
-**C:**
+**C**:
 
 ```c
 #include <osal/Thread.h>
@@ -225,7 +225,7 @@ osal::Mutex mutex;
 }   // mutex unlocked automatically on scope exit
 ```
 
-**C (manual lock/unlock):**
+**C (manual lock/unlock)**:
 
 ```c
 #include <osal/Mutex.h>
@@ -243,7 +243,7 @@ osalMutexDestroy(&mutex);
 
 #### Semaphores
 
-**C++:**
+**C++**:
 
 ```cpp
 #include <osal/Semaphore.hpp>
@@ -254,7 +254,7 @@ sem.signal();   // producer
 sem.wait();     // consumer (blocks until signalled)
 ```
 
-**C:**
+**C**:
 
 ```c
 #include <osal/Semaphore.h>
@@ -269,7 +269,7 @@ osalSemaphoreDestroy(&sem);
 
 #### Sleep
 
-**C++:**
+**C++**:
 
 ```cpp
 #include <osal/sleep.hpp>
@@ -278,7 +278,7 @@ using namespace std::chrono_literals;
 osal::sleep(100ms);
 ```
 
-**C:**
+**C**:
 
 ```c
 #include <osal/sleep.h>
@@ -295,23 +295,23 @@ osalSleepMs(100);
 
 ### Commands
 
-- **Configure:** `cmake --preset <preset-name> . -B out/build/<preset-name>`
-- **Build:** `cmake --build out/build/<preset-name> --parallel`
-- **Run tests:** `cd out/build/<preset-name>/bin; ./osal-tests`
-- **Reformat code:** `tools/check-clang-format.sh`
-- **Run linter:** `cd out/build/<preset-name>; ../../../tools/check-clang-tidy.sh`
+- **Configure**: `cmake --preset <preset-name> . -B out/build/<preset-name>`
+- **Build**: `cmake --build out/build/<preset-name> --parallel`
+- **Run tests**: `cd out/build/<preset-name>/bin; ./osal-tests`
+- **Reformat code**: `tools/check-clang-format.sh`
+- **Run linter**: `cd out/build/<preset-name>; ../../../tools/check-clang-tidy.sh`
     - Must be launched with a clang preset (usually inside the clang dev container)
 
 ### Available CMake Presets
 
 - **Native Linux**:
-    - **System dependencies:** `linux-native-{gcc,clang}-{debug,release}`
-    - **Conan dependencies:** `linux-native-conan-{gcc,clang}-{debug,release}`
+    - **System dependencies**: `linux-native-{gcc,clang}-{debug,release}`
+    - **Conan dependencies**: `linux-native-conan-{gcc,clang}-{debug,release}`
 - **Cross-compilation**:
-    - **Generic ARM64:** `linux-arm64-conan-{gcc,clang}-{debug,release}`
-    - **Yocto (via SDK):** `yocto-sdk-{gcc,clang}-{debug,release}`
-    - **FreeRTOS ARMv7 Cortex-M4:** `freertos-armv7-m4-conan-gcc-{debug,release}`
-- **Sanitizers:** `*-{asan,lsan,tsan,ubsan}` variants (Linux native and Conan presets)
+    - **Generic ARM64**: `linux-arm64-conan-{gcc,clang}-{debug,release}`
+    - **Yocto (via SDK)**: `yocto-sdk-{gcc,clang}-{debug,release}`
+    - **FreeRTOS ARMv7 Cortex-M4**: `freertos-armv7-m4-conan-gcc-{debug,release}`
+- **Sanitizers**: `*-{asan,lsan,tsan,ubsan}` variants (Linux native and Conan presets)
 
 > [!NOTE]
 >
@@ -319,11 +319,11 @@ osalSleepMs(100);
 
 ### Code Quality
 
-- **Zero Warning Policy:** All warnings treated as errors (`-Wall -Wextra -Wpedantic -Werror`)
-- **No Exceptions:** C++ code is built with `-fno-exceptions`; errors are reported via `std::error_code`
-- **Code Formatting:** clang-format with project-specific style (120-character line length)
-- **Static Analysis:** clang-tidy configuration enforced in CI
-- **Sanitizers:** Address, leak, thread, and undefined behavior sanitizer presets available
+- **Zero Warning Policy**: All warnings treated as errors (`-Wall -Wextra -Wpedantic -Werror`)
+- **No Exceptions**: C++ code is built with `-fno-exceptions`; errors are reported via `std::error_code`
+- **Code Formatting**: clang-format with project-specific style (120-character line length)
+- **Static Analysis**: clang-tidy configuration enforced in CI
+- **Sanitizers**: Address, leak, thread, and undefined behavior sanitizer presets available
 
 ### Important Notes
 
