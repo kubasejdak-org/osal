@@ -1,15 +1,15 @@
 # osal
 
-OS abstraction layer providing unified C and C++ APIs for threads, mutexes, semaphores, sleep, and time utilities.
+OS abstraction layer providing unified C and C++ APIs for common OS and RTOS primitives.
 Architecture is organized around a portable C layer with an optional C++ wrapper for RAII and object-oriented use.
 
 Main features:
 
 - **dual-layer API**: thin C API (`osal::c`) for direct use, and C++ RAII wrappers (`osal::cpp`) built on top of it,
-- **thread management**: create, join, yield, and prioritize threads with a 5-level priority system,
-- **synchronization**: mutexes (recursive and non-recursive), semaphores, and scoped locks — all with optional timeouts,
 - **ISR-safe variants**: dedicated `*Isr()` operations for mutex and semaphore use from interrupt context,
-- **time utilities**: timestamp functions, time unit conversions, and `std::chrono`-based sleep.
+- **threads**: create, join, yield, and prioritize with a 5-level priority system,
+- **synchronization**: mutexes (recursive and non-recursive), semaphores, and scoped locks — all with optional timeouts,
+- **time and sleep**: timestamp functions, time unit conversions, and `std::chrono`-based sleep.
 
 ## Supported Platforms
 
