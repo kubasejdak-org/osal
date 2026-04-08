@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2020-2023, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2020, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -39,6 +39,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include <cstdint>
 #include <cstring>
 
 /// Helper thread function which is used as a wrapper for OSAL thread function.
@@ -66,6 +67,7 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
         return OsalError::InvalidArgument;
 
     thread->initialized = false;
+    thread->joined = false;
 
     const auto cPriorityMin = 0;
     const auto cPriorityMax = configMAX_PRIORITIES - 1;
@@ -113,6 +115,9 @@ OsalError osalThreadDestroy(OsalThread* thread)
     if (thread == nullptr || !thread->initialized)
         return OsalError::InvalidArgument;
 
+    if (!thread->joined)
+        return OsalError::ThreadNotJoined;
+
     vTaskDelete(thread->impl.handle);
 
     osalSemaphoreDestroy(&thread->impl.params.semaphore);
@@ -123,10 +128,15 @@ OsalError osalThreadDestroy(OsalThread* thread)
 
 OsalError osalThreadJoin(OsalThread* thread)
 {
-    if (thread == nullptr || !thread->initialized)
+    if (thread == nullptr || !thread->initialized || thread->joined)
         return OsalError::InvalidArgument;
 
-    return osalSemaphoreWait(&thread->impl.params.semaphore);
+    auto error = osalSemaphoreWait(&thread->impl.params.semaphore);
+    if (error)
+        return error;
+
+    thread->joined = true;
+    return {};
 }
 
 void osalThreadYield()
@@ -136,7 +146,7 @@ void osalThreadYield()
 
 uint32_t osalThreadId()
 {
-    return uint32_t(xTaskGetCurrentTaskHandle());
+    return static_cast<std::uint32_t>(reinterpret_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
 }
 
 OsalError osalThreadName(char* name, size_t size)

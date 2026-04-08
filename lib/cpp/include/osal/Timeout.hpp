@@ -131,7 +131,7 @@ private:
 
 /// Blocks current thread until given timeout is expired.
 /// @param timeout                  Timeout to be checked.
-static inline void sleepUntilExpired(const Timeout& timeout)
+inline void sleepUntilExpired(const Timeout& timeout)
 {
     if (!timeout.isExpired())
         sleep(timeout.timeLeft());
@@ -140,7 +140,7 @@ static inline void sleepUntilExpired(const Timeout& timeout)
 /// Coverts duration of the given timeout to raw milliseconds.
 /// @param timeout                  Timeout to be used.
 /// @return Duration of the given timeout expressed in raw milliseconds.
-static inline std::uint32_t durationMs(const osal::Timeout& timeout)
+inline std::uint32_t durationMs(const osal::Timeout& timeout)
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(timeout.duration()).count();
 }

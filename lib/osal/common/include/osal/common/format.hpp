@@ -40,8 +40,8 @@ struct std::formatter<OsalMutexType> : std::formatter<std::string_view> {
     {
         std::string_view name;
         switch (value) {
-            case OsalMutexType::eRecursive:    name = "recursive"; break;
-            case OsalMutexType::eNonRecursive: name = "non-recursive"; break;
+            case OsalMutexType::Recursive:    name = "recursive"; break;
+            case OsalMutexType::NonRecursive: name = "non-recursive"; break;
         }
 
         return std::formatter<std::string_view>::format(name, ctx);

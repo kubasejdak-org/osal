@@ -38,14 +38,13 @@ extern "C" {
 #include <stddef.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 #include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
 
-#include <cstddef>
-
 /// Represents OSAL thread handle.
 /// @note Size of this structure depends on the concrete implementation. In particular, ThreadImpl
 ///       contains objects from the target platform. Thus depending on its size is not recommended.
 struct OsalThread {
     ThreadImpl impl;
     bool initialized;
+    bool joined;
 };
 
 /// Represents possible thread priorities that can be set with the OSAL API.

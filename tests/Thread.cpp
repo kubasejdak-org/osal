@@ -152,7 +152,7 @@ TEST_CASE("Multiple thread joins", "[unit][c][thread]")
     CHECK_FALSE(error);
 
     error = osalThreadJoin(&thread);
-    CHECK(error == OsalError::OsError);
+    CHECK(error == OsalError::InvalidArgument);
 
     error = osalThreadDestroy(&thread);
     CHECK_FALSE(error);
@@ -167,6 +167,25 @@ TEST_CASE("Join invalid thread", "[unit][c][thread]")
 
     error = osalThreadJoin(nullptr);
     CHECK(error == OsalError::InvalidArgument);
+}
+
+TEST_CASE("Destroy thread without join", "[unit][c][thread]")
+{
+    auto func = [](void* /*unused*/) {};
+
+    OsalThread thread{};
+    auto error
+        = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+    REQUIRE_FALSE(error);
+
+    error = osalThreadDestroy(&thread);
+    CHECK(error == OsalError::ThreadNotJoined);
+
+    error = osalThreadJoin(&thread);
+    CHECK_FALSE(error);
+
+    error = osalThreadDestroy(&thread);
+    CHECK_FALSE(error);
 }
 
 TEST_CASE("Launch 5 threads and check their results", "[unit][c][thread]")

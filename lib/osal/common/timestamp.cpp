@@ -30,83 +30,69 @@
 
 #include <cstdint>
 
-/// @enum ConversionsToSec
-/// Represents the time conversion helpers to seconds.
-enum ConversionsToSec {
-    OsalMsInSec = 1000,
-    OsalUsInSec = 1000000,
-    OsalNsInSec = 1000000000
-};
-
-/// @enum ConversionsToMs
-/// Represents the time conversion helpers to milliseconds.
-enum ConversionsToMs {
-    OsalUsInMs = 1000,
-    OsalNsInMs = 1000000
-};
-
-/// @enum ConversionsToUs
-/// Represents the time conversion helpers to microseconds.
-enum ConversionsToUs {
-    OsalNsInUs = 1000
-};
+static constexpr std::uint64_t cOsalMsInSec = 1000;
+static constexpr std::uint64_t cOsalUsInSec = 1000000;
+static constexpr std::uint64_t cOsalNsInSec = 1000000000;
+static constexpr std::uint64_t cOsalUsInMs = 1000;
+static constexpr std::uint64_t cOsalNsInMs = 1000000;
+static constexpr std::uint64_t cOsalNsInUs = 1000;
 
 uint64_t osalMsToSec(uint64_t milliseconds)
 {
-    return milliseconds / OsalMsInSec;
+    return milliseconds / cOsalMsInSec;
 }
 
 uint64_t osalUsToSec(uint64_t microseconds)
 {
-    return microseconds / OsalUsInSec;
+    return microseconds / cOsalUsInSec;
 }
 
 uint64_t osalNsToSec(uint64_t nanoseconds)
 {
-    return nanoseconds / OsalNsInSec;
+    return nanoseconds / cOsalNsInSec;
 }
 
 uint64_t osalSecToMs(uint64_t seconds)
 {
-    return seconds * OsalMsInSec;
+    return seconds * cOsalMsInSec;
 }
 
 uint64_t osalUsToMs(uint64_t microseconds)
 {
-    return microseconds / OsalUsInMs;
+    return microseconds / cOsalUsInMs;
 }
 
 uint64_t osalNsToMs(uint64_t nanoseconds)
 {
-    return nanoseconds / OsalNsInMs;
+    return nanoseconds / cOsalNsInMs;
 }
 
 uint64_t osalSecToUs(uint64_t seconds)
 {
-    return seconds * OsalUsInSec;
+    return seconds * cOsalUsInSec;
 }
 
 uint64_t osalMsToUs(uint64_t milliseconds)
 {
-    return milliseconds * OsalUsInMs;
+    return milliseconds * cOsalUsInMs;
 }
 
 uint64_t osalNsToUs(uint64_t nanoseconds)
 {
-    return nanoseconds / OsalNsInUs;
+    return nanoseconds / cOsalNsInUs;
 }
 
 uint64_t osalSecToNs(uint64_t seconds)
 {
-    return seconds * OsalNsInSec;
+    return seconds * cOsalNsInSec;
 }
 
 uint64_t osalMsToNs(uint64_t milliseconds)
 {
-    return milliseconds * OsalNsInMs;
+    return milliseconds * cOsalNsInMs;
 }
 
 uint64_t osalUsToNs(uint64_t microseconds)
 {
-    return microseconds * OsalNsInUs;
+    return microseconds * cOsalNsInUs;
 }

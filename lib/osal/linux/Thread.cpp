@@ -85,6 +85,7 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
         return OsalError::InvalidArgument;
 
     thread->initialized = false;
+    thread->joined = false;
 
     const auto cPriorityMin = sched_get_priority_min(SCHED_RR);
     const auto cPriorityMax = sched_get_priority_max(SCHED_RR);
@@ -141,18 +142,22 @@ OsalError osalThreadDestroy(OsalThread* thread)
     if (thread == nullptr || !thread->initialized)
         return OsalError::InvalidArgument;
 
+    if (!thread->joined)
+        return OsalError::ThreadNotJoined;
+
     std::memset(thread, 0, sizeof(OsalThread));
     return {};
 }
 
 OsalError osalThreadJoin(OsalThread* thread)
 {
-    if (thread == nullptr || !thread->initialized)
+    if (thread == nullptr || !thread->initialized || thread->joined)
         return OsalError::InvalidArgument;
 
     if (pthread_join(thread->impl.handle, nullptr) != 0)
         return OsalError::OsError;
 
+    thread->joined = true;
     return {};
 }
 
@@ -168,6 +173,9 @@ uint32_t osalThreadId()
 
 OsalError osalThreadName(char* name, size_t size)
 {
+    if (name == nullptr || size == 0)
+        return OsalError::InvalidArgument;
+
     std::array<char, cMaxThreadName + 1> buffer{};
     [[maybe_unused]] auto result = pthread_getname_np(pthread_self(), buffer.data(), buffer.size());
     assert(result == 0);

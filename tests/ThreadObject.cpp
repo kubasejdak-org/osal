@@ -326,7 +326,7 @@ TEST_CASE("Multiple thread joins in C++", "[unit][cpp][thread]")
     CHECK_FALSE(error);
 
     error = thread.join();
-    CHECK(error == OsalError::OsError);
+    CHECK(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Join invalid thread in C++", "[unit][cpp][thread]")
