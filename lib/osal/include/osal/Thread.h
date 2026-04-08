@@ -44,6 +44,7 @@ extern "C" {
 struct OsalThread {
     ThreadImpl impl;
     bool initialized;
+    bool joined;
 };
 
 /// Represents possible thread priorities that can be set with the OSAL API.

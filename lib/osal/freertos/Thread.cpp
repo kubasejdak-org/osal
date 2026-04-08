@@ -67,6 +67,7 @@ osalThreadCreateEx(OsalThread* thread, OsalThreadConfig config, OsalThreadFuncti
         return OsalError::InvalidArgument;
 
     thread->initialized = false;
+    thread->joined = false;
 
     const auto cPriorityMin = 0;
     const auto cPriorityMax = configMAX_PRIORITIES - 1;
@@ -114,6 +115,9 @@ OsalError osalThreadDestroy(OsalThread* thread)
     if (thread == nullptr || !thread->initialized)
         return OsalError::InvalidArgument;
 
+    if (!thread->joined)
+        return OsalError::ThreadNotJoined;
+
     vTaskDelete(thread->impl.handle);
 
     osalSemaphoreDestroy(&thread->impl.params.semaphore);
@@ -124,10 +128,15 @@ OsalError osalThreadDestroy(OsalThread* thread)
 
 OsalError osalThreadJoin(OsalThread* thread)
 {
-    if (thread == nullptr || !thread->initialized)
+    if (thread == nullptr || !thread->initialized || thread->joined)
         return OsalError::InvalidArgument;
 
-    return osalSemaphoreWait(&thread->impl.params.semaphore);
+    auto error = osalSemaphoreWait(&thread->impl.params.semaphore);
+    if (error)
+        return error;
+
+    thread->joined = true;
+    return {};
 }
 
 void osalThreadYield()
