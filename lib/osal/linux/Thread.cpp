@@ -153,6 +153,7 @@ OsalError osalThreadJoin(OsalThread* thread)
     if (pthread_join(thread->impl.handle, nullptr) != 0)
         return OsalError::OsError;
 
+    thread->initialized = false;
     return {};
 }
 
@@ -168,6 +169,9 @@ uint32_t osalThreadId()
 
 OsalError osalThreadName(char* name, size_t size)
 {
+    if (name == nullptr || size == 0)
+        return OsalError::InvalidArgument;
+
     std::array<char, cMaxThreadName + 1> buffer{};
     [[maybe_unused]] auto result = pthread_getname_np(pthread_self(), buffer.data(), buffer.size());
     assert(result == 0);

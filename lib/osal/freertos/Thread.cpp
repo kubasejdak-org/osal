@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2020-2023, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2020, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -136,7 +136,7 @@ void osalThreadYield()
 
 uint32_t osalThreadId()
 {
-    return uint32_t(xTaskGetCurrentTaskHandle());
+    return static_cast<uint32_t>(reinterpret_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
 }
 
 OsalError osalThreadName(char* name, size_t size)

@@ -4,7 +4,7 @@
 /// @author Kuba Sejdak
 /// @copyright BSD 2-Clause License
 ///
-/// Copyright (c) 2020-2023, Kuba Sejdak <kuba.sejdak@gmail.com>
+/// Copyright (c) 2020, Kuba Sejdak <kuba.sejdak@gmail.com>
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
 #elif configSUPPORT_DYNAMIC_ALLOCATION
     switch (type) {
     #if configUSE_RECURSIVE_MUTEXES
-        case OsalMutexType::Recursive: handle = xSemaphoreCreateRecursiveMutex(&mutex->impl.buffer); break;
+        case OsalMutexType::Recursive: handle = xSemaphoreCreateRecursiveMutex(); break;
     #endif
         case OsalMutexType::NonRecursive: handle = xSemaphoreCreateMutex(); break;
         default:                          return OsalError::InvalidArgument;

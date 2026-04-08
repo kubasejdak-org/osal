@@ -57,7 +57,7 @@ OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)
     result = pthread_mutex_init(&handle, &attr);
     assert(result == 0);
 
-    pthread_mutexattr_destroy(&attr);
+    result = pthread_mutexattr_destroy(&attr);
     assert(result == 0);
 
     mutex->impl.handle = handle;
@@ -125,7 +125,7 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
         auto ns = std::chrono::time_point_cast<std::chrono::nanoseconds>(timePoint)
                 - std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
 
-        return timespec{int(secs.time_since_epoch().count()), int(ns.count())};
+        return timespec{static_cast<time_t>(secs.time_since_epoch().count()), static_cast<long>(ns.count())};
     };
 
     auto ts = toTimespec(std::chrono::system_clock::now() + std::chrono::milliseconds{timeoutMs});
