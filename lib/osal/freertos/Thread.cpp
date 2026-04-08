@@ -137,7 +137,7 @@ void osalThreadYield()
 
 uint32_t osalThreadId()
 {
-    return static_cast<uint32_t>(reinterpret_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
+    return static_cast<std::uint32_t>(reinterpret_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
 }
 
 OsalError osalThreadName(char* name, size_t size)
