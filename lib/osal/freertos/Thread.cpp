@@ -39,6 +39,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include <cstdint>
 #include <cstring>
 
 /// Helper thread function which is used as a wrapper for OSAL thread function.
