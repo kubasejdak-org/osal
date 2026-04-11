@@ -1,7 +1,7 @@
 # osal
 
-OS abstraction layer providing unified C and C++ APIs for common OS and RTOS primitives.
-Architecture is organized around a portable C layer with an optional C++ wrapper for RAII and object-oriented use.
+OS abstraction layer providing unified C and C++ APIs for common OS and RTOS primitives. Architecture is organized
+around a portable C layer with an optional C++ wrapper for RAII and object-oriented use.
 
 Main features:
 
