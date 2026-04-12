@@ -26,16 +26,17 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "osal/time.h" // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include "osal/time.h"
 
 #include "osal/Error.h"
 
+#include <cstddef>
 #include <ctime>
 #include <string>
 
 // This declaration is needed, because embedded platforms do not define timegm() function. Platform fills this gap
 // by providing its own implementation, but still <ctime> header doesn't provide this prototype.
-extern "C" time_t timegm(struct tm* tm); // NOLINT
+extern "C" time_t timegm(struct tm*); // NOLINT(readability-redundant-declaration)
 
 struct tm osalTimeToTm(time_t value)
 {
@@ -101,25 +102,30 @@ struct timeval osalTimespecToTimeval(struct timespec value)
 
 OsalError osalTmToString(struct tm value, char* str, size_t size, OsalTimeStringFormat format)
 {
+    static constexpr std::size_t cTimeFormatSize = 9;            // "HH:MM:SS\0"
+    static constexpr std::size_t cDateFormatSize = 11;           // "DD.MM.YYYY\0"
+    static constexpr std::size_t cTimeDateFormatSize = 20;       // "HH:MM:SS DD.MM.YYYY\0"
+    static constexpr std::size_t cSortedDateTimeFormatSize = 16; // "YYYYMMDD_HHMMSS\0"
+
     std::string formatStr;
     std::size_t requiredSize{};
 
     switch (format) {
         case OsalTimeStringFormat::Time:
             formatStr = "%T";
-            requiredSize = 9; // NOLINT
+            requiredSize = cTimeFormatSize;
             break;
         case OsalTimeStringFormat::Date:
             formatStr = "%d.%m.%Y";
-            requiredSize = 11; // NOLINT
+            requiredSize = cDateFormatSize;
             break;
         case OsalTimeStringFormat::TimeDate:
             formatStr = "%T %d.%m.%Y";
-            requiredSize = 20; // NOLINT
+            requiredSize = cTimeDateFormatSize;
             break;
         case OsalTimeStringFormat::SortedDateTime:
             formatStr = "%Y%m%d_%H%M%S";
-            requiredSize = 16; // NOLINT
+            requiredSize = cSortedDateTimeFormatSize;
             break;
     }
 

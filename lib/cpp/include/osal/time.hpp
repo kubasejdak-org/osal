@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "osal/time.h" // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include "osal/time.h"
 
-#include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <sys/time.h>
 
 #include <ctime>
 #include <string>

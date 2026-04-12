@@ -26,9 +26,9 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <osal/time.h>
 #include <osal/time.hpp>
-#include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <sys/time.h>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
@@ -40,12 +40,12 @@
 #include <ctime>
 #include <string>
 
-static constexpr int cDatesCount = 5;     // NOLINT
-static constexpr int cDate1 = 1643407982; // NOLINT
-static constexpr int cDate2 = 871571145;  // NOLINT
-static constexpr int cDate3 = 1009832777; // NOLINT
-static constexpr int cDate4 = 21902400;   // NOLINT
-static constexpr int cDate5 = 650146800;  // NOLINT
+static constexpr int cDatesCount = 5;
+static constexpr int cDate1 = 1643407982;
+static constexpr int cDate2 = 871571145;
+static constexpr int cDate3 = 1009832777;
+static constexpr int cDate4 = 21902400;
+static constexpr int cDate5 = 650146800;
 
 TEST_CASE("Convert to struct tm", "[unit][c][time]")
 {
@@ -129,50 +129,50 @@ TEST_CASE("Convert to time_t", "[unit][c][time]")
     SECTION("struct tm to time_t")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         std::transform(tms.begin(), tms.end(), times.begin(), osalTmToTime);
     }
@@ -209,50 +209,50 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
     SECTION("struct tm to struct timespec")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         std::transform(tms.begin(), tms.end(), timespecs.begin(), osalTmToTimespec);
     }
@@ -292,50 +292,50 @@ TEST_CASE("Convert to struct timeval", "[unit][c][time]")
     SECTION("struct tm to struct timeval")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         std::transform(tms.begin(), tms.end(), timevals.begin(), osalTmToTimeval);
     }
@@ -379,50 +379,50 @@ TEST_CASE("Convert to string", "[unit][c][time]")
     SECTION("struct tm to string")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         for (std::size_t i = 0; i < tms.size(); ++i) {
             auto error = osalTmToString(tms[i], time[i].data(), cSize, OsalTimeStringFormat::Time);
@@ -617,50 +617,50 @@ TEST_CASE("Convert to std::time_t in C++", "[unit][cpp][time]")
     SECTION("std::tm to std::time_t")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         for (std::size_t i = 0; i < tms.size(); ++i)
             times[i] = osal::toTime(tms[i]);
@@ -700,50 +700,50 @@ TEST_CASE("Convert to std::timespec in C++", "[unit][cpp][time]")
     SECTION("std::tm to std::timespec")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         for (std::size_t i = 0; i < tms.size(); ++i)
             timespecs[i] = osal::toTimespec(tms[i]);
@@ -786,50 +786,50 @@ TEST_CASE("Convert to std::timeval in C++", "[unit][cpp][time]")
     SECTION("std::tm to std::timeval")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         for (std::size_t i = 0; i < tms.size(); ++i)
             timevals[i] = osal::toTimeval(tms[i]);
@@ -875,50 +875,50 @@ TEST_CASE("Convert to std::string in C++", "[unit][cpp][time]")
     SECTION("std::tm to std::string")
     {
         std::array<std::tm, cDatesCount> tms{};
-        tms[0].tm_mday = 28;  // NOLINT
-        tms[0].tm_mon = 0;    // NOLINT
-        tms[0].tm_year = 122; // NOLINT
-        tms[0].tm_hour = 22;  // NOLINT
-        tms[0].tm_min = 13;   // NOLINT
-        tms[0].tm_sec = 2;    // NOLINT
-        tms[0].tm_wday = 5;   // NOLINT
-        tms[0].tm_yday = 27;  // NOLINT
+        tms[0].tm_mday = 28;
+        tms[0].tm_mon = 0;
+        tms[0].tm_year = 122;
+        tms[0].tm_hour = 22;
+        tms[0].tm_min = 13;
+        tms[0].tm_sec = 2;
+        tms[0].tm_wday = 5;
+        tms[0].tm_yday = 27;
 
-        tms[1].tm_mday = 14;  // NOLINT
-        tms[1].tm_mon = 7;    // NOLINT
-        tms[1].tm_year = 97;  // NOLINT
-        tms[1].tm_hour = 15;  // NOLINT
-        tms[1].tm_min = 5;    // NOLINT
-        tms[1].tm_sec = 45;   // NOLINT
-        tms[1].tm_wday = 4;   // NOLINT
-        tms[1].tm_yday = 225; // NOLINT
+        tms[1].tm_mday = 14;
+        tms[1].tm_mon = 7;
+        tms[1].tm_year = 97;
+        tms[1].tm_hour = 15;
+        tms[1].tm_min = 5;
+        tms[1].tm_sec = 45;
+        tms[1].tm_wday = 4;
+        tms[1].tm_yday = 225;
 
-        tms[2].tm_mday = 31;  // NOLINT
-        tms[2].tm_mon = 11;   // NOLINT
-        tms[2].tm_year = 101; // NOLINT
-        tms[2].tm_hour = 21;  // NOLINT
-        tms[2].tm_min = 6;    // NOLINT
-        tms[2].tm_sec = 17;   // NOLINT
-        tms[2].tm_wday = 1;   // NOLINT
-        tms[2].tm_yday = 364; // NOLINT
+        tms[2].tm_mday = 31;
+        tms[2].tm_mon = 11;
+        tms[2].tm_year = 101;
+        tms[2].tm_hour = 21;
+        tms[2].tm_min = 6;
+        tms[2].tm_sec = 17;
+        tms[2].tm_wday = 1;
+        tms[2].tm_yday = 364;
 
-        tms[3].tm_mday = 11;  // NOLINT
-        tms[3].tm_mon = 8;    // NOLINT
-        tms[3].tm_year = 70;  // NOLINT
-        tms[3].tm_hour = 12;  // NOLINT
-        tms[3].tm_min = 0;    // NOLINT
-        tms[3].tm_sec = 0;    // NOLINT
-        tms[3].tm_wday = 5;   // NOLINT
-        tms[3].tm_yday = 253; // NOLINT
+        tms[3].tm_mday = 11;
+        tms[3].tm_mon = 8;
+        tms[3].tm_year = 70;
+        tms[3].tm_hour = 12;
+        tms[3].tm_min = 0;
+        tms[3].tm_sec = 0;
+        tms[3].tm_wday = 5;
+        tms[3].tm_yday = 253;
 
-        tms[4].tm_mday = 8;   // NOLINT
-        tms[4].tm_mon = 7;    // NOLINT
-        tms[4].tm_year = 90;  // NOLINT
-        tms[4].tm_hour = 20;  // NOLINT
-        tms[4].tm_min = 20;   // NOLINT
-        tms[4].tm_sec = 0;    // NOLINT
-        tms[4].tm_wday = 3;   // NOLINT
-        tms[4].tm_yday = 219; // NOLINT
+        tms[4].tm_mday = 8;
+        tms[4].tm_mon = 7;
+        tms[4].tm_year = 90;
+        tms[4].tm_hour = 20;
+        tms[4].tm_min = 20;
+        tms[4].tm_sec = 0;
+        tms[4].tm_wday = 3;
+        tms[4].tm_yday = 219;
 
         for (std::size_t i = 0; i < tms.size(); ++i) {
             time[i] = osal::toString(tms[i], OsalTimeStringFormat::Time);

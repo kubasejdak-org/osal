@@ -37,6 +37,7 @@ namespace osal {
 
 Timestamp timestamp()
 {
+    // NOLINTBEGIN(google-readability-braces-around-statements,hicpp-braces-around-statements,readability-braces-around-statements)
     if constexpr (std::is_same_v<Duration, std::chrono::nanoseconds>)
         return Timestamp(Duration(osalTimestampNs()));
     else if constexpr (std::is_same_v<Duration, std::chrono::microseconds>)
@@ -45,6 +46,7 @@ Timestamp timestamp()
         return Timestamp(Duration(osalTimestampMs()));
     else
         __builtin_unreachable();
+    // NOLINTEND(google-readability-braces-around-statements,hicpp-braces-around-statements,readability-braces-around-statements)
 }
 
 } // namespace osal

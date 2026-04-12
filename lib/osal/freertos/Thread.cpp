@@ -141,7 +141,7 @@ OsalError osalThreadJoin(OsalThread* thread)
 
 void osalThreadYield()
 {
-    taskYIELD(); // NOLINT
+    taskYIELD();
 }
 
 uint32_t osalThreadId()
