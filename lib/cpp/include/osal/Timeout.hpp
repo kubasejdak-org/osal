@@ -64,7 +64,8 @@ public:
     template <typename Representation,
               typename Period,
               typename = detail::NotLessThanDuration<std::chrono::duration<Representation, Period>>>
-    Timeout(const std::chrono::duration<Representation, Period>& duration, bool forceExpire = false) // NOLINT
+    // NOLINTNEXTLINE(google-explicit-constructor,hicpp-explicit-conversions)
+    Timeout(const std::chrono::duration<Representation, Period>& duration, bool forceExpire = false)
         : m_duration(duration)
         , m_infinity(duration == Duration::max())
     {
@@ -76,7 +77,7 @@ public:
 
     /// Conversion operator to Duration.
     /// @return Duration value representing time left in std::chrono unit to the deadline timestamp.
-    operator Duration() const { return timeLeft(); } // NOLINT
+    operator Duration() const { return timeLeft(); } // NOLINT(google-explicit-constructor,hicpp-explicit-conversions)
 
     /// Returns the std::chrono duration value used to initialize timeout.
     /// @return std::chrono duration value used to initialize timeout.
