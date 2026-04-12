@@ -80,7 +80,7 @@ TEST_CASE("Moving mutex around in C++", "[unit][cpp][mutex]")
 
     osal::Mutex mutex2(std::move(mutex));
 
-    error = mutex.unlock(); // NOLINT
+    error = mutex.unlock(); // NOLINT(bugprone-use-after-move,clang-analyzer-cplusplus.Move,hicpp-invalid-access-moved)
     CHECK(error == OsalError::InvalidArgument);
 
     error = mutex2.unlock();

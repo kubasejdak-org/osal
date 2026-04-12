@@ -194,6 +194,6 @@ private:
     std::string m_lastSection;
 };
 
-CATCH_REGISTER_REPORTER("verbose", VerboseReporter) // NOLINT
+CATCH_REGISTER_REPORTER("verbose", VerboseReporter)
 
 } // end namespace Catch

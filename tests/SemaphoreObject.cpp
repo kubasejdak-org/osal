@@ -76,7 +76,8 @@ TEST_CASE("Moving semaphore around in C++", "[unit][cpp][semaphore]")
 
     osal::Semaphore semaphore2(std::move(semaphore));
 
-    error = semaphore.signal(); // NOLINT
+    // NOLINTNEXTLINE(bugprone-use-after-move,clang-analyzer-cplusplus.Move,hicpp-invalid-access-moved)
+    error = semaphore.signal();
     CHECK(error == OsalError::InvalidArgument);
 
     error = semaphore2.signal();

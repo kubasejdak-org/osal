@@ -34,7 +34,6 @@
 namespace {
 
 /// Internal value of system time latched during timestamp module initialization.
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 const auto cInitTime = std::chrono::steady_clock::now();
 
 /// Returns the time since the timestamp module was initialized.
