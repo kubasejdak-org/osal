@@ -26,9 +26,9 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <osal/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <osal/time.h>
 #include <osal/time.hpp>
-#include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <sys/time.h>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
