@@ -208,111 +208,111 @@ TEST_CASE("Check C++ timestamp values after multiple delays", "[unit][cpp][times
 
 TEST_CASE("Check helper conversion functions", "[unit][c][timestamp]")
 {
-    auto result = osalMsToSec(45); // NOLINT
+    auto result = osalMsToSec(45);
     REQUIRE(result == 0);
 
-    result = osalMsToSec(5000); // NOLINT
+    result = osalMsToSec(5000);
     REQUIRE(result == 5);
 
-    result = osalMsToSec(4500); // NOLINT
+    result = osalMsToSec(4500);
     REQUIRE(result == 4);
 
-    result = osalUsToSec(45); // NOLINT
+    result = osalUsToSec(45);
     REQUIRE(result == 0);
 
-    result = osalUsToSec(5000000UL); // NOLINT
+    result = osalUsToSec(5000000UL);
     REQUIRE(result == 5);
 
-    result = osalUsToSec(4500000UL); // NOLINT
+    result = osalUsToSec(4500000UL);
     REQUIRE(result == 4);
 
-    result = osalNsToSec(45); // NOLINT
+    result = osalNsToSec(45);
     REQUIRE(result == 0);
 
-    result = osalNsToSec(5000000000UL); // NOLINT
+    result = osalNsToSec(5000000000UL);
     REQUIRE(result == 5);
 
-    result = osalNsToSec(4500000000UL); // NOLINT
+    result = osalNsToSec(4500000000UL);
     REQUIRE(result == 4);
 
-    result = osalSecToMs(45); // NOLINT
+    result = osalSecToMs(45);
     REQUIRE(result == 45000);
 
-    result = osalSecToMs(5); // NOLINT
+    result = osalSecToMs(5);
     REQUIRE(result == 5000);
 
-    result = osalSecToMs(4); // NOLINT
+    result = osalSecToMs(4);
     REQUIRE(result == 4000);
 
-    result = osalUsToMs(45); // NOLINT
+    result = osalUsToMs(45);
     REQUIRE(result == 0);
 
-    result = osalUsToMs(5000); // NOLINT
+    result = osalUsToMs(5000);
     REQUIRE(result == 5);
 
-    result = osalUsToMs(4500); // NOLINT
+    result = osalUsToMs(4500);
     REQUIRE(result == 4);
 
-    result = osalNsToMs(45); // NOLINT
+    result = osalNsToMs(45);
     REQUIRE(result == 0);
 
-    result = osalNsToMs(5000000UL); // NOLINT
+    result = osalNsToMs(5000000UL);
     REQUIRE(result == 5);
 
-    result = osalNsToMs(4500000UL); // NOLINT
+    result = osalNsToMs(4500000UL);
     REQUIRE(result == 4);
 
-    result = osalSecToUs(1); // NOLINT
+    result = osalSecToUs(1);
     REQUIRE(result == 1000000UL);
 
-    result = osalSecToUs(2); // NOLINT
+    result = osalSecToUs(2);
     REQUIRE(result == 2000000UL);
 
-    result = osalSecToUs(4); // NOLINT
+    result = osalSecToUs(4);
     REQUIRE(result == 4000000UL);
 
-    result = osalMsToUs(1); // NOLINT
+    result = osalMsToUs(1);
     REQUIRE(result == 1000);
 
-    result = osalMsToUs(2); // NOLINT
+    result = osalMsToUs(2);
     REQUIRE(result == 2000);
 
-    result = osalMsToUs(4); // NOLINT
+    result = osalMsToUs(4);
     REQUIRE(result == 4000);
 
-    result = osalNsToUs(5); // NOLINT
+    result = osalNsToUs(5);
     REQUIRE(result == 0);
 
-    result = osalNsToUs(2000); // NOLINT
+    result = osalNsToUs(2000);
     REQUIRE(result == 2);
 
-    result = osalNsToUs(4600); // NOLINT
+    result = osalNsToUs(4600);
     REQUIRE(result == 4);
 
-    result = osalSecToNs(1); // NOLINT
+    result = osalSecToNs(1);
     REQUIRE(result == 1000000000UL);
 
-    result = osalSecToNs(2); // NOLINT
+    result = osalSecToNs(2);
     REQUIRE(result == 2000000000UL);
 
-    result = osalSecToNs(4); // NOLINT
+    result = osalSecToNs(4);
     REQUIRE(result == 4000000000UL);
 
-    result = osalMsToNs(1); // NOLINT
+    result = osalMsToNs(1);
     REQUIRE(result == 1000000UL);
 
-    result = osalMsToNs(2); // NOLINT
+    result = osalMsToNs(2);
     REQUIRE(result == 2000000UL);
 
-    result = osalMsToNs(4); // NOLINT
+    result = osalMsToNs(4);
     REQUIRE(result == 4000000UL);
 
-    result = osalUsToNs(1); // NOLINT
+    result = osalUsToNs(1);
     REQUIRE(result == 1000);
 
-    result = osalUsToNs(2); // NOLINT
+    result = osalUsToNs(2);
     REQUIRE(result == 2000);
 
-    result = osalUsToNs(4); // NOLINT
+    result = osalUsToNs(4);
     REQUIRE(result == 4000);
 }

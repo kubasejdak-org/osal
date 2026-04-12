@@ -307,7 +307,8 @@ TEST_CASE("Move thread around", "[unit][cpp][thread]")
     osal::Thread thread1(func, cParam);
     osal::Thread thread2(std::move(thread1));
 
-    auto error = thread1.join(); // NOLINT
+    // NOLINTNEXTLINE(bugprone-use-after-move,clang-analyzer-cplusplus.Move,hicpp-invalid-access-moved)
+    auto error = thread1.join();
     CHECK(error == OsalError::InvalidArgument);
 
     error = thread2.join();
@@ -370,7 +371,7 @@ TEST_CASE("Launch 5 threads in C++ with different priorities and check their res
     bool start{};
     bool stop{};
 
-    auto func = [](unsigned int& counter, bool& start, bool& stop) { // NOLINT(bugprone-easily-swappable-parameters)
+    auto func = [](unsigned int& counter, bool& start, bool& stop) {
         while (!start)
             osal::thread::yield();
 
@@ -386,9 +387,9 @@ TEST_CASE("Launch 5 threads in C++ with different priorities and check their res
     osal::LowPrioThread<> thread4(func, std::ref(counters[3]), std::ref(start), std::ref(stop));
     osal::NormalPrioThread<> thread5(func, std::ref(counters[4]), std::ref(start), std::ref(stop));
 
-    start = true; // NOLINT
+    start = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
     osal::sleep(5s);
-    stop = true; // NOLINT
+    stop = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     auto error = thread1.join();
     CHECK_FALSE(error);
@@ -432,7 +433,7 @@ TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thr
     osal::LowPrioThread<> thread4(func, std::ref(ids[3]), std::ref(start));
     osal::NormalPrioThread<> thread5(func, std::ref(ids[4]), std::ref(start));
 
-    start = true; // NOLINT
+    start = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     auto error = thread1.join();
     CHECK_FALSE(error);

@@ -259,9 +259,9 @@ TEST_CASE("Launch 5 threads with different priorities and check their results", 
         REQUIRE_FALSE(error);
     }
 
-    start = true; // NOLINT
+    start = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
     osal::sleep(5s);
-    stop = true; // NOLINT
+    stop = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     for (auto& thread : threads) {
         auto error = osalThreadJoin(&thread);
@@ -332,7 +332,7 @@ TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
         REQUIRE_FALSE(error);
     }
 
-    start = true; // NOLINT
+    start = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
     for (auto& thread : threads) {
         auto error = osalThreadJoin(&thread);
