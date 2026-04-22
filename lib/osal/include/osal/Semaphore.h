@@ -35,7 +35,7 @@ extern "C" {
 #include "internal/SemaphoreImpl.h"
 #include "osal/Error.h"
 
-#include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <stdint.h>
 
 /// Represents OSAL semaphore handle.
 /// @note Size of this structure depends on the concrete implementation. In particular, SemaphoreImpl
