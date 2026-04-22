@@ -34,9 +34,9 @@ extern "C" {
 
 #include "osal/Error.h"
 
-#include <stddef.h>   // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
-#include <sys/time.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
-#include <time.h>     // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <stddef.h>
+#include <sys/time.h>
+#include <time.h>
 
 /// Converts time_t value to struct tm.
 /// @param value            Value to be converted.

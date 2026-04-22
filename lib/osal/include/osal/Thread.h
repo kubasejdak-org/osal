@@ -35,8 +35,8 @@ extern "C" {
 #include "internal/ThreadImpl.h"
 #include "osal/Error.h"
 
-#include <stddef.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
-#include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <stddef.h>
+#include <stdint.h>
 
 /// Represents OSAL thread handle.
 /// @note Size of this structure depends on the concrete implementation. In particular, ThreadImpl
