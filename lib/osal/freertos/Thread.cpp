@@ -39,18 +39,23 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include <bit>
 #include <cstdint>
 #include <cstring>
+
+namespace {
 
 /// Helper thread function which is used as a wrapper for OSAL thread function.
 /// @param arg          Helper thread arguments.
 /// @note This function is used to implement thread joining.
-static void threadWrapper(void* arg)
+void threadWrapper(void* arg)
 {
     auto* params = static_cast<ThreadWrapperData*>(arg);
     params->func(params->arg);
     osalSemaphoreSignal(&params->semaphore);
 }
+
+} // namespace
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {
@@ -132,7 +137,7 @@ OsalError osalThreadJoin(OsalThread* thread)
         return OsalError::InvalidArgument;
 
     auto error = osalSemaphoreWait(&thread->impl.params.semaphore);
-    if (error)
+    if (error != OsalError{})
         return error;
 
     thread->joined = true;
@@ -146,7 +151,7 @@ void osalThreadYield()
 
 uint32_t osalThreadId()
 {
-    return static_cast<std::uint32_t>(reinterpret_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
+    return static_cast<std::uint32_t>(std::bit_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
 }
 
 OsalError osalThreadName(char* name, size_t size)

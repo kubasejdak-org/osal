@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <stdint.h>
 
 /// Suspends the current thread for the specified amount of time in ms.
 /// @param cDurationMs          Amount of time in ms for which current thread should be suspended.

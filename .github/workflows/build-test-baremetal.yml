@@ -21,6 +21,10 @@ jobs:
             DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
           - PRESET: freertos-armv7-m4-conan-gcc-release
             DOCKER_IMAGE: kubasejdak/arm-none-eabi-gcc:13-24.04
+          - PRESET: freertos-armv7-m4-conan-clang-debug
+            DOCKER_IMAGE: kubasejdak/arm-none-eabi-clang:18-24.04
+          - PRESET: freertos-armv7-m4-conan-clang-release
+            DOCKER_IMAGE: kubasejdak/arm-none-eabi-clang:18-24.04
     steps:
       - uses: actions/checkout@v6
 
@@ -55,4 +59,4 @@ jobs:
       # - examples-stm32f4
     steps:
       - name: Check all jobs
-        run: echo '${{ toJSON(needs.*.result) }}' | grep -qvE '"(failure|cancelled|skipped)"'
+        run: '! echo ''${{ toJSON(needs.*.result) }}'' | grep -qE ''"(failure|cancelled|skipped)"'''

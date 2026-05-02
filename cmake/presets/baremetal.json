@@ -25,6 +25,14 @@
       "cacheVariables": {
         "TOOLCHAIN": "arm-none-eabi-gcc"
       }
+    },
+    {
+      "name": "freertos-armv7-m4-clang",
+      "hidden": true,
+      "inherits": "freertos-armv7-m4",
+      "cacheVariables": {
+        "TOOLCHAIN": "arm-none-eabi-clang"
+      }
     }
   ]
 }

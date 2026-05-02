@@ -38,6 +38,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 
+#include <cstdint>
 #include <cstring>
 
 OsalError osalMutexCreate(OsalMutex* mutex, OsalMutexType type)

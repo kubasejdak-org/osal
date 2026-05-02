@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#include <stdint.h> // NOLINT(modernize-deprecated-headers,hicpp-deprecated-headers)
+#include <stdint.h>
 
 /// Returns the timestamp relative to library initialization in ms.
 /// @return Timestamp relative to library initialization in ms.

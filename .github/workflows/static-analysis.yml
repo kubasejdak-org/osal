@@ -32,6 +32,8 @@ jobs:
         include:
           - PRESET: linux-native-conan-clang-debug
             DOCKER_IMAGE: kubasejdak/clang:18-24.04
+          - PRESET: freertos-armv7-m4-conan-clang-debug
+            DOCKER_IMAGE: kubasejdak/arm-none-eabi-clang:18-24.04
     steps:
       - uses: actions/checkout@v6
 
@@ -47,4 +49,4 @@ jobs:
       - linting
     steps:
       - name: Check all jobs
-        run: echo '${{ toJSON(needs.*.result) }}' | grep -qvE '"(failure|cancelled|skipped)"'
+        run: '! echo ''${{ toJSON(needs.*.result) }}'' | grep -qE ''"(failure|cancelled|skipped)"'''

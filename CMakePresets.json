@@ -116,6 +116,14 @@
     {
       "name": "freertos-armv7-m4-conan-gcc-release",
       "inherits": ["freertos-armv7-m4-gcc", "release", "conan"]
+    },
+    {
+      "name": "freertos-armv7-m4-conan-clang-debug",
+      "inherits": ["freertos-armv7-m4-clang", "debug", "conan"]
+    },
+    {
+      "name": "freertos-armv7-m4-conan-clang-release",
+      "inherits": ["freertos-armv7-m4-clang", "release", "conan"]
     }
   ]
 }
