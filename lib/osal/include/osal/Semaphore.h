@@ -47,9 +47,9 @@ struct OsalSemaphore {
 
 /// Creates new semaphore with the given initial value.
 /// @param semaphore        Semaphore handle to be initialized.
-/// @param initialValue     Initial value of the semaphore to be created.
+/// @param initValue        Initial value of the semaphore to be created.
 /// @return Error code of the operation.
-OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValue);
+OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initValue);
 
 /// Destroys semaphore represented by the given handle.
 /// @param semaphore        Semaphore handle to be destroyed.

@@ -42,15 +42,19 @@
 #include <cstdint>
 #include <cstring>
 
+namespace {
+
 /// Helper thread function which is used as a wrapper for OSAL thread function.
 /// @param arg          Helper thread arguments.
 /// @note This function is used to implement thread joining.
-static void threadWrapper(void* arg)
+void threadWrapper(void* arg)
 {
     auto* params = static_cast<ThreadWrapperData*>(arg);
     params->func(params->arg);
     osalSemaphoreSignal(&params->semaphore);
 }
+
+} // namespace
 
 OsalError osalThreadCreate(OsalThread* thread, OsalThreadConfig config, OsalThreadFunction func, void* arg)
 {

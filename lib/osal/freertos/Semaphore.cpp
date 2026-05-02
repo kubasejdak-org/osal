@@ -37,6 +37,7 @@
 #include <FreeRTOSConfig.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
+#include <stdint.h>
 
 #include <cstring>
 #include <limits>

@@ -34,6 +34,7 @@
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <stdint.h>
 
 void osalSleepMs(uint64_t cDurationMs)
 {

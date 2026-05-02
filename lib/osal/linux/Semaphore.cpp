@@ -39,13 +39,13 @@
 #include <cstring>
 #include <ctime>
 
-OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initialValue)
+OsalError osalSemaphoreCreate(OsalSemaphore* semaphore, unsigned int initValue)
 {
     if (semaphore == nullptr)
         return OsalError::InvalidArgument;
 
     sem_t handle{};
-    [[maybe_unused]] auto result = sem_init(&handle, 0, initialValue);
+    [[maybe_unused]] auto result = sem_init(&handle, 0, initValue);
     assert(result == 0);
 
     semaphore->impl.handle = handle;
