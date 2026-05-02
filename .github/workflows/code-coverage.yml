@@ -66,4 +66,4 @@ jobs:
       - generate-coverage-report
     steps:
       - name: Check all jobs
-        run: "! echo '${{ toJSON(needs.*.result) }}' | grep -qE '\"(failure|cancelled|skipped)\"'"
+        run: '! echo ''${{ toJSON(needs.*.result) }}'' | grep -qE ''"(failure|cancelled|skipped)"'''
