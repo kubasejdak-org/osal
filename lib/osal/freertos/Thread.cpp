@@ -39,6 +39,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#include <bit>
 #include <cstdint>
 #include <cstring>
 
@@ -136,7 +137,7 @@ OsalError osalThreadJoin(OsalThread* thread)
         return OsalError::InvalidArgument;
 
     auto error = osalSemaphoreWait(&thread->impl.params.semaphore);
-    if (error)
+    if (error != OsalError{})
         return error;
 
     thread->joined = true;
@@ -150,7 +151,7 @@ void osalThreadYield()
 
 uint32_t osalThreadId()
 {
-    return static_cast<std::uint32_t>(reinterpret_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
+    return static_cast<std::uint32_t>(std::bit_cast<std::uintptr_t>(xTaskGetCurrentTaskHandle()));
 }
 
 OsalError osalThreadName(char* name, size_t size)
