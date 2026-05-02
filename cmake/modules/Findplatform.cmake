@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(platform
     GIT_REPOSITORY  https://github.com/kubasejdak-org/platform.git
-    GIT_TAG         b3a55804506e07e320f0cd47a28bc3f6902d50ca
+    GIT_TAG         f7e9d72017452973400fa02a442b6fc3335aebc3
     SOURCE_SUBDIR   lib
 )
 
