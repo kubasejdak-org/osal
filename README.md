@@ -23,7 +23,7 @@ additional backends over time.
 
 > [!IMPORTANT]
 >
-> `osal` requires the target project to use CMake.
+> `osal` requires target project to use CMake.
 
 ## Architecture
 
@@ -42,32 +42,27 @@ The diagram below illustrates the layering. The C++ API is a thin wrapper over t
 platform-specific work to the selected backend:
 
 ```mermaid
-classDiagram
-    namespace osal_cpp {
-        class Thread {
-            +start(function) error_code
-            +join() error_code
-        }
-    }
-    namespace osal_c {
-        class OsalThread {
-            +ThreadImpl impl
-        }
-    }
-    namespace linux {
-        class LinuxThreadImpl["ThreadImpl"] {
-            +pthread_t handle
-        }
-    }
-    namespace freertos {
-        class FreeRTOSThreadImpl["ThreadImpl"] {
-            +TaskHandle_t handle
-        }
-    }
+---
+  config:
+    class:
+      hideEmptyMembersBox: true
+---
 
-    Thread *-- OsalThread : contains
-    OsalThread ..> LinuxThreadImpl : OSAL_PLATFORM=linux
-    OsalThread ..> FreeRTOSThreadImpl : OSAL_PLATFORM=freertos
+classDiagram
+    class Thread
+    class OsalThread
+    class ThreadImpl
+
+    class LinuxThreadImpl["POSIX API"]
+    class FreeRTOSThreadImpl["FreeRTOS API"]
+
+    Thread *-- OsalThread
+    OsalThread *-- ThreadImpl
+    ThreadImpl ..> LinuxThreadImpl : Linux
+    ThreadImpl ..> FreeRTOSThreadImpl : FreeRTOS
+
+    note for Thread "C++"
+    note for OsalThread "C"
 ```
 
 ### Technologies
