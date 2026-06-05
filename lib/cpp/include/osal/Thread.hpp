@@ -40,6 +40,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <tuple>
 #include <utility>
 
 namespace osal {
@@ -152,7 +153,7 @@ public:
             return OsalError::ThreadAlreadyStarted;
 
         m_userFunction = std::make_unique<FunctionWrapper>(
-            std::bind(std::forward<ThreadFunction>(function), std::forward<Args>(args)...));
+            [function, args = std::make_tuple(std::forward<Args>(args)...)]() mutable { std::apply(function, args); });
         assert(m_userFunction);
 
         m_workerFunction = [](void* arg) {
