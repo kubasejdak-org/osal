@@ -9,4 +9,5 @@ project(osal ASM C CXX)
 include(cmake/compilation-flags.cmake)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_subdirectory(examples)
 add_subdirectory(tests)
