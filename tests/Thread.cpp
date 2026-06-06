@@ -320,11 +320,12 @@ TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
         }
     };
 
-    std::array<ThreadArgs, cThreadsCount> args = {std::make_tuple(std::ref(ids[0]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[1]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[2]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[3]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[4]), std::ref(start))};
+    std::array<ThreadArgs, cThreadsCount> args
+        = {std::make_tuple(std::ref(ids[0]), std::ref(start)),
+           std::make_tuple(std::ref(ids[1]), std::ref(start)),
+           std::make_tuple(std::ref(ids[2]), std::ref(start)),
+           std::make_tuple(std::ref(ids[3]), std::ref(start)),
+           std::make_tuple(std::ref(ids[4]), std::ref(start))};
 
     for (std::size_t i = 0; i < threads.size(); ++i) {
         auto priority = static_cast<OsalThreadPriority>(i / 2);

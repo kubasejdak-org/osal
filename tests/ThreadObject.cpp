@@ -48,7 +48,7 @@
 
 TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
 {
-    constexpr unsigned int cParam = 0xdeadbeef;
+    constexpr unsigned int cParam = 0xDEADBEEF;
     bool launched = false;
     auto func = [&](unsigned int arg) {
         osal::sleep(1s);
@@ -295,7 +295,7 @@ TEST_CASE("Thread creation in C++ with different priorities using helper types",
 
 TEST_CASE("Move thread around", "[unit][cpp][thread]")
 {
-    constexpr unsigned int cParam = 0xdeadbeef;
+    constexpr unsigned int cParam = 0xDEADBEEF;
     bool launched = false;
     auto func = [&](unsigned int arg) {
         osal::sleep(5s);
