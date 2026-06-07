@@ -47,24 +47,61 @@
 namespace osal {
 
 /// Represents OSAL thread handle.
-/// @tparam cPriority           Priority to be used in thread construction.
-/// @tparam cStackSize          Stack size to be used in thread construction.
 /// @note This type can be used to start thread with any function (with any signature), in contrary to the C version
 ///       of this API.
-template <OsalThreadPriority cPriority = cOsalThreadDefaultPriority,
-          std::size_t cStackSize = cOsalThreadDefaultStackSize>
 class Thread {
 public:
     /// Default constructor.
-    /// @note This constructor creates an empty thread. It can be later started with start() method.
+    /// @note This constructor creates an empty thread with the default priority and stack size. It can be later started
+    ///       with start() method.
     Thread() = default;
+
+    /// Constructor.
+    /// @param priority         Priority to be used in thread construction.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @note This constructor creates an empty thread with the given priority and default stack size. It can be later
+    ///       started with start() method.
+    explicit Thread(OsalThreadPriority priority, std::size_t stackSize = cOsalThreadDefaultStackSize)
+        : m_priority{priority}
+        , m_stackSize{stackSize}
+    {}
+
+    /// Constructor.
+    /// @param name             Human readable name of the thread.
+    /// @note This constructor creates an empty thread with the default priority and stack size. It can be later started
+    ///       with start() method.
+    explicit Thread(std::string_view name)
+        : m_name{name}
+    {}
+
+    /// Constructor.
+    /// @param priority         Priority to be used in thread construction.
+    /// @param name             Human readable name of the thread.
+    /// @note This constructor creates an empty thread with the given priority and default stack size. It can be later
+    ///       started with start() method.
+    explicit Thread(OsalThreadPriority priority, std::string_view name)
+        : m_priority{priority}
+        , m_name{name}
+    {}
+
+    /// Constructor.
+    /// @param priority         Priority to be used in thread construction.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @param name             Human readable name of the thread.
+    /// @note This constructor creates an empty thread with the given priority and stack size. It can be later started
+    ///       with start() method.
+    explicit Thread(OsalThreadPriority priority, std::size_t stackSize, std::string_view name)
+        : m_priority{priority}
+        , m_stackSize{stackSize}
+        , m_name{name}
+    {}
 
     /// Constructor.
     /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
     /// @tparam Args            Types of user arguments to be passed to the used function.
     /// @param function         User function to be invoked by the new thread.
     /// @param args             User arguments to be passed to the used function.
-    /// @note This constructor immediately starts the thread.
+    /// @note This constructor immediately starts the thread with the default priority and stack size.
     template <typename ThreadFunction, typename... Args>
     requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
     explicit Thread(ThreadFunction function, Args&&... args)
@@ -75,12 +112,81 @@ public:
     /// Constructor.
     /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
     /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param priority         Priority to be used in thread construction.
     /// @param function         User function to be invoked by the new thread.
     /// @param args             User arguments to be passed to the used function.
-    /// @param name             Human readable name of the thread.
+    /// @note This constructor immediately starts the thread with the default stack size.
+    template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
+    explicit Thread(OsalThreadPriority priority, ThreadFunction function, Args&&... args)
+        : Thread{priority, cOsalThreadDefaultStackSize}
+    {
+        start(std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+    }
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param priority         Priority to be used in thread construction.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
     /// @note This constructor immediately starts the thread.
     template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
+    explicit Thread(OsalThreadPriority priority, std::size_t stackSize, ThreadFunction function, Args&&... args)
+        : Thread{priority, stackSize}
+    {
+        start(std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+    }
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param name             Human readable name of the thread.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread with the default priority and stack size.
+    template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
     explicit Thread(std::string_view name, ThreadFunction function, Args&&... args)
+    {
+        start(name, std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+    }
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param priority         Priority to be used in thread construction.
+    /// @param name             Human readable name of the thread.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread with the default stack size.
+    template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
+    explicit Thread(OsalThreadPriority priority, std::string_view name, ThreadFunction function, Args&&... args)
+        : Thread{priority, cOsalThreadDefaultStackSize}
+    {
+        start(name, std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+    }
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param priority         Priority to be used in thread construction.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @param name             Human readable name of the thread.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread.
+    template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
+    explicit Thread(OsalThreadPriority priority,
+                    std::size_t stackSize,
+                    std::string_view name,
+                    ThreadFunction function,
+                    Args&&... args)
+        : Thread{priority, stackSize}
     {
         start(name, std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
     }
@@ -93,6 +199,9 @@ public:
     /// @param other            Thread instance to be moved from.
     Thread(Thread&& other) noexcept
     {
+        std::swap(m_priority, other.m_priority);
+        std::swap(m_stackSize, other.m_stackSize);
+        std::swap(m_name, other.m_name);
         std::swap(m_thread, other.m_thread);
         std::swap(m_stack, other.m_stack);
         std::swap(m_userFunction, other.m_userFunction);
@@ -139,15 +248,15 @@ public:
     requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
     std::error_code start(ThreadFunction function, Args&&... args)
     {
-        return start({}, std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
+        return start(m_name, std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
     }
 
     /// Starts the thread.
     /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
     /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param name             Human readable name of the thread.
     /// @param function         User function to be invoked by the new thread.
     /// @param args             User arguments to be passed to the used function.
-    /// @param name             Human readable name of the thread.
     /// @return Error code of the operation.
     template <typename ThreadFunction, typename... Args>
     std::error_code start(std::string_view name, ThreadFunction function, Args&&... args)
@@ -166,12 +275,14 @@ public:
 
         std::error_code error{};
         if (name.empty()) {
-            error
-                = osalThreadCreate(&m_thread, {cPriority, cStackSize, m_stack}, m_workerFunction, m_userFunction.get());
+            error = osalThreadCreate(&m_thread,
+                                     {m_priority, m_stackSize, m_stack},
+                                     m_workerFunction,
+                                     m_userFunction.get());
         }
         else {
             error = osalThreadCreateEx(&m_thread,
-                                       {cPriority, cStackSize, m_stack},
+                                       {m_priority, m_stackSize, m_stack},
                                        m_workerFunction,
                                        m_userFunction.get(),
                                        name.data());
@@ -190,6 +301,9 @@ private:
     /// Helper wrapper around user thread function.
     using FunctionWrapper = std::function<void(void)>;
 
+    OsalThreadPriority m_priority{cOsalThreadDefaultPriority};
+    std::size_t m_stackSize{cOsalThreadDefaultStackSize};
+    std::string m_name;
     OsalThread m_thread{};
     void* m_stack{};
     std::unique_ptr<FunctionWrapper> m_userFunction;
@@ -197,30 +311,102 @@ private:
     bool m_started{};
 };
 
-/// Helper type alias representing OSAL thread with OsalThreadPriority::eLowest priority.
-/// @tparam cStackSize          Stack size to be used in thread construction.
-template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using LowestPrioThread = Thread<OsalThreadPriority::Lowest, cStackSize>;
+/// Helper class used for Thread class aliases.
+/// @tparam cPriority           Priority to be used in thread construction.
+template <OsalThreadPriority cPriority>
+class ThreadAlias : public Thread {
+public:
+    /// Default constructor.
+    /// @note This constructor creates an empty thread. It can be later started with start() method.
+    ThreadAlias()
+        : Thread{cPriority}
+    {}
 
-/// Helper type alias representing OSAL thread with OsalThreadPriority::eLow priority.
-/// @tparam cStackSize          Stack size to be used in thread construction.
-template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using LowPrioThread = Thread<OsalThreadPriority::Low, cStackSize>;
+    /// Constructor.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @note This constructor creates an empty thread. It can be later started with start() method.
+    explicit ThreadAlias(std::size_t stackSize)
+        : Thread{cPriority, stackSize}
+    {}
 
-/// Helper type alias representing OSAL thread with OsalThreadPriority::eNormal priority.
-/// @tparam cStackSize          Stack size to be used in thread construction.
-template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using NormalPrioThread = Thread<OsalThreadPriority::Normal, cStackSize>;
+    /// Constructor.
+    /// @param name             Human readable name of the thread.
+    /// @note This constructor creates an empty thread. It can be later started with start() method.
+    explicit ThreadAlias(std::string_view name)
+        : Thread{cPriority, name}
+    {}
 
-/// Helper type alias representing OSAL thread with OsalThreadPriority::eHigh priority.
-/// @tparam cStackSize          Stack size to be used in thread construction.
-template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using HighPrioThread = Thread<OsalThreadPriority::High, cStackSize>;
+    /// Constructor.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @param name             Human readable name of the thread.
+    /// @note This constructor creates an empty thread. It can be later started with start() method.
+    explicit ThreadAlias(std::size_t stackSize, std::string_view name)
+        : Thread{cPriority, stackSize, name}
+    {}
 
-/// Helper type alias representing OSAL thread with OsalThreadPriority::eHighest priority.
-/// @tparam cStackSize          Stack size to be used in thread construction.
-template <std::size_t cStackSize = cOsalThreadDefaultStackSize>
-using HighestPrioThread = Thread<OsalThreadPriority::Highest, cStackSize>;
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread with the default stack size.
+    template <typename ThreadFunction, typename... Args>
+    explicit ThreadAlias(ThreadFunction function, Args&&... args)
+        : Thread{cPriority, std::forward<ThreadFunction>(function), std::forward<Args>(args)...}
+    {}
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread.
+    template <typename ThreadFunction, typename... Args>
+    explicit ThreadAlias(std::size_t stackSize, ThreadFunction function, Args&&... args)
+        : Thread{cPriority, stackSize, std::forward<ThreadFunction>(function), std::forward<Args>(args)...}
+    {}
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param name             Human readable name of the thread.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread with the default stack size.
+    template <typename ThreadFunction, typename... Args>
+    explicit ThreadAlias(std::string_view name, ThreadFunction function, Args&&... args)
+        : Thread{cPriority, name, std::forward<ThreadFunction>(function), std::forward<Args>(args)...}
+    {}
+
+    /// Constructor.
+    /// @tparam ThreadFunction  Type of user function to be invoked by the new thread.
+    /// @tparam Args            Types of user arguments to be passed to the used function.
+    /// @param stackSize        Stack size to be used in thread construction.
+    /// @param name             Human readable name of the thread.
+    /// @param function         User function to be invoked by the new thread.
+    /// @param args             User arguments to be passed to the used function.
+    /// @note This constructor immediately starts the thread.
+    template <typename ThreadFunction, typename... Args>
+    explicit ThreadAlias(std::size_t stackSize, std::string_view name, ThreadFunction function, Args&&... args)
+        : Thread{cPriority, stackSize, name, std::forward<ThreadFunction>(function), std::forward<Args>(args)...}
+    {}
+};
+
+/// Helper type alias representing OSAL thread with OsalThreadPriority::Lowest priority.
+using LowestPrioThread = ThreadAlias<OsalThreadPriority::Lowest>;
+
+/// Helper type alias representing OSAL thread with OsalThreadPriority::Low priority.
+using LowPrioThread = ThreadAlias<OsalThreadPriority::Low>;
+
+/// Helper type alias representing OSAL thread with OsalThreadPriority::Normal priority.
+using NormalPrioThread = ThreadAlias<OsalThreadPriority::Normal>;
+
+/// Helper type alias representing OSAL thread with OsalThreadPriority::High priority.
+using HighPrioThread = ThreadAlias<OsalThreadPriority::High>;
+
+/// Helper type alias representing OSAL thread with OsalThreadPriority::Highest priority.
+using HighestPrioThread = ThreadAlias<OsalThreadPriority::Highest>;
 
 namespace thread {
 
