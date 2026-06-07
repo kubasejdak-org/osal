@@ -52,7 +52,7 @@ TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
     auto func = [&](unsigned int arg) {
         osal::sleep(1s);
 
-        REQUIRE(arg == cParam);
+        CHECK(arg == cParam);
         launched = true;
     };
 
@@ -299,7 +299,7 @@ TEST_CASE("Move thread around", "[unit][cpp][thread]")
     auto func = [&](unsigned int arg) {
         osal::sleep(5s);
 
-        REQUIRE(arg == cParam);
+        CHECK(arg == cParam);
         launched = true;
     };
 

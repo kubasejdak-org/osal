@@ -32,7 +32,7 @@
 #include <cstdint>
 #include <thread>
 
-void osalSleepMs(uint64_t cDurationMs)
+void osalSleepMs(uint64_t durationMs)
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(cDurationMs));
+    std::this_thread::sleep_for(std::chrono::milliseconds(durationMs));
 }

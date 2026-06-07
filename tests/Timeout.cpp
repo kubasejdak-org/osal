@@ -50,51 +50,51 @@ TEST_CASE("Creation of timeout", "[unit][cpp][timeout]")
     osal::Timeout t7 = t4;
     osal::Timeout t8(100ms, true);
 
-    REQUIRE(t1.duration() == 3s);
-    REQUIRE(!t1.isInfinity());
-    REQUIRE(t2.duration() == 4ms);
-    REQUIRE(!t2.isInfinity());
-    REQUIRE(t3.duration() == 1ms);
-    REQUIRE(!t3.isInfinity());
-    REQUIRE(t4.duration() == 8ms);
-    REQUIRE(!t4.isInfinity());
-    REQUIRE(t5.duration() == 100ms);
-    REQUIRE(!t5.isInfinity());
-    REQUIRE(t6.duration() == t2.duration());
-    REQUIRE(!t6.isInfinity());
-    REQUIRE(t7.duration() == t4.duration());
-    REQUIRE(!t7.isInfinity());
-    REQUIRE(t8.duration() == 100ms);
-    REQUIRE(!t8.isInfinity());
+    CHECK(t1.duration() == 3s);
+    CHECK(!t1.isInfinity());
+    CHECK(t2.duration() == 4ms);
+    CHECK(!t2.isInfinity());
+    CHECK(t3.duration() == 1ms);
+    CHECK(!t3.isInfinity());
+    CHECK(t4.duration() == 8ms);
+    CHECK(!t4.isInfinity());
+    CHECK(t5.duration() == 100ms);
+    CHECK(!t5.isInfinity());
+    CHECK(t6.duration() == t2.duration());
+    CHECK(!t6.isInfinity());
+    CHECK(t7.duration() == t4.duration());
+    CHECK(!t7.isInfinity());
+    CHECK(t8.duration() == 100ms);
+    CHECK(!t8.isInfinity());
 
     // Make all timeouts expired.
     constexpr auto cDelay = 5s;
     osal::sleep(cDelay);
 
-    REQUIRE(t1.isExpired());
-    REQUIRE(t1.isExpired());
-    REQUIRE(t1.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t2.isExpired());
-    REQUIRE(t2.isExpired());
-    REQUIRE(t2.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t3.isExpired());
-    REQUIRE(t3.isExpired());
-    REQUIRE(t3.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t4.isExpired());
-    REQUIRE(t4.isExpired());
-    REQUIRE(t4.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t5.isExpired());
-    REQUIRE(t5.isExpired());
-    REQUIRE(t5.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t6.isExpired());
-    REQUIRE(t6.isExpired());
-    REQUIRE(t6.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t7.isExpired());
-    REQUIRE(t7.isExpired());
-    REQUIRE(t7.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(t8.isExpired());
-    REQUIRE(t8.isExpired());
-    REQUIRE(t8.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t1.isExpired());
+    CHECK(t1.isExpired());
+    CHECK(t1.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t2.isExpired());
+    CHECK(t2.isExpired());
+    CHECK(t2.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t3.isExpired());
+    CHECK(t3.isExpired());
+    CHECK(t3.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t4.isExpired());
+    CHECK(t4.isExpired());
+    CHECK(t4.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t5.isExpired());
+    CHECK(t5.isExpired());
+    CHECK(t5.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t6.isExpired());
+    CHECK(t6.isExpired());
+    CHECK(t6.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t7.isExpired());
+    CHECK(t7.isExpired());
+    CHECK(t7.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(t8.isExpired());
+    CHECK(t8.isExpired());
+    CHECK(t8.timeLeft() == std::chrono::milliseconds::zero());
 }
 
 TEST_CASE("Creation of special timeout values", "[unit][cpp][timeout]")
@@ -102,21 +102,21 @@ TEST_CASE("Creation of special timeout values", "[unit][cpp][timeout]")
     auto t1 = osal::Timeout::none();
     auto t2 = osal::Timeout::infinity();
 
-    REQUIRE(t1.duration() == std::chrono::milliseconds::zero());
-    REQUIRE(!t1.isInfinity());
-    REQUIRE(t2.duration() == std::chrono::milliseconds::max());
-    REQUIRE(t2.isInfinity());
+    CHECK(t1.duration() == std::chrono::milliseconds::zero());
+    CHECK(!t1.isInfinity());
+    CHECK(t2.duration() == std::chrono::milliseconds::max());
+    CHECK(t2.isInfinity());
 
     // Make all timeouts expired.
     constexpr auto cDelay = 5s;
     osal::sleep(cDelay);
 
-    REQUIRE(t1.isExpired());
-    REQUIRE(t1.isExpired());
-    REQUIRE(t1.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE(!t2.isExpired());
-    REQUIRE(!t2.isExpired());
-    REQUIRE(t2.timeLeft() == std::chrono::milliseconds::max());
+    CHECK(t1.isExpired());
+    CHECK(t1.isExpired());
+    CHECK(t1.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK(!t2.isExpired());
+    CHECK(!t2.isExpired());
+    CHECK(t2.timeLeft() == std::chrono::milliseconds::max());
 }
 
 TEST_CASE("Timeout is monotonic", "[unit][cpp][timeout]")
@@ -131,8 +131,8 @@ TEST_CASE("Timeout is monotonic", "[unit][cpp][timeout]")
         timesLeft.push_back(t.timeLeft().count());
     }
 
-    REQUIRE(t.timeLeft().count() == 0);
-    REQUIRE(std::ranges::is_sorted(timesLeft, std::greater{}));
+    CHECK(t.timeLeft().count() == 0);
+    CHECK(std::ranges::is_sorted(timesLeft, std::greater{}));
 }
 
 TEST_CASE("Timeout used as a function argument", "[unit][cpp][timeout]")
@@ -165,42 +165,42 @@ TEST_CASE("Timeout used as a function argument", "[unit][cpp][timeout]")
 
         auto func2 = [=](osal::Timeout timeout) {
             bool expired = func1(timeout);
-            REQUIRE(expired);
-            REQUIRE(timeout.isExpired());
+            CHECK(expired);
+            CHECK(timeout.isExpired());
             return expired;
         };
 
         auto func3 = [=](osal::Timeout timeout) {
             bool expired = func2(timeout);
-            REQUIRE(expired);
-            REQUIRE(timeout.isExpired());
+            CHECK(expired);
+            CHECK(timeout.isExpired());
             return expired;
         };
 
         auto func4 = [=](osal::Timeout timeout) {
             bool expired = func3(timeout);
-            REQUIRE(expired);
-            REQUIRE(timeout.isExpired());
+            CHECK(expired);
+            CHECK(timeout.isExpired());
             return expired;
         };
 
         auto func5 = [=](osal::Timeout timeout) {
             bool expired = func4(timeout);
-            REQUIRE(expired);
-            REQUIRE(timeout.isExpired());
+            CHECK(expired);
+            CHECK(timeout.isExpired());
             return expired;
         };
 
         bool expired = func5(timeout);
-        REQUIRE(expired);
+        CHECK(expired);
     }
 
     auto end = osal::timestamp();
     [[maybe_unused]] auto diff = (end - start).count();
 
-    REQUIRE(timeout.isExpired());
-    REQUIRE(timeout.timeLeft() == std::chrono::milliseconds::zero());
-    REQUIRE((end - start) >= cTimeout);
+    CHECK(timeout.isExpired());
+    CHECK(timeout.timeLeft() == std::chrono::milliseconds::zero());
+    CHECK((end - start) >= cTimeout);
 }
 
 TEST_CASE("Resetting timeout", "[unit][cpp][timeout]")
@@ -214,14 +214,14 @@ TEST_CASE("Resetting timeout", "[unit][cpp][timeout]")
         constexpr auto cDelay = 500ms;
         osal::sleep(cDelay);
 
-        REQUIRE(t1.isExpired());
-        REQUIRE(t2.isExpired());
+        CHECK(t1.isExpired());
+        CHECK(t2.isExpired());
 
         t1.reset();
-        REQUIRE(!t1.isExpired());
+        CHECK(!t1.isExpired());
 
         t2.reset();
-        REQUIRE(!t2.isExpired());
+        CHECK(!t2.isExpired());
     }
 }
 
@@ -230,19 +230,19 @@ TEST_CASE("Sleeping until timeout is expired", "[unit][cpp][timeout]")
     SECTION("Sleeping for timeout expiration is required")
     {
         osal::Timeout timeout = 400ms;
-        REQUIRE(!timeout.isExpired());
+        CHECK(!timeout.isExpired());
 
         osal::sleepUntilExpired(timeout);
-        REQUIRE(timeout.isExpired());
+        CHECK(timeout.isExpired());
     }
 
     SECTION("Sleeping for timeout expiration is not required")
     {
         osal::Timeout timeout = 0ms;
-        REQUIRE(timeout.isExpired());
+        CHECK(timeout.isExpired());
 
         osal::sleepUntilExpired(timeout);
-        REQUIRE(timeout.isExpired());
+        CHECK(timeout.isExpired());
     }
 }
 
@@ -254,9 +254,9 @@ TEST_CASE("Converting duration to raw milliseconds", "[unit][cpp][timeout]")
     osal::Timeout t4(13ms);
     osal::Timeout t5(0ms);
 
-    REQUIRE(osal::durationMs(t1) == (2 * 1000));
-    REQUIRE(osal::durationMs(t2) == (16 * 60 * 1000));
-    REQUIRE(osal::durationMs(t3) == 546);
-    REQUIRE(osal::durationMs(t4) == 13);
-    REQUIRE(osal::durationMs(t5) == 0);
+    CHECK(osal::durationMs(t1) == (2 * 1000));
+    CHECK(osal::durationMs(t2) == (16 * 60 * 1000));
+    CHECK(osal::durationMs(t3) == 546);
+    CHECK(osal::durationMs(t4) == 13);
+    CHECK(osal::durationMs(t5) == 0);
 }

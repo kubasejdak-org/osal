@@ -117,9 +117,9 @@ TEST_CASE("Lock called from two threads in C++", "[unit][cpp][mutex]")
         REQUIRE_FALSE(mutex.lock());
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
-        REQUIRE_FALSE(mutex.unlock());
+        CHECK_FALSE(mutex.unlock());
     };
 
     osal::Thread thread(func);
@@ -160,9 +160,9 @@ TEST_CASE("TryLock called from second threads in C++", "[unit][cpp][mutex]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
-        REQUIRE_FALSE(mutex.unlock());
+        CHECK_FALSE(mutex.unlock());
     };
 
     osal::Thread thread(func);
@@ -200,9 +200,9 @@ TEST_CASE("TryLock and unlock called from ISR in C++", "[unit][cpp][mutex]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
-        REQUIRE_FALSE(mutex.unlockIsr());
+        CHECK_FALSE(mutex.unlockIsr());
     };
 
     osal::Thread thread(func);
@@ -250,10 +250,10 @@ TEST_CASE("TimedLock called from second thread, timeout in C++", "[unit][cpp][mu
         auto start = osal::timestamp();
 
         auto error = mutex.timedLock(100ms);
-        REQUIRE(error == OsalError::Timeout);
+        CHECK(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
     };
 
     osal::Thread thread(func);
@@ -290,12 +290,12 @@ TEST_CASE("TimedLock called from second thread, success in C++", "[unit][cpp][mu
     auto func = [&mutex] {
         auto start = osal::timestamp();
 
-        REQUIRE_FALSE(mutex.timedLock(100ms));
+        CHECK_FALSE(mutex.timedLock(100ms));
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) <= 100ms);
+        CHECK((end - start) <= 100ms);
 
-        REQUIRE_FALSE(mutex.unlock());
+        CHECK_FALSE(mutex.unlock());
     };
 
     osal::Thread thread(func);

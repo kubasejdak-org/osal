@@ -148,6 +148,32 @@ TEST_CASE("Invalid arguments passed to mutex functions in one thread", "[unit][c
     CHECK(error == OsalError::InvalidArgument);
 }
 
+TEST_CASE("Mutex operations on uninitialized handle", "[unit][c][mutex]")
+{
+    OsalMutex mutex{};
+
+    auto error = osalMutexLock(&mutex);
+    CHECK(error == OsalError::InvalidArgument);
+
+    error = osalMutexTryLock(&mutex);
+    CHECK(error == OsalError::InvalidArgument);
+
+    error = osalMutexTryLockIsr(&mutex);
+    CHECK(error == OsalError::InvalidArgument);
+
+    error = osalMutexTimedLock(&mutex, 3);
+    CHECK(error == OsalError::InvalidArgument);
+
+    error = osalMutexUnlock(&mutex);
+    CHECK(error == OsalError::InvalidArgument);
+
+    error = osalMutexUnlockIsr(&mutex);
+    CHECK(error == OsalError::InvalidArgument);
+
+    error = osalMutexDestroy(&mutex);
+    CHECK(error == OsalError::InvalidArgument);
+}
+
 TEST_CASE("Lock called from two threads", "[unit][c][mutex]")
 {
     OsalMutexType type{};
@@ -181,10 +207,10 @@ TEST_CASE("Lock called from two threads", "[unit][c][mutex]")
         REQUIRE_FALSE(error);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
         error = osalMutexUnlock(&mutex);
-        REQUIRE_FALSE(error);
+        CHECK_FALSE(error);
     };
 
     osal::Thread thread(func);
@@ -232,10 +258,10 @@ TEST_CASE("TryLock called from second thread", "[unit][c][mutex]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
         auto error = osalMutexUnlock(&mutex);
-        REQUIRE_FALSE(error);
+        CHECK_FALSE(error);
     };
 
     osal::Thread thread(func);
@@ -278,10 +304,10 @@ TEST_CASE("TryLock and unlock called from ISR", "[unit][c][mutex]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
         auto error = osalMutexUnlock(&mutex);
-        REQUIRE_FALSE(error);
+        CHECK_FALSE(error);
     };
 
     osal::Thread thread(func);
@@ -340,10 +366,10 @@ TEST_CASE("TimedLock called from second thread, timeout", "[unit][c][mutex]")
 
         constexpr std::uint32_t cTimeoutMs = 100;
         auto error = osalMutexTimedLock(&mutex, cTimeoutMs);
-        REQUIRE(error == OsalError::Timeout);
+        CHECK(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
     };
 
     osal::Thread thread(func);
@@ -386,12 +412,12 @@ TEST_CASE("TimedLock called from second thread, success", "[unit][c][mutex]")
         auto start = osal::timestamp();
 
         constexpr std::uint32_t cTimeoutMs = 100;
-        REQUIRE_FALSE(osalMutexTimedLock(&mutex, cTimeoutMs));
+        CHECK_FALSE(osalMutexTimedLock(&mutex, cTimeoutMs));
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) <= 100ms);
+        CHECK((end - start) <= 100ms);
 
-        REQUIRE_FALSE(osalMutexUnlock(&mutex));
+        CHECK_FALSE(osalMutexUnlock(&mutex));
     };
 
     osal::Thread thread(func);
