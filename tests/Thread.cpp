@@ -42,7 +42,7 @@
 #include <cstring>
 #include <functional>
 #include <set>
-#include <string_view>
+#include <string>
 #include <tuple>
 
 TEST_CASE("Thread creation and destruction", "[unit][c][thread]")
@@ -50,8 +50,11 @@ TEST_CASE("Thread creation and destruction", "[unit][c][thread]")
     auto func = [](void* /*unused*/) {};
 
     OsalThread thread{};
-    auto error
-        = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+    auto error = osalThreadCreate(
+        &thread,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        func,
+        nullptr);
     REQUIRE_FALSE(error);
 
     error = osalThreadJoin(&thread);
@@ -84,20 +87,21 @@ TEST_CASE("Named thread creation and destruction", "[unit][c][thread]")
         CHECK_FALSE(threadData->stopSemaphore.signal());
     };
 
-    std::string_view setThreadName = "0123456789ABCDE";
+    std::string setThreadName = "0123456789ABCDE";
 
     OsalThread thread{};
-    auto error = osalThreadCreateEx(&thread,
-                                    {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr},
-                                    func,
-                                    &threadData,
-                                    setThreadName.data());
+    auto error = osalThreadCreateEx(
+        &thread,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        func,
+        &threadData,
+        setThreadName.c_str());
     REQUIRE_FALSE(error);
 
     CHECK_FALSE(threadData.startSemaphore.signal());
     CHECK_FALSE(threadData.stopSemaphore.wait());
-    std::string_view getThreadName{threadData.getThreadName.data(), std::strlen(threadData.getThreadName.data())};
-    CHECK_THAT(getThreadName.data(), Catch::Matchers::Equals(setThreadName.data()));
+    std::string getThreadName(threadData.getThreadName.data());
+    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
 
     error = osalThreadJoin(&thread);
     CHECK_FALSE(error);
@@ -114,26 +118,33 @@ TEST_CASE("Thread creation with invalid arguments", "[unit][c][thread]")
     auto func = [](void* /*unused*/) {};
 
     OsalThread thread{};
-    auto error
-        = osalThreadCreate(nullptr, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+    auto error = osalThreadCreate(
+        nullptr,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        func,
+        nullptr);
     CHECK(error == OsalError::InvalidArgument);
 
-    error = osalThreadCreate(&thread,
-                             {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr},
-                             nullptr,
-                             nullptr);
+    error = osalThreadCreate(
+        &thread,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        nullptr,
+        nullptr);
     CHECK(error == OsalError::InvalidArgument);
 
-    error = osalThreadCreateEx(&thread,
-                               {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr},
-                               func,
-                               nullptr,
-                               "0123456789ABCDEF");
+    error = osalThreadCreateEx(
+        &thread,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        func,
+        nullptr,
+        "0123456789ABCDEF");
     CHECK(error == OsalError::InvalidArgument);
 
     constexpr int cInvalidPriority = 5;
     error = osalThreadCreate(&thread,
-                             {static_cast<OsalThreadPriority>(cInvalidPriority), cOsalThreadDefaultStackSize, nullptr},
+                             {.priority = static_cast<OsalThreadPriority>(cInvalidPriority),
+                              .stackSize = cOsalThreadDefaultStackSize,
+                              .stack = nullptr},
                              func,
                              nullptr);
     CHECK(error == OsalError::InvalidArgument);
@@ -144,8 +155,11 @@ TEST_CASE("Multiple thread joins", "[unit][c][thread]")
     auto func = [](void* /*unused*/) {};
 
     OsalThread thread{};
-    auto error
-        = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+    auto error = osalThreadCreate(
+        &thread,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        func,
+        nullptr);
     REQUIRE_FALSE(error);
 
     error = osalThreadJoin(&thread);
@@ -174,8 +188,11 @@ TEST_CASE("Destroy thread without join", "[unit][c][thread]")
     auto func = [](void* /*unused*/) {};
 
     OsalThread thread{};
-    auto error
-        = osalThreadCreate(&thread, {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+    auto error = osalThreadCreate(
+        &thread,
+        {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+        func,
+        nullptr);
     REQUIRE_FALSE(error);
 
     error = osalThreadDestroy(&thread);
@@ -202,10 +219,11 @@ TEST_CASE("Launch 5 threads and check their results", "[unit][c][thread]")
     };
 
     for (std::size_t i = 0; i < threads.size(); ++i) {
-        auto error = osalThreadCreate(&threads[i],
-                                      {cOsalThreadDefaultPriority, cOsalThreadDefaultStackSize, nullptr},
-                                      func,
-                                      &counters[i]);
+        auto error = osalThreadCreate(
+            &threads[i],
+            {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+            func,
+            &counters[i]);
         REQUIRE_FALSE(error);
     }
 
@@ -255,7 +273,11 @@ TEST_CASE("Launch 5 threads with different priorities and check their results", 
 
     for (std::size_t i = 0; i < threads.size(); ++i) {
         auto priority = static_cast<OsalThreadPriority>(i / 2);
-        auto error = osalThreadCreate(&threads[i], {priority, cOsalThreadDefaultStackSize, nullptr}, func, &args[i]);
+        auto error
+            = osalThreadCreate(&threads[i],
+                               {.priority = priority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+                               func,
+                               &args[i]);
         REQUIRE_FALSE(error);
     }
 
@@ -282,7 +304,11 @@ TEST_CASE("Create threads with all priorities", "[unit][c][thread]")
     for (int i = OsalThreadPriority::Lowest; i <= OsalThreadPriority::Highest; ++i) {
         OsalThread thread{};
         auto priority = static_cast<OsalThreadPriority>(i / 2);
-        auto error = osalThreadCreate(&thread, {priority, cOsalThreadDefaultStackSize, nullptr}, func, nullptr);
+        auto error
+            = osalThreadCreate(&thread,
+                               {.priority = priority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+                               func,
+                               nullptr);
         REQUIRE_FALSE(error);
 
         error = osalThreadJoin(&thread);
@@ -320,15 +346,20 @@ TEST_CASE("Check if thread ids are unique and constant", "[unit][c][thread]")
         }
     };
 
-    std::array<ThreadArgs, cThreadsCount> args = {std::make_tuple(std::ref(ids[0]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[1]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[2]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[3]), std::ref(start)),
-                                                  std::make_tuple(std::ref(ids[4]), std::ref(start))};
+    std::array<ThreadArgs, cThreadsCount> args
+        = {std::make_tuple(std::ref(ids[0]), std::ref(start)),
+           std::make_tuple(std::ref(ids[1]), std::ref(start)),
+           std::make_tuple(std::ref(ids[2]), std::ref(start)),
+           std::make_tuple(std::ref(ids[3]), std::ref(start)),
+           std::make_tuple(std::ref(ids[4]), std::ref(start))};
 
     for (std::size_t i = 0; i < threads.size(); ++i) {
         auto priority = static_cast<OsalThreadPriority>(i / 2);
-        auto error = osalThreadCreate(&threads[i], {priority, cOsalThreadDefaultStackSize, nullptr}, func, &args[i]);
+        auto error
+            = osalThreadCreate(&threads[i],
+                               {.priority = priority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
+                               func,
+                               &args[i]);
         REQUIRE_FALSE(error);
     }
 

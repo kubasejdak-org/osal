@@ -29,6 +29,8 @@
 #include "platform/init.hpp"
 #include "tests/helpers/VerboseReporter.hpp"
 
+#include <platform/main.hpp>
+
 #include <catch2/catch_session.hpp>
 
 #include <cstdlib>

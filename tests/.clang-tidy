@@ -2,6 +2,7 @@
 InheritParentConfig: true
 Checks: '
   -clang-analyzer-optin.core.EnumCastOutOfRange,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
   -*-magic-numbers
 '
 ...

@@ -43,12 +43,11 @@
 #include <functional>
 #include <set>
 #include <string>
-#include <string_view>
 #include <utility>
 
 TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
 {
-    constexpr unsigned int cParam = 0xdeadbeef;
+    constexpr unsigned int cParam = 0xDEADBEEF;
     bool launched = false;
     auto func = [&](unsigned int arg) {
         osal::sleep(1s);
@@ -128,13 +127,13 @@ TEST_CASE("Named thread creation and destruction", "[unit][cpp][thread]")
         CHECK_FALSE(stopSemaphore.signal());
     };
 
-    std::string_view setThreadName = "0123456789ABCDE";
+    std::string setThreadName = "0123456789ABCDE";
 
     osal::Thread thread(setThreadName, func);
 
     CHECK_FALSE(startSemaphore.signal());
     CHECK_FALSE(stopSemaphore.wait());
-    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName.data()));
+    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
 
     auto error = thread.join();
     CHECK_FALSE(error);
@@ -295,7 +294,7 @@ TEST_CASE("Thread creation in C++ with different priorities using helper types",
 
 TEST_CASE("Move thread around", "[unit][cpp][thread]")
 {
-    constexpr unsigned int cParam = 0xdeadbeef;
+    constexpr unsigned int cParam = 0xDEADBEEF;
     bool launched = false;
     auto func = [&](unsigned int arg) {
         osal::sleep(5s);

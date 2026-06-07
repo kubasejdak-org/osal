@@ -59,7 +59,6 @@ public:
 
     static std::string getDescription() { return "Reports test results in a similar way to Google Test"; }
 
-private:
     void testCaseStarting(const TestCaseInfo& testInfo) override
     {
         StreamingReporterBase::testCaseStarting(testInfo);
@@ -158,6 +157,7 @@ private:
         StreamingReporterBase::testRunEnded(testRunStats);
     }
 
+private:
     [[nodiscard]] std::string indentation() const
     {
         std::string indent(m_indentation, ' ');
