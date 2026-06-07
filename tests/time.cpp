@@ -357,14 +357,14 @@ TEST_CASE("Convert to struct timeval", "[unit][c][time]")
         tms[4].tm_wday = 3;
         tms[4].tm_yday = 219;
 
-        std::transform(tms.begin(), tms.end(), timevals.begin(), osalTmToTimeval);
+        std::ranges::transform(tms, timevals.begin(), osalTmToTimeval);
     }
 
     SECTION("time_t to struct timeval")
     {
         std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
 
-        std::transform(times.begin(), times.end(), timevals.begin(), osalTimeToTimeval);
+        std::ranges::transform(times, timevals.begin(), osalTimeToTimeval);
     }
 
     SECTION("struct timespec to struct timeval")

@@ -99,6 +99,7 @@ struct timeval osalTmToTimeval(struct tm value);
 struct timeval osalTimespecToTimeval(struct timespec value);
 
 /// Represents possible string representations of date/time objects.
+// NOLINTNEXTLINE(cppcoreguidelines-use-enum-class)
 enum OsalTimeStringFormat {
     Time,          // "15:30:59"
     Date,          // "31.12.2022"

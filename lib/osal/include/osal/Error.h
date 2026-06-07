@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 /// Errors definition.
+// NOLINTNEXTLINE(cppcoreguidelines-use-enum-class)
 enum OsalError {
     InvalidArgument = 1,
     OsError,
