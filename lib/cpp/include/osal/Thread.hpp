@@ -41,6 +41,7 @@
 #include <string_view>
 #include <system_error>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 
 namespace osal {
@@ -65,6 +66,7 @@ public:
     /// @param args             User arguments to be passed to the used function.
     /// @note This constructor immediately starts the thread.
     template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
     explicit Thread(ThreadFunction function, Args&&... args)
     {
         start(std::forward<ThreadFunction>(function), std::forward<Args>(args)...);
@@ -134,6 +136,7 @@ public:
     /// @param args             User arguments to be passed to the used function.
     /// @return Error code of the operation.
     template <typename ThreadFunction, typename... Args>
+    requires std::is_invocable_v<std::decay_t<ThreadFunction>, std::decay_t<Args>...>
     std::error_code start(ThreadFunction function, Args&&... args)
     {
         return start({}, std::forward<ThreadFunction>(function), std::forward<Args>(args)...);

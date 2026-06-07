@@ -133,7 +133,7 @@ TEST_CASE("Named thread creation and destruction", "[unit][cpp][thread]")
 
     CHECK_FALSE(startSemaphore.signal());
     CHECK_FALSE(stopSemaphore.wait());
-    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName.data()));
+    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
 
     auto error = thread.join();
     CHECK_FALSE(error);
