@@ -72,32 +72,32 @@ time_t osalTimevalToTime(struct timeval value)
 
 struct timespec osalTimeToTimespec(time_t value)
 {
-    return {value, 0};
+    return {.tv_sec = value, .tv_nsec = 0};
 }
 
 struct timespec osalTmToTimespec(struct tm value)
 {
-    return {osalTmToTime(value), 0};
+    return {.tv_sec = osalTmToTime(value), .tv_nsec = 0};
 }
 
 struct timespec osalTimevalToTimespec(struct timeval value)
 {
-    return {osalTimevalToTime(value), 0};
+    return {.tv_sec = osalTimevalToTime(value), .tv_nsec = 0};
 }
 
 struct timeval osalTimeToTimeval(time_t value)
 {
-    return {value, 0};
+    return {.tv_sec = value, .tv_usec = 0};
 }
 
 struct timeval osalTmToTimeval(struct tm value)
 {
-    return {osalTmToTime(value), 0};
+    return {.tv_sec = osalTmToTime(value), .tv_usec = 0};
 }
 
 struct timeval osalTimespecToTimeval(struct timespec value)
 {
-    return {osalTimespecToTime(value), 0};
+    return {.tv_sec = osalTimespecToTime(value), .tv_usec = 0};
 }
 
 OsalError osalTmToString(struct tm value, char* str, size_t size, OsalTimeStringFormat format)

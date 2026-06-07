@@ -126,8 +126,8 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
                 - std::chrono::time_point_cast<std::chrono::nanoseconds>(secs);
 
         return timespec{
-            static_cast<std::time_t>(secs.time_since_epoch().count()),
-            static_cast<std::int64_t>(ns.count())
+            .tv_sec = static_cast<std::time_t>(secs.time_since_epoch().count()),
+            .tv_nsec = static_cast<std::int64_t>(ns.count())
         };
     };
 
