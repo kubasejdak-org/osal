@@ -126,8 +126,9 @@ OsalError osalMutexTimedLock(OsalMutex* mutex, uint32_t timeoutMs)
         result = xSemaphoreTakeRecursive(mutex->impl.handle, tickTimeout);
 #endif
     }
-    else
+    else {
         result = xSemaphoreTake(mutex->impl.handle, tickTimeout);
+    }
 
     if (result == pdFALSE)
         return OsalError::Timeout;
@@ -147,8 +148,9 @@ OsalError osalMutexUnlock(OsalMutex* mutex)
         result = xSemaphoreGiveRecursive(mutex->impl.handle);
 #endif
     }
-    else
+    else {
         result = xSemaphoreGive(mutex->impl.handle);
+    }
 
     if (result == pdFALSE)
         return OsalError::OsError;
