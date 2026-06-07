@@ -42,7 +42,7 @@
 #include <cstring>
 #include <functional>
 #include <set>
-#include <string_view>
+#include <string>
 #include <tuple>
 
 TEST_CASE("Thread creation and destruction", "[unit][c][thread]")
@@ -87,7 +87,7 @@ TEST_CASE("Named thread creation and destruction", "[unit][c][thread]")
         CHECK_FALSE(threadData->stopSemaphore.signal());
     };
 
-    std::string_view setThreadName = "0123456789ABCDE";
+    std::string setThreadName = "0123456789ABCDE";
 
     OsalThread thread{};
     auto error = osalThreadCreateEx(
@@ -95,13 +95,13 @@ TEST_CASE("Named thread creation and destruction", "[unit][c][thread]")
         {.priority = cOsalThreadDefaultPriority, .stackSize = cOsalThreadDefaultStackSize, .stack = nullptr},
         func,
         &threadData,
-        setThreadName.data());
+        setThreadName.c_str());
     REQUIRE_FALSE(error);
 
     CHECK_FALSE(threadData.startSemaphore.signal());
     CHECK_FALSE(threadData.stopSemaphore.wait());
-    std::string_view getThreadName{threadData.getThreadName.data(), std::strlen(threadData.getThreadName.data())};
-    CHECK_THAT(getThreadName.data(), Catch::Matchers::Equals(setThreadName.data()));
+    std::string getThreadName(threadData.getThreadName.data());
+    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
 
     error = osalThreadJoin(&thread);
     CHECK_FALSE(error);

@@ -35,7 +35,8 @@ extern "C" {
 /// Errors definition.
 // NOLINTNEXTLINE(cppcoreguidelines-use-enum-class)
 enum OsalError {
-    InvalidArgument = 1,
+    Ok,
+    InvalidArgument,
     OsError,
     ThreadNotJoined,
     ThreadAlreadyStarted,

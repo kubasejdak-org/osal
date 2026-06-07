@@ -43,7 +43,6 @@
 #include <functional>
 #include <set>
 #include <string>
-#include <string_view>
 #include <utility>
 
 TEST_CASE("Thread creation and destruction in C++", "[unit][cpp][thread]")
@@ -128,7 +127,7 @@ TEST_CASE("Named thread creation and destruction", "[unit][cpp][thread]")
         CHECK_FALSE(stopSemaphore.signal());
     };
 
-    std::string_view setThreadName = "0123456789ABCDE";
+    std::string setThreadName = "0123456789ABCDE";
 
     osal::Thread thread(setThreadName, func);
 

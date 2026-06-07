@@ -35,6 +35,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <functional>
 #include <iterator>
 #include <vector>
 
@@ -131,7 +132,7 @@ TEST_CASE("Timeout is monotonic", "[unit][cpp][timeout]")
     }
 
     REQUIRE(t.timeLeft().count() == 0);
-    REQUIRE(std::is_sorted(std::rbegin(timesLeft), std::rend(timesLeft)));
+    REQUIRE(std::ranges::is_sorted(timesLeft, std::greater{}));
 }
 
 TEST_CASE("Timeout used as a function argument", "[unit][cpp][timeout]")

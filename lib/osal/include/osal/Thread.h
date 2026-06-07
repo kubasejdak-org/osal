@@ -52,6 +52,7 @@ struct OsalThread {
 ///       enum value. The only assumption client can make, is that eLowest will set the lowest
 //        possible priority in the system and eHighest will set the highest possible priority in the system.
 ///       All implementations will also try to set eNormal to the default priority on the target system.
+// NOLINTNEXTLINE(cppcoreguidelines-use-enum-class)
 enum OsalThreadPriority {
     Lowest,
     Low,

@@ -74,7 +74,7 @@ TEST_CASE("Check C timestamp values after multiple delays in ms", "[unit][c][tim
     REQUIRE((now3 - now2) >= cDelay2Ms);
     REQUIRE((now3 - now2) <= (cDelay2Ms + cMarginMs));
     REQUIRE((now3 - now1) >= (cDelay2Ms + delayMs));
-    REQUIRE((now3 - now1) <= (cDelay2Ms + delayMs + 2 * cMarginMs));
+    REQUIRE((now3 - now1) <= (cDelay2Ms + delayMs + (2 * cMarginMs)));
 }
 
 TEST_CASE("Check C timestamp values after multiple delays in us", "[unit][c][timestamp]")
@@ -115,7 +115,7 @@ TEST_CASE("Check C timestamp values after multiple delays in us", "[unit][c][tim
     REQUIRE((now3 - now2) >= osalMsToUs(cDelay2Ms));
     REQUIRE((now3 - now2) <= osalMsToUs(cDelay2Ms + cMarginMs));
     REQUIRE((now3 - now1) >= osalMsToUs(cDelay2Ms + delayMs));
-    REQUIRE((now3 - now1) <= osalMsToUs(cDelay2Ms + delayMs + 2 * cMarginMs));
+    REQUIRE((now3 - now1) <= osalMsToUs(cDelay2Ms + delayMs + (2 * cMarginMs)));
 }
 
 TEST_CASE("Check C timestamp values after multiple delays in ns", "[unit][c][timestamp]")
@@ -156,7 +156,7 @@ TEST_CASE("Check C timestamp values after multiple delays in ns", "[unit][c][tim
     REQUIRE((now3 - now2) >= osalMsToNs(cDelay2Ms));
     REQUIRE((now3 - now2) <= osalMsToNs(cDelay2Ms + cMarginMs));
     REQUIRE((now3 - now1) >= osalMsToNs(cDelay2Ms + delayMs));
-    REQUIRE((now3 - now1) <= osalMsToNs(cDelay2Ms + delayMs + 2 * cMarginMs));
+    REQUIRE((now3 - now1) <= osalMsToNs(cDelay2Ms + delayMs + (2 * cMarginMs)));
 }
 
 TEST_CASE("Check C++ timestamp values after multiple delays", "[unit][cpp][timestamp]")
@@ -203,7 +203,7 @@ TEST_CASE("Check C++ timestamp values after multiple delays", "[unit][cpp][times
     REQUIRE((now3 - now2) >= cDelay2);
     REQUIRE((now3 - now2) <= (cDelay2 + cMargin));
     REQUIRE((now3 - now1) >= (cDelay2 + delay));
-    REQUIRE((now3 - now1) <= (cDelay2 + delay + 2 * cMargin));
+    REQUIRE((now3 - now1) <= (cDelay2 + delay + (2 * cMargin)));
 }
 
 TEST_CASE("Check helper conversion functions", "[unit][c][timestamp]")

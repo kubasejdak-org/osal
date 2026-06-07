@@ -55,7 +55,7 @@ TEST_CASE("Convert to struct tm", "[unit][c][time]")
     {
         std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
 
-        std::transform(times.begin(), times.end(), tms.begin(), osalTimeToTm);
+        std::ranges::transform(times, tms.begin(), osalTimeToTm);
     }
 
     SECTION("struct timespec to struct tm")
@@ -68,7 +68,7 @@ TEST_CASE("Convert to struct tm", "[unit][c][time]")
              {.tv_sec = cDate5, .tv_nsec = 0}}
         };
 
-        std::transform(timespecs.begin(), timespecs.end(), tms.begin(), osalTimespecToTm);
+        std::ranges::transform(timespecs, tms.begin(), osalTimespecToTm);
     }
 
     SECTION("struct timeval to struct tm")
@@ -81,7 +81,7 @@ TEST_CASE("Convert to struct tm", "[unit][c][time]")
              {.tv_sec = cDate5, .tv_usec = 0}}
         };
 
-        std::transform(timevals.begin(), timevals.end(), tms.begin(), osalTimevalToTm);
+        std::ranges::transform(timevals, tms.begin(), osalTimevalToTm);
     }
 
     CHECK(tms[0].tm_mday == 28);
@@ -182,7 +182,7 @@ TEST_CASE("Convert to time_t", "[unit][c][time]")
         tms[4].tm_wday = 3;
         tms[4].tm_yday = 219;
 
-        std::transform(tms.begin(), tms.end(), times.begin(), osalTmToTime);
+        std::ranges::transform(tms, times.begin(), osalTmToTime);
     }
 
     SECTION("struct timespec to time_t")
@@ -195,7 +195,7 @@ TEST_CASE("Convert to time_t", "[unit][c][time]")
              {.tv_sec = cDate5, .tv_nsec = 0}}
         };
 
-        std::transform(timespecs.begin(), timespecs.end(), times.begin(), osalTimespecToTime);
+        std::ranges::transform(timespecs, times.begin(), osalTimespecToTime);
     }
 
     SECTION("struct timeval to time_t")
@@ -208,7 +208,7 @@ TEST_CASE("Convert to time_t", "[unit][c][time]")
              {.tv_sec = cDate5, .tv_usec = 0}}
         };
 
-        std::transform(timevals.begin(), timevals.end(), times.begin(), osalTimevalToTime);
+        std::ranges::transform(timevals, times.begin(), osalTimevalToTime);
     }
 
     CHECK(times[0] == cDate1);
@@ -270,14 +270,14 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
         tms[4].tm_wday = 3;
         tms[4].tm_yday = 219;
 
-        std::transform(tms.begin(), tms.end(), timespecs.begin(), osalTmToTimespec);
+        std::ranges::transform(tms, timespecs.begin(), osalTmToTimespec);
     }
 
     SECTION("time_t to struct timespec")
     {
         std::array<std::time_t, cDatesCount> times = {cDate1, cDate2, cDate3, cDate4, cDate5};
 
-        std::transform(times.begin(), times.end(), timespecs.begin(), osalTimeToTimespec);
+        std::ranges::transform(times, timespecs.begin(), osalTimeToTimespec);
     }
 
     SECTION("struct timeval to time_t")
@@ -290,7 +290,7 @@ TEST_CASE("Convert to struct timespec", "[unit][c][time]")
              {.tv_sec = cDate5, .tv_usec = 0}}
         };
 
-        std::transform(timevals.begin(), timevals.end(), timespecs.begin(), osalTimevalToTimespec);
+        std::ranges::transform(timevals, timespecs.begin(), osalTimevalToTimespec);
     }
 
     CHECK(timespecs[0].tv_sec == cDate1);
@@ -377,7 +377,7 @@ TEST_CASE("Convert to struct timeval", "[unit][c][time]")
              {.tv_sec = cDate5, .tv_nsec = 0}}
         };
 
-        std::transform(timespecs.begin(), timespecs.end(), timevals.begin(), osalTimespecToTimeval);
+        std::ranges::transform(timespecs, timevals.begin(), osalTimespecToTimeval);
     }
 
     CHECK(timevals[0].tv_sec == cDate1);
