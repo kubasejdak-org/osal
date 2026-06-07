@@ -148,6 +148,9 @@ TEST_CASE("Thread creation with invalid arguments", "[unit][c][thread]")
                              func,
                              nullptr);
     CHECK(error == OsalError::InvalidArgument);
+
+    error = osalThreadDestroy(nullptr);
+    CHECK(error == OsalError::InvalidArgument);
 }
 
 TEST_CASE("Multiple thread joins", "[unit][c][thread]")

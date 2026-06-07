@@ -181,9 +181,9 @@ TEST_CASE("Wait called from two threads in C++", "[unit][cpp][semaphore]")
         REQUIRE_FALSE(semaphore.wait());
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
-        REQUIRE_FALSE(semaphore.signal());
+        CHECK_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
@@ -207,9 +207,9 @@ TEST_CASE("TryWait called from second thread in C++", "[unit][cpp][semaphore]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
-        REQUIRE_FALSE(semaphore.signal());
+        CHECK_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
@@ -233,9 +233,9 @@ TEST_CASE("TryWait and signal called from ISR in C++", "[unit][cpp][semaphore]")
             osal::sleep(10ms);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
 
-        REQUIRE_FALSE(semaphore.signal());
+        CHECK_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);
@@ -352,10 +352,10 @@ TEST_CASE("TimedWait called from second thread in C++, timeout", "[unit][cpp][se
         auto start = osal::timestamp();
 
         auto error = semaphore.timedWait(100ms);
-        REQUIRE(error == OsalError::Timeout);
+        CHECK(error == OsalError::Timeout);
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) >= 100ms);
+        CHECK((end - start) >= 100ms);
     };
 
     osal::Thread thread(func);
@@ -375,12 +375,12 @@ TEST_CASE("TimedWait called from second thread in C++, success", "[unit][cpp][se
     auto func = [&semaphore] {
         auto start = osal::timestamp();
 
-        REQUIRE_FALSE(semaphore.timedWait(100ms));
+        CHECK_FALSE(semaphore.timedWait(100ms));
 
         auto end = osal::timestamp();
-        REQUIRE((end - start) <= 100ms);
+        CHECK((end - start) <= 100ms);
 
-        REQUIRE_FALSE(semaphore.signal());
+        CHECK_FALSE(semaphore.signal());
     };
 
     osal::Thread thread(func);

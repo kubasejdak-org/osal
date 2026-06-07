@@ -35,8 +35,8 @@ extern "C" {
 #include <stdint.h>
 
 /// Suspends the current thread for the specified amount of time in ms.
-/// @param cDurationMs          Amount of time in ms for which current thread should be suspended.
-void osalSleepMs(uint64_t cDurationMs);
+/// @param durationMs           Amount of time in ms for which current thread should be suspended.
+void osalSleepMs(uint64_t durationMs);
 
 #ifdef __cplusplus
 }
