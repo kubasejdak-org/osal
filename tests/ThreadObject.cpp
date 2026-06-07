@@ -129,14 +129,86 @@ TEST_CASE("Named thread creation and destruction", "[unit][cpp][thread]")
 
     std::string setThreadName = "0123456789ABCDE";
 
-    osal::Thread thread(setThreadName, func);
+    SECTION("Name only")
+    {
+        osal::Thread thread(setThreadName, func);
 
-    CHECK_FALSE(startSemaphore.signal());
-    CHECK_FALSE(stopSemaphore.wait());
-    CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
+        CHECK_FALSE(startSemaphore.signal());
+        CHECK_FALSE(stopSemaphore.wait());
+        CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
 
-    auto error = thread.join();
-    CHECK_FALSE(error);
+        auto error = thread.join();
+        CHECK_FALSE(error);
+    }
+
+    SECTION("Name and priority")
+    {
+        osal::Thread thread(OsalThreadPriority::Normal, setThreadName, func);
+
+        CHECK_FALSE(startSemaphore.signal());
+        CHECK_FALSE(stopSemaphore.wait());
+        CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
+
+        auto error = thread.join();
+        CHECK_FALSE(error);
+    }
+
+    SECTION("Name, priority and stack size")
+    {
+        osal::Thread thread(OsalThreadPriority::Normal, cOsalThreadDefaultStackSize, setThreadName, func);
+
+        CHECK_FALSE(startSemaphore.signal());
+        CHECK_FALSE(stopSemaphore.wait());
+        CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
+
+        auto error = thread.join();
+        CHECK_FALSE(error);
+    }
+
+    SECTION("Name only, deferred start")
+    {
+        osal::Thread thread(setThreadName);
+
+        auto error = thread.start(func);
+        REQUIRE_FALSE(error);
+
+        CHECK_FALSE(startSemaphore.signal());
+        CHECK_FALSE(stopSemaphore.wait());
+        CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
+
+        error = thread.join();
+        CHECK_FALSE(error);
+    }
+
+    SECTION("Name and priority, deferred start")
+    {
+        osal::Thread thread(OsalThreadPriority::Normal, setThreadName);
+
+        auto error = thread.start(func);
+        REQUIRE_FALSE(error);
+
+        CHECK_FALSE(startSemaphore.signal());
+        CHECK_FALSE(stopSemaphore.wait());
+        CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
+
+        error = thread.join();
+        CHECK_FALSE(error);
+    }
+
+    SECTION("Name, priority and stack size, deferred start")
+    {
+        osal::Thread thread(OsalThreadPriority::Normal, cOsalThreadDefaultStackSize, setThreadName);
+
+        auto error = thread.start(func);
+        REQUIRE_FALSE(error);
+
+        CHECK_FALSE(startSemaphore.signal());
+        CHECK_FALSE(stopSemaphore.wait());
+        CHECK_THAT(getThreadName, Catch::Matchers::Equals(setThreadName));
+
+        error = thread.join();
+        CHECK_FALSE(error);
+    }
 }
 
 TEST_CASE("Thread creation with custom stack", "[unit][cpp][thread]")
@@ -229,27 +301,27 @@ TEST_CASE("Thread creation in C++ with different priorities", "[unit][cpp][threa
 
     SECTION("Lowest priority")
     {
-        osal::Thread<OsalThreadPriority::Lowest> thread(func);
+        osal::Thread thread(OsalThreadPriority::Lowest, func);
     }
 
     SECTION("Low priority")
     {
-        osal::Thread<OsalThreadPriority::Low> thread(func);
+        osal::Thread thread(OsalThreadPriority::Low, func);
     }
 
     SECTION("Normal priority")
     {
-        osal::Thread<OsalThreadPriority::Normal> thread(func);
+        osal::Thread thread(OsalThreadPriority::Normal, func);
     }
 
     SECTION("High priority")
     {
-        osal::Thread<OsalThreadPriority::High> thread(func);
+        osal::Thread thread(OsalThreadPriority::High, func);
     }
 
     SECTION("Highest priority")
     {
-        osal::Thread<OsalThreadPriority::Highest> thread(func);
+        osal::Thread thread(OsalThreadPriority::Highest, func);
     }
 
     CHECK(launched);
@@ -266,27 +338,27 @@ TEST_CASE("Thread creation in C++ with different priorities using helper types",
 
     SECTION("Lowest priority")
     {
-        osal::LowestPrioThread<> thread(func);
+        osal::LowestPrioThread thread(func);
     }
 
     SECTION("Low priority")
     {
-        osal::LowPrioThread<> thread(func);
+        osal::LowPrioThread thread(func);
     }
 
     SECTION("Normal priority")
     {
-        osal::NormalPrioThread<> thread(func);
+        osal::NormalPrioThread thread(func);
     }
 
     SECTION("High priority")
     {
-        osal::HighPrioThread<> thread(func);
+        osal::HighPrioThread thread(func);
     }
 
     SECTION("Highest priority")
     {
-        osal::HighestPrioThread<> thread(func);
+        osal::HighestPrioThread thread(func);
     }
 
     CHECK(launched);
@@ -346,7 +418,7 @@ TEST_CASE("Launch 5 threads in C++ and check their results", "[unit][cpp][thread
     };
 
     constexpr std::size_t cThreadsCount = 5;
-    std::array<osal::Thread<>, cThreadsCount> threads{};
+    std::array<osal::Thread, cThreadsCount> threads{};
     std::array<int, cThreadsCount> counters{};
 
     for (std::size_t i = 0; i < threads.size(); ++i) {
@@ -380,11 +452,11 @@ TEST_CASE("Launch 5 threads in C++ with different priorities and check their res
         }
     };
 
-    osal::LowestPrioThread<> thread1(func, std::ref(counters[0]), std::ref(start), std::ref(stop));
-    osal::LowestPrioThread<> thread2(func, std::ref(counters[1]), std::ref(start), std::ref(stop));
-    osal::LowPrioThread<> thread3(func, std::ref(counters[2]), std::ref(start), std::ref(stop));
-    osal::LowPrioThread<> thread4(func, std::ref(counters[3]), std::ref(start), std::ref(stop));
-    osal::NormalPrioThread<> thread5(func, std::ref(counters[4]), std::ref(start), std::ref(stop));
+    osal::LowestPrioThread thread1(func, std::ref(counters[0]), std::ref(start), std::ref(stop));
+    osal::LowestPrioThread thread2(func, std::ref(counters[1]), std::ref(start), std::ref(stop));
+    osal::LowPrioThread thread3(func, std::ref(counters[2]), std::ref(start), std::ref(stop));
+    osal::LowPrioThread thread4(func, std::ref(counters[3]), std::ref(start), std::ref(stop));
+    osal::NormalPrioThread thread5(func, std::ref(counters[4]), std::ref(start), std::ref(stop));
 
     start = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
     osal::sleep(5s);
@@ -426,11 +498,11 @@ TEST_CASE("Check if thread ids are unique and constant in C++", "[unit][cpp][thr
         }
     };
 
-    osal::LowestPrioThread<> thread1(func, std::ref(ids[0]), std::ref(start));
-    osal::LowestPrioThread<> thread2(func, std::ref(ids[1]), std::ref(start));
-    osal::LowPrioThread<> thread3(func, std::ref(ids[2]), std::ref(start));
-    osal::LowPrioThread<> thread4(func, std::ref(ids[3]), std::ref(start));
-    osal::NormalPrioThread<> thread5(func, std::ref(ids[4]), std::ref(start));
+    osal::LowestPrioThread thread1(func, std::ref(ids[0]), std::ref(start));
+    osal::LowestPrioThread thread2(func, std::ref(ids[1]), std::ref(start));
+    osal::LowPrioThread thread3(func, std::ref(ids[2]), std::ref(start));
+    osal::LowPrioThread thread4(func, std::ref(ids[3]), std::ref(start));
+    osal::NormalPrioThread thread5(func, std::ref(ids[4]), std::ref(start));
 
     start = true; // NOLINT(clang-analyzer-deadcode.DeadStores)
 
